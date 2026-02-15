@@ -1,0 +1,236 @@
+.user-profile {
+  background: linear-gradient(135deg, rgba(0, 61, 91, 0.6) 0%, rgba(17, 157, 164, 0.4) 100%);
+  border: 2px solid #119da4;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  margin-bottom: 2rem;
+  transition: box-shadow 0.3s ease;
+}
+
+.user-profile:hover {
+  box-shadow: 0 8px 20px rgba(77, 217, 232, 0.3);
+}
+
+.profile-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 2.5rem;
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 3px solid #4dd9e8;
+}
+
+.profile-image-wrapper {
+  flex-shrink: 0;
+  position: relative;
+}
+
+.profile-image {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 8px 20px rgba(77, 217, 232, 0.4);
+  border: 4px solid #4dd9e8;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.profile-image:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 28px rgba(77, 217, 232, 0.5);
+}
+
+.profile-info {
+  flex: 1;
+}
+
+.profile-info h1 {
+  margin: 0 0 0.5rem 0;
+  color: #ffffff;
+  font-size: 2.2rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.profile-info .title {
+  margin: 0 0 1.5rem 0;
+  color: #ffffff;
+  font-size: 1.4rem;
+  font-weight: 600;
+  display: inline-block;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #119da4;
+}
+
+.contact-info {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.contact-info p {
+  margin: 0;
+  color: #ffffff;
+  font-size: 0.95rem;
+}
+
+.contact-info strong {
+  color: #ffffff;
+  margin-right: 0.5rem;
+}
+
+.contact-info a {
+  color: #4dd9e8;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.contact-info a:hover {
+  color: #80ecf2;
+  text-decoration: underline;
+}
+
+.profile-bio {
+  margin-top: 2rem;
+}
+
+.profile-bio h3 {
+  color: #ffffff;
+  border-bottom: 3px solid #119da4;
+  padding-bottom: 0.75rem;
+  margin-bottom: 1.5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.profile-bio p {
+  color: #e0f2f7;
+  line-height: 1.8;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 768px) {
+  .user-profile {
+    padding: 1.5rem;
+  }
+
+  .profile-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1.5rem;
+  }
+
+  .profile-info h1 {
+    font-size: 1.8rem;
+  }
+
+  .profile-info .title {
+    font-size: 1.1rem;
+  }
+
+  .contact-info {
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .profile-image {
+    width: 140px;
+    height: 140px;
+  }
+}
+
+@media print {
+  .user-profile {
+    background: white !important;
+    border: 1px solid #003d5b !important;
+    page-break-inside: avoid;
+    box-shadow: none !important;
+    padding: 0.4rem !important;
+    margin-bottom: 0.4rem !important;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.5rem !important;
+    align-items: start !important;
+  }
+
+  .profile-header {
+    /* Move header into the left column of the two-column layout */
+    grid-column: 1 / 2;
+    border-bottom: none !important;
+    gap: 0.6rem;
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  .profile-image-wrapper {
+    flex-shrink: 0;
+  }
+
+  .profile-image {
+    width: 64px !important;
+    height: 64px !important;
+    border: 2px solid #119da4 !important;
+  }
+
+  .profile-info h1 {
+    color: #003d5b !important;
+    font-size: 1.1rem;
+    margin: 0 0 0.15rem 0;
+    line-height: 1.1;
+    font-weight: 700;
+  }
+
+  .profile-info .title {
+    color: #119da4 !important;
+    border-bottom: 1px solid #119da4 !important;
+    font-size: 0.85rem;
+    margin-bottom: 0.4rem;
+    display: inline-block;
+    padding-bottom: 0.15rem;
+  }
+
+  .contact-info {
+    gap: 0.4rem;
+    flex-direction: column;
+  }
+
+  .contact-info p {
+    color: #003d5b !important;
+    margin: 0.05rem 0;
+    font-size: 0.75rem;
+  }
+
+  .contact-info strong {
+    color: #003d5b !important;
+  }
+
+  .contact-info a {
+    color: #119da4 !important;
+    text-decoration: underline !important;
+  }
+
+  .profile-bio {
+    /* Place bio in the right column */
+    grid-column: 2 / 3;
+    margin-top: 0 !important;
+  }
+
+  .profile-bio h3 {
+    color: #003d5b !important;
+    border-bottom: 1px solid #119da4 !important;
+    font-size: 0.85rem;
+    margin: 0.25rem 0 0.25rem 0;
+    padding-bottom: 0.15rem;
+  }
+
+  .profile-bio p {
+    color: #333 !important;
+    font-size: 0.75rem;
+    margin: 0;
+  }
+}

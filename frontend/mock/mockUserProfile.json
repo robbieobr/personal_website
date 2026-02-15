@@ -1,0 +1,62 @@
+{
+  "user": {
+    "id": 1,
+    "name": "John Doe",
+    "email": "john.doe@example.com",
+    "title": "Full Stack Developer",
+    "phone": "+1 (555) 123-4567",
+    "profileImage": "/images/placeholder-profile.png",
+    "bio": "Passionate full-stack developer with a focus on creating scalable and user-friendly web applications. Experienced with TypeScript, React, Node.js, and MySQL."
+  },
+  "jobHistory": [
+    {
+      "id": 1,
+      "userId": 1,
+      "company": "Tech Corp",
+      "position": "Senior Software Engineer",
+      "startDate": "2021-03-15",
+      "endDate": null,
+      "description": "Led development of microservices architecture, mentored junior developers, and improved system performance by 40%."
+    },
+    {
+      "id": 2,
+      "userId": 1,
+      "company": "StartUp Inc",
+      "position": "Full Stack Developer",
+      "startDate": "2019-06-01",
+      "endDate": "2021-02-28",
+      "description": "Built and maintained web applications using React and Node.js. Implemented CI/CD pipelines and improved code quality."
+    },
+    {
+      "id": 3,
+      "userId": 1,
+      "company": "Web Solutions Ltd",
+      "position": "Junior Developer",
+      "startDate": "2018-01-15",
+      "endDate": "2019-05-31",
+      "description": "Developed frontend components and assisted with backend API development using Express.js and MySQL."
+    }
+  ],
+  "education": [
+    {
+      "id": 1,
+      "userId": 1,
+      "institution": "State University",
+      "degree": "Bachelor of Science",
+      "field": "Computer Science",
+      "startDate": "2014-09-01",
+      "endDate": "2018-05-31",
+      "description": "Graduated with honors. Focused on software engineering and database design. Active member of the computer science club."
+    },
+    {
+      "id": 2,
+      "userId": 1,
+      "institution": "Tech Institute",
+      "degree": "Master of Science",
+      "field": "Software Engineering",
+      "startDate": "2018-09-01",
+      "endDate": "2020-05-31",
+      "description": "Specialized in full-stack development and cloud computing. Completed thesis on microservices architecture."
+    }
+  ]
+}
