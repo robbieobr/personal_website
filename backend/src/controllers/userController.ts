@@ -69,7 +69,7 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
       phone,
       profileImage: profileImage || null,
       bio: bio || null,
-    } as any);
+    });
 
     res.status(201).json({ id: userId, message: 'User created successfully' });
   } catch (error) {

@@ -3,7 +3,7 @@ services:
     image: mysql:8.0
     container_name: personal_website_db
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
       MYSQL_DATABASE: personal_website
     ports:
       - "3306:3306"
@@ -26,7 +26,7 @@ services:
       DB_HOST: mysql
       DB_PORT: 3306
       DB_USER: root
-      DB_PASSWORD: rootpassword
+      DB_PASSWORD: ${DB_PASSWORD:-rootpassword}
       DB_NAME: personal_website
       PORT: 5000
       NODE_ENV: development
@@ -56,7 +56,7 @@ services:
     networks:
       - personal_website_network
     environment:
-      REACT_APP_API_URL: http://localhost:5000/api
+      VITE_API_URL: http://localhost:5000/api
 
 volumes:
   mysql_data:

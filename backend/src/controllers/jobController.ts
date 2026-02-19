@@ -28,7 +28,7 @@ export const createJob = async (req: Request, res: Response): Promise<void> => {
       startDate: new Date(startDate),
       endDate: endDate ? new Date(endDate) : null,
       description: description || null,
-    } as any);
+    });
 
     res.status(201).json({ id: jobId, message: 'Job created successfully' });
   } catch (error) {

@@ -9,7 +9,6 @@ export default defineConfig({
       '/api': {
         target: process.env.VITE_API_BACKEND || 'http://backend:5000',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '/api'),
       },
     },
   },
@@ -20,7 +19,6 @@ export default defineConfig({
       '/api': {
         target: process.env.VITE_API_BACKEND || 'http://backend:5000',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '/api'),
       },
     },
   },

@@ -37,12 +37,3 @@ export const getUser = async (userId: number): Promise<User> => {
     throw new Error('Failed to fetch user');
   }
 };
-
-export const updateUser = async (userId: number, data: Partial<User>): Promise<void> => {
-  try {
-    await api.put(`/users/${userId}`, data);
-  } catch (error) {
-    console.error('Error updating user');
-    throw new Error('Failed to update user');
-  }
-};
