@@ -1,0 +1,25 @@
+{
+  "app": {
+    "title": "Mo Phunann"
+  },
+  "profilePage": {
+    "loading": "Ag luchtú próifíle...",
+    "error": "Theip ar an bpróifíl a luchtú. Cinntigh go bhfuil an cúl-deireadh ag rith.",
+    "noData": "Níl sonraí próifíle ar fáil"
+  },
+  "userProfile": {
+    "email": "Ríomhphost:",
+    "phone": "Fón:",
+    "about": "Faoi"
+  },
+  "jobHistory": {
+    "title": "Stair Poist",
+    "noHistory": "Níl stair phost ar fáil",
+    "present": "Faoi láthair"
+  },
+  "educationHistory": {
+    "title": "Oideachas",
+    "noHistory": "Níl stair oideachais ar fáil",
+    "present": "Faoi láthair"
+  }
+}
