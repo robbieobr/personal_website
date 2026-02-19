@@ -1,0 +1,2 @@
+# This directory is used by Docker to initialize the MySQL database
+# It's populated by running: database/scripts/init.sh [seed_type]

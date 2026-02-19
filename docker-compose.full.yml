@@ -1,0 +1,11 @@
+version: '3.8'
+
+# Override compose file for full seed dataset
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.full.yml up
+
+services:
+  mysql:
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/migrations:/docker-entrypoint-initdb.d/migrations
+      - ./database/seeds/full:/docker-entrypoint-initdb.d/seeds

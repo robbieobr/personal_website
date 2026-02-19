@@ -1,0 +1,11 @@
+version: '3.8'
+
+# Override compose file for minimal seed dataset
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.minimal.yml up
+
+services:
+  mysql:
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/migrations:/docker-entrypoint-initdb.d/migrations
+      - ./database/seeds/minimal:/docker-entrypoint-initdb.d/seeds

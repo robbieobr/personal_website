@@ -1,0 +1,25 @@
+{
+  "app": {
+    "title": "My Portfolio"
+  },
+  "profilePage": {
+    "loading": "Loading profile...",
+    "error": "Failed to load profile. Please make sure the backend is running.",
+    "noData": "No profile data available"
+  },
+  "userProfile": {
+    "email": "Email:",
+    "phone": "Phone:",
+    "about": "About"
+  },
+  "jobHistory": {
+    "title": "Job History",
+    "noHistory": "No job history available",
+    "present": "Present"
+  },
+  "educationHistory": {
+    "title": "Education",
+    "noHistory": "No education history available",
+    "present": "Present"
+  }
+}

@@ -1,0 +1,132 @@
+.education-history {
+  margin: 2rem 0;
+}
+
+.education-history h2 {
+  color: #ffffff;
+  border-bottom: 2px solid #119da4;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.education-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.education-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border-left: 4px solid #119da4;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.2s;
+}
+
+.education-card:hover {
+  box-shadow: 0 0 30px rgba(17, 157, 164, 0.8), 0 0 15px rgba(17, 157, 164, 0.5), 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.education-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.education-header h3 {
+  margin: 0;
+  color: #222;
+  font-size: 1.2rem;
+}
+
+.institution {
+  color: #666;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.education-field {
+  color: #666;
+  font-size: 0.9rem;
+  font-style: italic;
+  margin-bottom: 0.5rem;
+}
+
+.education-dates {
+  color: #999;
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+}
+
+.education-description {
+  color: #555;
+  line-height: 1.6;
+  margin: 0;
+}
+
+@media print {
+  .education-history {
+    margin: 1.5rem 0 1rem 0;
+  }
+
+  .education-history h2 {
+    color: #003d5b !important;
+    border-bottom: 2px solid #119da4 !important;
+    padding-bottom: 0.4rem;
+    margin-bottom: 0.8rem;
+    font-size: 1.1rem;
+  }
+
+  .education-container {
+    gap: 0.75rem;
+  }
+
+  .education-card {
+    background: transparent !important;
+    border-left: none !important;
+    border-top: 1px solid #119da4;
+    border-radius: 0;
+    box-shadow: none !important;
+    padding: 0.75rem 0;
+    page-break-inside: avoid;
+  }
+
+  .education-card:hover {
+    box-shadow: none !important;
+  }
+
+  .education-header {
+    margin-bottom: 0.2rem;
+  }
+
+  .education-header h3 {
+    color: #003d5b !important;
+    font-size: 0.95rem;
+    margin: 0.25rem 0 0 0;
+    font-weight: 600;
+  }
+
+  .institution {
+    color: #119da4 !important;
+    font-weight: 600;
+    font-size: 0.85rem;
+  }
+
+  .education-field {
+    color: #333 !important;
+    font-size: 0.8rem;
+  }
+
+  .education-dates {
+    color: #333 !important;
+    font-size: 0.8rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .education-description {
+    color: #333 !important;
+    font-size: 0.8rem;
+  }
+}
