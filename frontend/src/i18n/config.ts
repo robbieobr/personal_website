@@ -19,7 +19,7 @@ i18n
     lng: 'en',
     fallbackLng: 'en',
     interpolation: {
-      escapeValue: true,
+      escapeValue: false, // react-i18next handles escaping by default
     },
   });
 

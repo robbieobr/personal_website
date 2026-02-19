@@ -1,3 +1,4 @@
+import { ResultSetHeader, FieldPacket } from 'mysql2';
 import pool from '../config/database';
 import { User, JobEntry, Education } from '../types/index';
 
@@ -29,10 +30,10 @@ export class UserModel {
   static async create(userData: Omit<User, 'id' | 'createdAt' | 'updatedAt'>): Promise<number> {
     const connection = await pool.getConnection();
     try {
-      const [result]: any = await connection.execute(
+      const [result] = await connection.execute(
         'INSERT INTO users (name, title, email, phone, profileImage, bio) VALUES (?, ?, ?, ?, ?, ?)',
         [userData.name, userData.title, userData.email, userData.phone, userData.profileImage, userData.bio]
-      );
+      ) as [ResultSetHeader, FieldPacket[]];
       return result.insertId;
     } finally {
       connection.release();
@@ -86,10 +87,10 @@ export class JobModel {
   static async create(jobData: Omit<JobEntry, 'id' | 'createdAt' | 'updatedAt'>): Promise<number> {
     const connection = await pool.getConnection();
     try {
-      const [result]: any = await connection.execute(
+      const [result] = await connection.execute(
         'INSERT INTO job_history (userId, company, position, startDate, endDate, description) VALUES (?, ?, ?, ?, ?, ?)',
         [jobData.userId, jobData.company, jobData.position, jobData.startDate, jobData.endDate, jobData.description]
-      );
+      ) as [ResultSetHeader, FieldPacket[]];
       return result.insertId;
     } finally {
       connection.release();
@@ -124,10 +125,10 @@ export class EducationModel {
   static async create(educationData: Omit<Education, 'id' | 'createdAt' | 'updatedAt'>): Promise<number> {
     const connection = await pool.getConnection();
     try {
-      const [result]: any = await connection.execute(
+      const [result] = await connection.execute(
         'INSERT INTO education (userId, institution, degree, field, startDate, endDate, description) VALUES (?, ?, ?, ?, ?, ?, ?)',
         [educationData.userId, educationData.institution, educationData.degree, educationData.field, educationData.startDate, educationData.endDate, educationData.description]
-      );
+      ) as [ResultSetHeader, FieldPacket[]];
       return result.insertId;
     } finally {
       connection.release();

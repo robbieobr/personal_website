@@ -2,12 +2,22 @@ const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
+
+// Load environment variables
+require('dotenv').config({ path: path.join(__dirname, '.env') });
+require('dotenv').config({ path: path.join(__dirname, '.env.local') });
+
 const app = express();
-const PORT = 5001;
-const MOCK_NETWORK_DELAY = 1000; // Simulate network delay in milliseconds
+
+// Configuration from environment variables
+const PORT = process.env.MOCK_PORT || 5001;
+const MOCK_NETWORK_DELAY = parseInt(process.env.MOCK_NETWORK_DELAY || '1000'); // Simulate network delay in milliseconds
+const ALLOWED_ORIGINS = process.env.MOCK_ALLOWED_ORIGINS 
+  ? process.env.MOCK_ALLOWED_ORIGINS.split(',').map(origin => origin.trim())
+  : ['http://localhost:3000', 'http://localhost:5001', 'http://localhost:5000'];
 
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:5000'],
+  origin: ALLOWED_ORIGINS,
   credentials: false,
 }));
 

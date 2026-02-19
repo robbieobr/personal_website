@@ -1,5 +1,3 @@
-version: '3.8'
-
 # Override compose file for minimal seed dataset
 # Usage: docker-compose -f docker-compose.yml -f docker-compose.minimal.yml up
 
