@@ -61,8 +61,13 @@ export const createJob = async (req: Request, res: Response): Promise<void> => {
 export const deleteJob = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
+    const idNum = parseInt(id, 10);
+    if (isNaN(idNum)) {
+      res.status(400).json({ error: 'Invalid job ID' });
+      return;
+    }
 
-    await JobModel.delete(parseInt(id));
+    await JobModel.delete(idNum);
     res.json({ message: 'Job deleted successfully' });
   } catch (error) {
     console.error('Error deleting job:', error);
