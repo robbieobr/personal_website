@@ -4,7 +4,12 @@ import { EducationModel } from '../models/index';
 export const getEducationByUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const { userId } = req.params;
-    const education = await EducationModel.findByUserId(parseInt(userId));
+    const userIdNum = parseInt(userId, 10);
+    if (isNaN(userIdNum)) {
+      res.status(400).json({ error: 'Invalid user ID' });
+      return;
+    }
+    const education = await EducationModel.findByUserId(userIdNum);
     res.json(education);
   } catch (error) {
     console.error('Error fetching education:', error);
@@ -21,13 +26,29 @@ export const createEducation = async (req: Request, res: Response): Promise<void
       return;
     }
 
+    const start = new Date(startDate);
+    if (isNaN(start.getTime())) {
+      res.status(400).json({ error: 'Invalid start date' });
+      return;
+    }
+
+    let end: Date | null = null;
+    if (endDate) {
+      const parsedEnd = new Date(endDate);
+      if (isNaN(parsedEnd.getTime())) {
+        res.status(400).json({ error: 'Invalid end date' });
+        return;
+      }
+      end = parsedEnd;
+    }
+
     const educationId = await EducationModel.create({
       userId,
       institution,
       degree,
       field,
-      startDate: new Date(startDate),
-      endDate: endDate ? new Date(endDate) : null,
+      startDate: start,
+      endDate: end,
       description: description || null,
     });
 
@@ -41,8 +62,13 @@ export const createEducation = async (req: Request, res: Response): Promise<void
 export const deleteEducation = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
+    const idNum = parseInt(id, 10);
+    if (isNaN(idNum)) {
+      res.status(400).json({ error: 'Invalid education ID' });
+      return;
+    }
 
-    await EducationModel.delete(parseInt(id));
+    await EducationModel.delete(idNum);
     res.json({ message: 'Education deleted successfully' });
   } catch (error) {
     console.error('Error deleting education:', error);
