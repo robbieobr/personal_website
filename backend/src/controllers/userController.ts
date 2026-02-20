@@ -4,7 +4,12 @@ import { UserModel, JobModel, EducationModel } from '../models/index';
 export const getUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
-    const user = await UserModel.findById(parseInt(id));
+    const userId = parseInt(id, 10);
+    if (isNaN(userId)) {
+      res.status(400).json({ error: 'Invalid user ID' });
+      return;
+    }
+    const user = await UserModel.findById(userId);
 
     if (!user) {
       res.status(404).json({ error: 'User not found' });
@@ -31,7 +36,11 @@ export const getAllUsers = async (req: Request, res: Response): Promise<void> =>
 export const getUserProfile = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
-    const userId = parseInt(id);
+    const userId = parseInt(id, 10);
+    if (isNaN(userId)) {
+      res.status(400).json({ error: 'Invalid user ID' });
+      return;
+    }
 
     const user = await UserModel.findById(userId);
     if (!user) {
@@ -92,7 +101,11 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
 export const updateUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
-    const userId = parseInt(id);
+    const userId = parseInt(id, 10);
+    if (isNaN(userId)) {
+      res.status(400).json({ error: 'Invalid user ID' });
+      return;
+    }
 
     const user = await UserModel.findById(userId);
     if (!user) {
@@ -111,7 +124,11 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
 export const deleteUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
-    const userId = parseInt(id);
+    const userId = parseInt(id, 10);
+    if (isNaN(userId)) {
+      res.status(400).json({ error: 'Invalid user ID' });
+      return;
+    }
 
     const user = await UserModel.findById(userId);
     if (!user) {
