@@ -4,7 +4,12 @@ import { JobModel } from '../models/index';
 export const getJobsByUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const { userId } = req.params;
-    const jobs = await JobModel.findByUserId(parseInt(userId));
+    const userIdNum = parseInt(userId, 10);
+    if (isNaN(userIdNum)) {
+      res.status(400).json({ error: 'Invalid user ID' });
+      return;
+    }
+    const jobs = await JobModel.findByUserId(userIdNum);
     res.json(jobs);
   } catch (error) {
     console.error('Error fetching jobs:', error);
@@ -21,12 +26,28 @@ export const createJob = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
+    const start = new Date(startDate);
+    if (isNaN(start.getTime())) {
+      res.status(400).json({ error: 'Invalid start date' });
+      return;
+    }
+
+    let end: Date | null = null;
+    if (endDate) {
+      const parsedEnd = new Date(endDate);
+      if (isNaN(parsedEnd.getTime())) {
+        res.status(400).json({ error: 'Invalid end date' });
+        return;
+      }
+      end = parsedEnd;
+    }
+
     const jobId = await JobModel.create({
       userId,
       company,
       position,
-      startDate: new Date(startDate),
-      endDate: endDate ? new Date(endDate) : null,
+      startDate: start,
+      endDate: end,
       description: description || null,
     });
 

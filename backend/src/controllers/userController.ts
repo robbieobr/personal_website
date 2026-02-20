@@ -62,6 +62,17 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
       return;
     }
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      res.status(400).json({ error: 'Invalid email format' });
+      return;
+    }
+
+    const phoneRegex = /^[0-9+\-\s()]{7,20}$/;
+    if (!phoneRegex.test(phone)) {
+      res.status(400).json({ error: 'Invalid phone format' });
+      return;
+    }
     const userId = await UserModel.create({
       name,
       title,

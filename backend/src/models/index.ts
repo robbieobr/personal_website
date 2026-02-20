@@ -43,12 +43,18 @@ export class UserModel {
   static async update(id: number, userData: Partial<User>): Promise<boolean> {
     const connection = await pool.getConnection();
     try {
-      const fields = Object.keys(userData).filter(k => k !== 'id' && k !== 'createdAt' && k !== 'updatedAt');
-      const values = fields.map(f => userData[f as keyof User]);
+      const allowedFields: (keyof User)[] = ['name', 'title', 'email', 'phone', 'profileImage', 'bio'];
+      const fields = Object.keys(userData)
+        .filter((k) => allowedFields.includes(k as keyof User));
+
+      if (fields.length === 0) {
+        return false;
+      }
+
+      const values = fields.map((f) => userData[f as keyof User]);
       values.push(id);
 
-      const setClause = fields.map(f => `${f} = ?`).join(', ');
-      
+      const setClause = fields.map((f) => `${f} = ?`).join(', ');
       await connection.execute(
         `UPDATE users SET ${setClause} WHERE id = ?`,
         values
