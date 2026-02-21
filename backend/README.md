@@ -16,7 +16,7 @@ This is the backend API that provides:
 - **Express.js** - Web framework
 - **TypeScript** - Type safety
 - **MySQL** - Database
-- **nodemon** - Development auto-reload
+- **tsx** - TypeScript execution with auto-reload
 
 ## 📁 Directory Structure
 
@@ -119,7 +119,7 @@ Access at http://localhost:5000
 
 | Script | Description |
 |--------|-------------|
-| `npm run dev` | Start development server with auto-reload (nodemon) |
+| `npm run dev` | Start development server with auto-reload (tsx watch) |
 | `npm run build` | Compile TypeScript to JavaScript |
 | `npm run start` | Run compiled JavaScript server |
 
