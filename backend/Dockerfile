@@ -6,7 +6,7 @@ COPY package*.json ./
 COPY backend/package*.json ./backend/
 COPY frontend/package*.json ./frontend/
 
-RUN npm ci --workspace=backend
+RUN npm ci --workspace=backend --include-workspace-root
 
 COPY backend/ ./backend/
 
