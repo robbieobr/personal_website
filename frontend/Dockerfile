@@ -12,6 +12,8 @@ COPY frontend/ ./frontend/
 
 RUN npm run build -w frontend
 
+WORKDIR /app/frontend
+
 FROM nginx:alpine AS production
 
 COPY --from=builder /app/frontend/build /usr/share/nginx/html

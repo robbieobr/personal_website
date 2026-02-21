@@ -12,6 +12,8 @@ COPY backend/ ./backend/
 
 RUN npm run build -w backend
 
+WORKDIR /app/backend
+
 FROM node:20-alpine AS production
 
 WORKDIR /app
