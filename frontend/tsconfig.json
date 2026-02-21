@@ -15,10 +15,9 @@
     "declarationMap": false,
     "sourceMap": false,
     "baseUrl": "src",
-    "types": ["vite/client"],
+    "types": ["vite/client", "@testing-library/jest-dom", "vitest/globals"],
     "isolatedModules": true,
     "noEmit": true
   },
-  "include": ["src"],
-  "exclude": ["node_modules"]
+  "include": ["src", "test"],
 }
