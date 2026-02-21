@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { screen, waitFor } from '@testing-library/react';
-import ProfilePage from './ProfilePage';
-import { renderWithProviders } from '../test/utils';
-import { mockUserProfile } from '../test/fixtures';
+import ProfilePage from '../../src/pages/ProfilePage';
+import { renderWithProviders } from '../utils';
+import { mockUserProfile } from '../fixtures';
 
-vi.mock('../services/api', () => ({
+vi.mock('../../src/services/api', () => ({
   getUserProfile: vi.fn(),
 }));
 
@@ -12,7 +12,7 @@ describe('ProfilePage', () => {
   let getUserProfile: ReturnType<typeof vi.fn>;
 
   beforeEach(async () => {
-    const apiModule = await import('../services/api');
+    const apiModule = await import('../../src/services/api');
     getUserProfile = apiModule.getUserProfile as ReturnType<typeof vi.fn>;
     getUserProfile.mockReset();
   });

@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { screen } from '@testing-library/react';
-import JobHistory from './JobHistory';
-import { renderWithProviders } from '../test/utils';
-import { mockJob, mockPastJob } from '../test/fixtures';
+import JobHistory from '../../src/components/JobHistory';
+import { renderWithProviders } from '../utils';
+import { mockJob, mockPastJob } from '../fixtures';
 
 describe('JobHistory', () => {
   it('renders no history message when jobs is empty', () => {

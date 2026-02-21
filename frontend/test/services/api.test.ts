@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { mockUserProfile, mockUser } from '../test/fixtures';
+import { mockUserProfile, mockUser } from '../fixtures';
 
 // Mock axios module before importing api
 vi.mock('axios', async () => {
@@ -27,7 +27,7 @@ describe('api service', () => {
   describe('getUserProfile', () => {
     it('returns user profile on success', async () => {
       mockGet.mockResolvedValue({ data: mockUserProfile });
-      const { getUserProfile } = await import('./api');
+      const { getUserProfile } = await import('../../src/services/api');
       const result = await getUserProfile(1);
       expect(result).toEqual(mockUserProfile);
       expect(mockGet).toHaveBeenCalledWith('/users/1/profile');
@@ -35,7 +35,7 @@ describe('api service', () => {
 
     it('throws on error', async () => {
       mockGet.mockRejectedValue(new Error('Network Error'));
-      const { getUserProfile } = await import('./api');
+      const { getUserProfile } = await import('../../src/services/api');
       await expect(getUserProfile(1)).rejects.toThrow('Failed to fetch user profile');
     });
   });
@@ -43,7 +43,7 @@ describe('api service', () => {
   describe('getUser', () => {
     it('returns user on success', async () => {
       mockGet.mockResolvedValue({ data: mockUser });
-      const { getUser } = await import('./api');
+      const { getUser } = await import('../../src/services/api');
       const result = await getUser(1);
       expect(result).toEqual(mockUser);
       expect(mockGet).toHaveBeenCalledWith('/users/1');
@@ -51,9 +51,8 @@ describe('api service', () => {
 
     it('throws on error', async () => {
       mockGet.mockRejectedValue(new Error('Network Error'));
-      const { getUser } = await import('./api');
+      const { getUser } = await import('../../src/services/api');
       await expect(getUser(1)).rejects.toThrow('Failed to fetch user');
     });
   });
 });
-

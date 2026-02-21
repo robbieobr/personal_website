@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { screen } from '@testing-library/react';
-import UserProfileComponent from './UserProfile';
-import { renderWithProviders } from '../test/utils';
-import { mockUser } from '../test/fixtures';
+import UserProfileComponent from '../../src/components/UserProfile';
+import { renderWithProviders } from '../utils';
+import { mockUser } from '../fixtures';
 
 describe('UserProfile', () => {
   it('renders user name and title', () => {

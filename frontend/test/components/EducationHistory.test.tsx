@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { screen } from '@testing-library/react';
-import EducationHistory from './EducationHistory';
-import { renderWithProviders } from '../test/utils';
-import { mockEducation, mockCurrentEducation } from '../test/fixtures';
+import EducationHistory from '../../src/components/EducationHistory';
+import { renderWithProviders } from '../utils';
+import { mockEducation, mockCurrentEducation } from '../fixtures';
 
 describe('EducationHistory', () => {
   it('renders no history message when education is empty', () => {

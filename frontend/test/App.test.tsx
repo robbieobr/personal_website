@@ -1,9 +1,9 @@
 import { describe, it, expect, vi } from 'vitest';
 import { screen, fireEvent } from '@testing-library/react';
-import App from './App';
-import { renderWithProviders } from './test/utils';
+import App from '../src/App';
+import { renderWithProviders } from './utils';
 
-vi.mock('./pages/ProfilePage', () => ({
+vi.mock('../src/pages/ProfilePage', () => ({
   default: () => <div data-testid="profile-page">Profile Page</div>,
 }));
 

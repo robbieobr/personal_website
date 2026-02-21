@@ -3,7 +3,7 @@ import { render, RenderOptions } from '@testing-library/react';
 import { I18nextProvider } from 'react-i18next';
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import enTranslations from '../i18n/locales/en.json';
+import enTranslations from '../src/i18n/locales/en.json';
 
 // Create a test-specific i18n instance
 const testI18n = i18n.createInstance();
