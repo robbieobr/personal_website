@@ -19,8 +19,8 @@ services:
 
   backend:
     build:
-      context: ./backend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: backend/Dockerfile
     container_name: personal_website_backend
     environment:
       DB_HOST: mysql
@@ -37,23 +37,23 @@ services:
       mysql:
         condition: service_healthy
     volumes:
-      - ./backend/src:/app/src
+      - ./backend/src:/app/backend/src
     networks:
       - personal_website_network
     command: npm run dev
 
   frontend:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: frontend/Dockerfile
     container_name: personal_website_frontend
     ports:
       - "3000:3000"
     depends_on:
       - backend
     volumes:
-      - ./frontend/src:/app/src
-      - ./frontend/public:/app/public
+      - ./frontend/src:/app/frontend/src
+      - ./frontend/public:/app/frontend/public
     networks:
       - personal_website_network
     environment:
