@@ -213,7 +213,7 @@ npm run mock
 
 **Access:**
 - Frontend: http://localhost:3000 (if running together with npm run dev)
-- Mock API: http://localhost:3001
+- Mock API: http://localhost:5001
 
 **Advantages:**
 - No backend or database needed
@@ -311,7 +311,7 @@ docker-compose logs -f --tail=50
 | Backend API | 5000 | Yes | `docker-compose.yml` |
 | MySQL | 3306 | Yes | `docker-compose.yml` |
 | Vite Dev (local) | 5173 | Yes | `frontend/vite.config.ts` |
-| Mock Server | 3001 | Yes | `frontend/mock/mockServer.js` |
+| Mock Server | 5001 | Yes | `frontend/mock/mockServer.js` |
 
 ### Change Port Example
 

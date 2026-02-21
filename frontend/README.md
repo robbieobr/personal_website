@@ -194,11 +194,11 @@ docker run -p 3000:3000 personal_website_frontend
 
 ### Dockerfile Details
 
-- **Base Image:** node:20-alpine
-- **Build Stage:** Builds React app with Vite
-- **Runtime:** Serves built app with Vite preview server
+- **Base Image:** node:20-alpine (builder stage), nginx:alpine (production stage)
+- **Build Stage:** Installs only frontend workspace dependencies, builds React app with Vite
+- **Production Stage:** Serves the built app with nginx on port 3000; proxies `/api` to the backend
 - **Port:** 3000
-- **Hot Reload:** Watches src/ and public/ directories when running with docker-compose
+- **Hot Reload:** Uses Vite HMR when running with docker-compose (builder stage with `npm run dev`)
 
 ## � Security
 
@@ -207,7 +207,7 @@ The frontend is built with security best practices:
 - **Content Security Policy (CSP)** - Configured in `public/index.html` to prevent XSS attacks
 - **HTTPS Headers** - Includes X-Frame-Options, X-Content-Type-Options, X-XSS-Protection
 - **Secure Dependencies** - Uses Vite instead of react-scripts for minimal dependency footprint, eliminating the large webpack dependency tree
-- **HTML Escaping** - i18n configured with `escapeValue: true` to prevent XSS
+- **HTML Escaping** - i18n configured with `escapeValue: false` because React already escapes rendered values, preventing double-escaping while maintaining XSS protection
 - **Error Boundaries** - React error boundary component catches and handles errors securely without exposing stack traces
 - **Secure API Calls** - Axios configured with proper timeout and validation
 

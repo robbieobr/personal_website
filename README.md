@@ -107,10 +107,10 @@ personal_website/
 │   ├── scripts/             # Database utilities
 │   │   ├── init.sh          # Initialize database
 │   │   └── reset.sh         # Reset database
-│   ├── docker-entrypoint-initdb.d/  # Docker init files
-│   ├── SCHEMA.md            # Database schema documentation
-│   ├── README.md            # Database setup guide
-│   └── schema.sql           # Legacy schema (deprecated)
+│   ├── docker-entrypoint-initdb.d/  # Docker init files (default seed)
+│   ├── init/                # Pre-combined init directories for compose overrides
+│   │   ├── minimal/         # Migrations + minimal seed
+│   │   └── full/            # Migrations + full seed
 │
 ├── docker-compose.yml       # Main container orchestration
 ├── docker-compose.minimal.yml    # Minimal seed configuration
@@ -392,19 +392,23 @@ All services are defined in `docker-compose.yml`:
 - **Health Check:** mysqladmin ping
 
 #### Backend Service
-- **Build:** From /backend/Dockerfile
+- **Build:** From /backend/Dockerfile (builder stage)
 - **Container:** personal_website_backend
 - **Port:** 5000
 - **Environment:** DB connection details, NODE_ENV
 - **Dependencies:** Waits for MySQL to be healthy
-- **Hot Reload:** Watches /backend/src for changes
+- **Hot Reload:** Watches /backend/src for changes (tsx watch)
 
 #### Frontend Service
-- **Build:** From /frontend/Dockerfile
+- **Build:** From /frontend/Dockerfile (builder stage)
 - **Container:** personal_website_frontend
 - **Port:** 3000
 - **Dependencies:** Depends on backend service
-- **Hot Reload:** Watches /frontend/src and /frontend/public for changes
+- **Hot Reload:** Watches /frontend/src and /frontend/public for changes (Vite HMR)
+
+> **Production builds:** Running `docker build` without docker-compose produces
+> lean, multi-stage images — the backend runs compiled JS without devDependencies,
+> and the frontend is served by nginx.
 
 ### Common Docker Commands
 

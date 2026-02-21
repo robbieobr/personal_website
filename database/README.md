@@ -29,9 +29,10 @@ database/
 │   └── reset.sh       # Reset the database to clean state
 │
 ├── docker-entrypoint-initdb.d/  # Files used by Docker MySQL initialization
-│   └── (auto-populated by init.sh)
 │
-├── schema.sql         # Original schema file (kept for reference)
+├── init/                # Pre-combined init directories for compose override files
+│   ├── minimal/        # Migrations + minimal seed
+│   └── full/           # Migrations + full seed
 └── README.md         # This file
 ```
 
@@ -81,6 +82,9 @@ This dataset includes 7 job history entries and 6 education records.
 
 **Option 1: Use compose override files**
 
+Each override file mounts a pre-combined directory (`database/init/`) that contains the
+migrations and the appropriate seed data:
+
 Default dataset (already loaded):
 ```bash
 docker-compose up -d
@@ -95,6 +99,8 @@ Full dataset:
 ```bash
 docker-compose -f docker-compose.yml -f docker-compose.full.yml up -d
 ```
+
+Note: The MySQL data volume must be fresh (or reset) for initialization to take effect.
 
 **Option 2: Using init.sh script (for re-initialization)**
 
@@ -162,16 +168,23 @@ To create a new seed dataset (e.g., `staging`):
 
 3. Populate with your desired data
 
-4. Create a corresponding docker-compose override file (optional):
+4. Create a pre-combined init directory with migrations and seeds:
+   ```bash
+   mkdir -p init/staging
+   cp migrations/*.sql init/staging/
+   cp seeds/staging/001_users.sql init/staging/005_users.sql
+   cp seeds/staging/002_job_history.sql init/staging/006_job_history.sql
+   cp seeds/staging/003_education.sql init/staging/007_education.sql
+   ```
+
+5. Create a corresponding docker-compose override file (optional):
    ```yaml
    # docker-compose.staging.yml
-   version: '3.8'
    services:
      mysql:
        volumes:
          - mysql_data:/var/lib/mysql
-         - ./database/migrations:/docker-entrypoint-initdb.d/migrations
-         - ./database/seeds/staging:/docker-entrypoint-initdb.d/seeds
+         - ./database/init/staging:/docker-entrypoint-initdb.d
    ```
 
 ## Docker Integration
@@ -203,13 +216,13 @@ Both migrations and seed files use a three-digit prefix for ordering:
 
 This ensures proper execution order when Docker processes the files alphabetically.
 
-## Reference: Original Schema
+## Reference: Schema History
 
-The original `schema.sql` file has been split into:
+The schema was originally defined in a single `schema.sql` file that has since been split into:
 - **Migrations** - Table definitions (`001*.sql` to `004*.sql`)
 - **Seeds/Default** - Sample data (in `seeds/default/`)
 
-The original file is kept for reference but is no longer used by Docker.
+The original file is no longer present in the repository.
 
 ## Troubleshooting
 
