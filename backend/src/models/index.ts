@@ -51,7 +51,7 @@ export class UserModel {
         return false;
       }
 
-      const values = fields.map((f) => userData[f as keyof User]);
+      const values = fields.map((f) => userData[f as keyof User] ?? null);
       values.push(id);
 
       const setClause = fields.map((f) => `${f} = ?`).join(', ');
