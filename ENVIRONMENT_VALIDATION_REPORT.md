@@ -1,6 +1,6 @@
 # Environment Setup Validation Report
 
-**Date:** February 19, 2026  
+**Date:** February 21, 2026  
 **Status:** ✅ ALL TESTS PASSED
 
 ---
@@ -25,10 +25,10 @@ File Status:
 
 **Test Command:**
 ```bash
-git status --short
+git ls-files | grep '\.env'
 ```
 
-**Result:** Actual `.env` files don't appear in status, example files are tracked. ✅ PASS
+**Result:** Actual `.env` files are not tracked; example and committed env files are tracked. ✅ PASS
 
 ---
 
@@ -36,7 +36,7 @@ git status --short
 
 ### ✅ Root Level Configuration
 - **File:** `.env`
-- **Status:** ✅ Created from example
+- **Status:** ✅ Not committed — create from example when needed (docker-compose)
 - **Variables:** All properly configured for Docker/docker-compose
 - **Contains:**
   - MYSQL_ROOT_PASSWORD
@@ -45,9 +45,13 @@ git status --short
   - VITE_API_BACKEND
   - VITE_API_URL
 
+```bash
+cp .env.example .env
+```
+
 ### ✅ Backend Configuration
 - **File:** `backend/.env`
-- **Status:** ✅ Created from example
+- **Status:** ✅ Not committed — create from example for local development
 - **Variables:** All properly configured for local development
 - **Contains:**
   - DB_HOST=localhost
@@ -59,17 +63,21 @@ git status --short
   - NODE_ENV=development
   - ALLOWED_ORIGINS
 
+```bash
+cp backend/.env.example backend/.env
+```
+
 ### ✅ Frontend Development Configuration
 - **File:** `frontend/.env.development`
-- **Status:** ✅ Created from example
+- **Status:** ✅ Committed to repository — ready to use, no setup needed
 - **Variables:** Configured for real backend
 - **Contains:**
   - VITE_API_BACKEND=http://localhost:5000
   - VITE_API_URL=http://localhost:5000/api
 
 ### ✅ Frontend Mock Configuration
-- **File:** `frontend/.env.local`
-- **Status:** ✅ Created from example
+- **File:** `frontend/.env.mock`
+- **Status:** ✅ Committed to repository — used by `npm run dev:mock` via `cross-env`
 - **Variables:** Configured for mock server
 - **Contains:**
   - VITE_API_BACKEND=http://localhost:5001
@@ -77,18 +85,22 @@ git status --short
 
 ### ✅ Mock Server Configuration
 - **File:** `frontend/mock/.env`
-- **Status:** ✅ Created from example
+- **Status:** ✅ Optional — create from example to override defaults
 - **Variables:** All properly configured
 - **Contains:**
   - MOCK_PORT=5001
   - MOCK_NETWORK_DELAY=1000
   - MOCK_ALLOWED_ORIGINS
 
-**Dependencies Added:**
 ```bash
-cd frontend/mock && npm install dotenv
+cp frontend/mock/.env.example frontend/mock/.env
 ```
-✅ Successfully installed
+
+**Dependencies:**
+```bash
+cd frontend/mock && npm install
+```
+✅ dotenv@17.3.1 installed
 
 ---
 
@@ -107,14 +119,17 @@ cd frontend && npm run dev:mock
 
 **Test Results:**
 - ✅ Mock server starts successfully on port 5001
-- ✅ Environment variables loaded from `frontend/mock/.env`
+  ```
+  Mock API server running at http://localhost:5001/api
+  ```
+  Note: dotenv@17.3.1 prints informational debug output on startup (e.g. `injecting env (0) from mock/.env`); this is expected when the optional `.env` file has not been created.
 - ✅ Mock API endpoint responds correctly
   ```
   GET http://localhost:5001/api/users/1/profile
   Status: 200
   Response: Complete user profile with jobs and education
   ```
-- ✅ Frontend starts on port 3000
+- ✅ Frontend starts on port 3000 (VITE_API_BACKEND set via cross-env in npm script)
 - ✅ Frontend proxy correctly routes to mock backend
   ```
   GET http://localhost:3000/api/users/1/profile (via proxy)
@@ -143,7 +158,7 @@ cd frontend && npm run dev
   ```
   GET http://localhost:5000/api/health
   Status: 200
-  Response: {"status": "Backend is running"}
+  Response: {"status":"Backend is running"}
   ```
 - ✅ Frontend starts on port 3000
 - ✅ Frontend proxy correctly routes to backend on localhost
@@ -155,30 +170,31 @@ cd frontend && npm run dev
 
 **Workflow Status:** FULLY FUNCTIONAL ✅
 
-**Note:** Full profile endpoint would require MySQL running with proper schema. Health check validates environment configuration works correctly.
+**Note:** Full profile endpoint requires MySQL running with proper schema. Health check validates environment configuration works correctly.
 
 ### Workflow 3: Full Stack with Docker ✅ PASS
 
 **Configuration:**
 ```bash
-docker-compose config
+docker compose config
 ```
 
+Note: Docker Compose V2 uses `docker compose` (space, not hyphen). The legacy `docker-compose` binary is no longer bundled separately.
+
 **Test Results:**
-- ✅ Docker-compose file validates successfully
-- ✅ Environment variables properly substituted
+- ✅ Docker compose file validates successfully
+- ✅ Environment variables properly substituted (defaults from `${VAR:-default}` syntax)
   - MYSQL_ROOT_PASSWORD: rootpassword
   - DB_PASSWORD: rootpassword
-  - DB_HOST: mysql (correctly set for Docker)
+  - DB_HOST: mysql (correctly set for Docker networking)
   - ALLOWED_ORIGINS: http://localhost:3000,http://localhost:5001,http://backend:5000
   - VITE_API_BACKEND: http://backend:5000
-  - VITE_API_URL: http://localhost:5000/api
 - ✅ All service configurations present
   - MySQL service with environment variables
   - Backend service with all required env vars
   - Frontend service with all required env vars
 - ✅ Networks and volumes properly configured
-- ✅ Service dependencies configured
+- ✅ Service dependencies configured (backend waits for mysql healthcheck)
 
 **Workflow Status:** READY FOR DEPLOYMENT ✅
 
@@ -225,17 +241,21 @@ docker-compose config
 
 ### ✅ All Required Packages Installed
 
+**Runtime:**
+- Node.js v24.13.0
+- npm 11.6.2
+
 **Backend:**
-- Express, TypeScript, MySQL2, CORS - ✅ Ready
-- dotenv - ✅ Configured in code
+- Express@4.22.1, TypeScript, MySQL2@3.17.4, CORS@2.8.6 - ✅ Ready
+- dotenv@16.6.1 - ✅ Configured in code
 
 **Frontend:**
-- React, Vite, Axios, i18next - ✅ Ready
-- No additional env packages needed (Vite built-in)
+- React@18.3.1, Vite@7.3.1, Axios@1.13.5, i18next@23.16.8 - ✅ Ready
+- No additional env packages needed (Vite built-in support)
 
 **Mock Server:**
 - Express, CORS - ✅ Ready
-- dotenv - ✅ Installed and working
+- dotenv@17.3.1 - ✅ Installed and working (verbose output on startup is informational)
 
 ---
 
@@ -258,7 +278,7 @@ docker-compose config
 | Item | Status | Notes |
 |------|--------|-------|
 | Git Configuration | ✅ PASS | .env ignored, examples tracked |
-| Environment Files | ✅ PASS | All files created and configured |
+| Environment Files | ✅ PASS | Committed env files ready; optional files documented |
 | Mock Server Workflow | ✅ PASS | Fully functional without database |
 | Backend Dev Workflow | ✅ PASS | Configured for local development |
 | Docker Workflow | ✅ PASS | Ready for containerized deployment |
@@ -296,7 +316,7 @@ Note: Requires MySQL running with proper initialization
 
 ### For Docker Deployment
 ```bash
-docker-compose up
+docker compose up
 ```
 Access: http://localhost:3000
 
