@@ -15,7 +15,7 @@
     "declarationMap": false,
     "sourceMap": false,
     "baseUrl": "src",
-    "types": ["vite/client", "@testing-library/jest-dom", "vitest/globals"],
+    "types": ["vite/client", "@testing-library/jest-dom"],
     "isolatedModules": true,
     "noEmit": true
   },
