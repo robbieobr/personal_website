@@ -131,20 +131,26 @@ Access at http://localhost:5000
 |--------|----------|-------------|
 | GET | `/api/users` | Get all users |
 | GET | `/api/users/:id` | Get specific user by ID |
+| GET | `/api/users/:id/profile` | Get user with full job and education history |
+| POST | `/api/users` | Create a new user |
+| PUT | `/api/users/:id` | Update an existing user |
+| DELETE | `/api/users/:id` | Delete a user |
 
 ### Jobs
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/api/jobs` | Get all job histories |
 | GET | `/api/jobs/user/:userId` | Get jobs for specific user |
+| POST | `/api/jobs` | Create a new job record |
+| DELETE | `/api/jobs/:id` | Delete a job record |
 
 ### Education
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/api/education` | Get all education records |
-| GET | `/api/education/user/:userId` | Get education for specific user |
+| GET | `/api/education/user/:userId` | Get education records for specific user |
+| POST | `/api/education` | Create a new education record |
+| DELETE | `/api/education/:id` | Delete an education record |
 
 ## 🗄️ Database Connection
 
@@ -202,22 +208,24 @@ The database module uses connection pools for better performance. Connection par
 
 ### Database Queries
 
-Use MySQL driver to execute queries:
+Use the MySQL2/promise pool to execute queries:
 
 ```typescript
 import pool from '../config/database';
 
-pool.query('SELECT * FROM users', (error, results) => {
-  if (error) throw error;
+const connection = await pool.getConnection();
+try {
+  const [results] = await connection.execute('SELECT * FROM users');
   console.log(results);
-});
+} finally {
+  connection.release();
+}
 ```
 
-Or with promises:
+Or use the pool directly with `execute` (uses parameterized queries for SQL injection prevention):
 
 ```typescript
-const connection = await pool.promise();
-const [results] = await connection.query('SELECT * FROM users');
+const [results] = await pool.execute('SELECT * FROM users WHERE id = ?', [userId]);
 ```
 
 ## 🐳 Docker Configuration
@@ -243,11 +251,11 @@ docker run \
 
 ### Dockerfile Details
 
-- **Base Image:** node:20-alpine
-- **Build Stage:** Compiles TypeScript to JavaScript
-- **Runtime:** Runs compiled JavaScript
+- **Base Image:** node:20-alpine (both stages)
+- **Builder Stage:** Installs all dependencies, compiles TypeScript to JavaScript
+- **Production Stage:** Installs only runtime dependencies (no devDependencies), runs compiled JS
 - **Port:** 5000
-- **Hot Reload:** Works with docker-compose volume mounting
+- **Hot Reload:** Uses tsx watch when running with docker-compose (builder stage with `npm run dev`)
 
 ## 🔧 Troubleshooting
 

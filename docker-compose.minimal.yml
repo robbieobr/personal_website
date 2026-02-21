@@ -5,5 +5,4 @@ services:
   mysql:
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./database/migrations:/docker-entrypoint-initdb.d/migrations
-      - ./database/seeds/minimal:/docker-entrypoint-initdb.d/seeds
+      - ./database/init/minimal:/docker-entrypoint-initdb.d

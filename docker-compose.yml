@@ -21,6 +21,7 @@ services:
     build:
       context: .
       dockerfile: backend/Dockerfile
+      target: builder
     container_name: personal_website_backend
     environment:
       DB_HOST: mysql
@@ -46,6 +47,7 @@ services:
     build:
       context: .
       dockerfile: frontend/Dockerfile
+      target: builder
     container_name: personal_website_frontend
     ports:
       - "3000:3000"
@@ -58,7 +60,7 @@ services:
       - personal_website_network
     environment:
       VITE_API_BACKEND: ${VITE_API_BACKEND:-http://backend:5000}
-      VITE_API_URL: ${VITE_API_URL:-http://localhost:5000/api}
+    command: npm run dev
 
 volumes:
   mysql_data:
