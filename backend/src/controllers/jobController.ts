@@ -1,11 +1,12 @@
 import { Request, Response } from 'express';
 import { JobModel } from '../models/index';
+import { parseId } from '../utils/parseId';
+import { parseDate } from '../utils/parseDate';
 
 export const getJobsByUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { userId } = req.params;
-    const userIdNum = parseInt(userId, 10);
-    if (isNaN(userIdNum)) {
+    const userIdNum = parseId(req.params.userId);
+    if (userIdNum === null) {
       res.status(400).json({ error: 'Invalid user ID' });
       return;
     }
@@ -26,20 +27,19 @@ export const createJob = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const start = new Date(startDate);
-    if (isNaN(start.getTime())) {
+    const start = parseDate(startDate);
+    if (start === null) {
       res.status(400).json({ error: 'Invalid start date' });
       return;
     }
 
     let end: Date | null = null;
     if (endDate) {
-      const parsedEnd = new Date(endDate);
-      if (isNaN(parsedEnd.getTime())) {
+      end = parseDate(endDate);
+      if (end === null) {
         res.status(400).json({ error: 'Invalid end date' });
         return;
       }
-      end = parsedEnd;
     }
 
     const jobId = await JobModel.create({
@@ -58,11 +58,56 @@ export const createJob = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+export const updateJob = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const idNum = parseId(req.params.id);
+    if (idNum === null) {
+      res.status(400).json({ error: 'Invalid job ID' });
+      return;
+    }
+
+    const { startDate, endDate, ...rest } = req.body;
+    const updates: Record<string, unknown> = { ...rest };
+
+    if (startDate !== undefined) {
+      const start = parseDate(startDate);
+      if (start === null) {
+        res.status(400).json({ error: 'Invalid start date' });
+        return;
+      }
+      updates.startDate = start;
+    }
+
+    if (endDate !== undefined) {
+      if (endDate === null) {
+        updates.endDate = null;
+      } else {
+        const end = parseDate(endDate);
+        if (end === null) {
+          res.status(400).json({ error: 'Invalid end date' });
+          return;
+        }
+        updates.endDate = end;
+      }
+    }
+
+    const updated = await JobModel.update(idNum, updates);
+    if (!updated) {
+      res.status(400).json({ error: 'No valid fields to update' });
+      return;
+    }
+
+    res.json({ message: 'Job updated successfully' });
+  } catch (error) {
+    console.error('Error updating job:', error);
+    res.status(500).json({ error: 'Failed to update job' });
+  }
+};
+
 export const deleteJob = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
-    const idNum = parseInt(id, 10);
-    if (isNaN(idNum)) {
+    const idNum = parseId(req.params.id);
+    if (idNum === null) {
       res.status(400).json({ error: 'Invalid job ID' });
       return;
     }

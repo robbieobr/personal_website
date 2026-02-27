@@ -2,6 +2,13 @@
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 
+const apiProxy = {
+  '/api': {
+    target: process.env.VITE_API_BACKEND || 'http://localhost:5000',
+    changeOrigin: true,
+  },
+};
+
 export default defineConfig({
   test: {
     globals: true,
@@ -21,26 +28,14 @@ export default defineConfig({
   },
   plugins: [react()],
   server: {
-    port: 3000,
+    port: parseInt(process.env.PORT || '5173'),
     host: '0.0.0.0',
-    proxy: {
-      '/api': {
-        target: process.env.VITE_API_BACKEND || 'http://localhost:5000',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '/api'),
-      },
-    },
+    proxy: apiProxy,
   },
   preview: {
-    port: 3000,
+    port: parseInt(process.env.PORT || '4173'),
     host: '0.0.0.0',
-    proxy: {
-      '/api': {
-        target: process.env.VITE_API_BACKEND || 'http://localhost:5000',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '/api'),
-      },
-    },
+    proxy: apiProxy,
   },
   build: {
     outDir: 'build',

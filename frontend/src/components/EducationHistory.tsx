@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { Education } from '../types/index';
+import { formatDate } from '../utils/date';
 import './EducationHistory.css';
 
 interface EducationHistoryProps {
@@ -13,13 +14,6 @@ interface EducationHistoryProps {
 
 const EducationHistory: React.FC<EducationHistoryProps> = ({ education, loading }) => {
   const { t, i18n } = useTranslation();
-
-  const formatDate = (dateString: string): string => {
-    return new Date(dateString).toLocaleDateString(i18n.language, {
-      year: 'numeric',
-      month: 'long',
-    });
-  };
 
   if (loading) {
     return (
@@ -60,7 +54,7 @@ const EducationHistory: React.FC<EducationHistoryProps> = ({ education, loading 
               {edu.field}
             </div>
             <div className="education-dates">
-              {formatDate(edu.startDate)} - {edu.endDate ? formatDate(edu.endDate) : t('educationHistory.present')}
+              {formatDate(edu.startDate, i18n.language)} - {edu.endDate ? formatDate(edu.endDate, i18n.language) : t('educationHistory.present')}
             </div>
             {edu.description && <p className="education-description">{edu.description}</p>}
           </div>

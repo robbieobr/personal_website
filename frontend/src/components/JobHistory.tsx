@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { JobEntry } from '../types/index';
+import { formatDate } from '../utils/date';
 import './JobHistory.css';
 
 interface JobHistoryProps {
@@ -13,13 +14,6 @@ interface JobHistoryProps {
 
 const JobHistory: React.FC<JobHistoryProps> = ({ jobs, loading }) => {
   const { t, i18n } = useTranslation();
-
-  const formatDate = (dateString: string): string => {
-    return new Date(dateString).toLocaleDateString(i18n.language, {
-      year: 'numeric',
-      month: 'long',
-    });
-  };
 
   if (loading) {
     return (
@@ -56,7 +50,7 @@ const JobHistory: React.FC<JobHistoryProps> = ({ jobs, loading }) => {
               <span className="company">{job.company}</span>
             </div>
             <div className="job-dates">
-              {formatDate(job.startDate)} - {job.endDate ? formatDate(job.endDate) : t('jobHistory.present')}
+              {formatDate(job.startDate, i18n.language)} - {job.endDate ? formatDate(job.endDate, i18n.language) : t('jobHistory.present')}
             </div>
             {job.description && <p className="job-description">{job.description}</p>}
           </div>
