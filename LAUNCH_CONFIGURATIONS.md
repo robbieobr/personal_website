@@ -11,7 +11,7 @@ This document describes all available ways to launch the personal website projec
 | **Full** | `docker-compose -f docker-compose.yml -f docker-compose.full.yml up -d` | Comprehensive testing | Full (3 users) |
 | **Frontend Only** | `cd frontend && npm run dev` | Frontend development | N/A |
 | **Backend Only** | `cd backend && npm run dev` | Backend API development | Requires MySQL |
-| **Mock Frontend** | `cd frontend && npm run mock` | Frontend with mock data | Mock data file |
+| **Mock Frontend** | `cd frontend && npm run mock` + `npm run dev:mock` | Frontend with mock data | Mock data file |
 
 ## 📋 Configuration Details
 
@@ -122,9 +122,9 @@ npm run dev
 ```
 
 **What starts:**
-- Vite development server on port 5173
+- Vite development server on port 5173 (default)
 - Hot module reloading enabled
-- Mock API data (if backend not running)
+- Proxies `/api` requests to backend on port 5000
 
 **Access:**
 - Frontend: http://localhost:5173
@@ -201,18 +201,22 @@ Ctrl+C in terminal
 **Best for:** Frontend development without backend, prototyping
 
 ```bash
+# Terminal 1: start the mock API server
 cd frontend
-npm install  # First time only
 npm run mock
+
+# Terminal 2: start Vite dev server pointing at mock API
+cd frontend
+npm run dev:mock
 ```
 
 **What starts:**
-- Mock server on port 3001
-- Frontend connects to mock data
+- Mock API server on port 5001 (Terminal 1)
+- Vite dev server on port 5173, proxying `/api` to mock server (Terminal 2)
 - Mock data from `frontend/mock/mockUserProfile.json`
 
 **Access:**
-- Frontend: http://localhost:3000 (if running together with npm run dev)
+- Frontend: http://localhost:5173
 - Mock API: http://localhost:5001
 
 **Advantages:**
@@ -311,7 +315,7 @@ docker-compose logs -f --tail=50
 | Backend API | 5000 | Yes | `docker-compose.yml` |
 | MySQL | 3306 | Yes | `docker-compose.yml` |
 | Vite Dev (local) | 5173 | Yes | `frontend/vite.config.ts` |
-| Mock Server | 5001 | Yes | `frontend/mock/mockServer.js` |
+| Mock Server | 5001 | Yes | `frontend/mock/mockServer.ts` |
 
 ### Change Port Example
 
@@ -463,8 +467,9 @@ cd database/scripts
 # Frontend development
 cd frontend
 npm install
-npm run dev
-npm run mock
+npm run dev          # dev server on port 5173 (proxies /api to localhost:5000)
+npm run dev:mock     # dev server on port 5173 (proxies /api to mock server on 5001)
+npm run mock         # mock API server on port 5001 (run alongside dev:mock)
 
 # Backend development
 cd backend

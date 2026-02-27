@@ -103,6 +103,27 @@ export class JobModel {
     }
   }
 
+  static async update(id: number, jobData: Partial<Pick<JobEntry, 'company' | 'position' | 'startDate' | 'endDate' | 'description'>>): Promise<boolean> {
+    const connection = await pool.getConnection();
+    try {
+      const allowedFields: (keyof JobEntry)[] = ['company', 'position', 'startDate', 'endDate', 'description'];
+      const fields = Object.keys(jobData).filter((k) => allowedFields.includes(k as keyof JobEntry));
+
+      if (fields.length === 0) {
+        return false;
+      }
+
+      const values: (string | number | Date | null)[] = fields.map((f) => jobData[f as keyof typeof jobData] ?? null) as (string | number | Date | null)[];
+      values.push(id);
+
+      const setClause = fields.map((f) => `${f} = ?`).join(', ');
+      await connection.execute(`UPDATE job_history SET ${setClause} WHERE id = ?`, values);
+      return true;
+    } finally {
+      connection.release();
+    }
+  }
+
   static async delete(id: number): Promise<boolean> {
     const connection = await pool.getConnection();
     try {
@@ -136,6 +157,27 @@ export class EducationModel {
         [educationData.userId, educationData.institution, educationData.degree, educationData.field, educationData.startDate, educationData.endDate, educationData.description]
       ) as [ResultSetHeader, FieldPacket[]];
       return result.insertId;
+    } finally {
+      connection.release();
+    }
+  }
+
+  static async update(id: number, educationData: Partial<Pick<Education, 'institution' | 'degree' | 'field' | 'startDate' | 'endDate' | 'description'>>): Promise<boolean> {
+    const connection = await pool.getConnection();
+    try {
+      const allowedFields: (keyof Education)[] = ['institution', 'degree', 'field', 'startDate', 'endDate', 'description'];
+      const fields = Object.keys(educationData).filter((k) => allowedFields.includes(k as keyof Education));
+
+      if (fields.length === 0) {
+        return false;
+      }
+
+      const values: (string | number | Date | null)[] = fields.map((f) => educationData[f as keyof typeof educationData] ?? null) as (string | number | Date | null)[];
+      values.push(id);
+
+      const setClause = fields.map((f) => `${f} = ?`).join(', ');
+      await connection.execute(`UPDATE education SET ${setClause} WHERE id = ?`, values);
+      return true;
     } finally {
       connection.release();
     }

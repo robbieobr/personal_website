@@ -22,9 +22,8 @@ export const getUserProfile = async (userId: number): Promise<UserProfile> => {
     const response = await api.get(`/users/${userId}/profile`);
     return response.data;
   } catch (error) {
-    // Never expose detailed error information to the UI
-    console.error('Error fetching user profile');
-    throw new Error('Failed to fetch user profile');
+    console.error('Error fetching user profile:', error);
+    throw new Error('Failed to fetch user profile', { cause: error });
   }
 };
 
@@ -33,7 +32,7 @@ export const getUser = async (userId: number): Promise<User> => {
     const response = await api.get(`/users/${userId}`);
     return response.data;
   } catch (error) {
-    console.error('Error fetching user');
-    throw new Error('Failed to fetch user');
+    console.error('Error fetching user:', error);
+    throw new Error('Failed to fetch user', { cause: error });
   }
 };

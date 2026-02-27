@@ -13,7 +13,7 @@ const ProfilePage: React.FC = () => {
   const { t } = useTranslation();
   const [profile, setProfile] = useState<UserProfileType | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [errorKey, setErrorKey] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -22,17 +22,17 @@ const ProfilePage: React.FC = () => {
         // Fetch profile for user ID 1 (demo user)
         const data = await getUserProfile(1);
         setProfile(data);
-        setError(null);
+        setErrorKey(null);
       } catch (err) {
         console.error('Error loading profile:', err);
-        setError(t('profilePage.error'));
+        setErrorKey('profilePage.error');
       } finally {
         setLoading(false);
       }
     };
 
     fetchProfile();
-  }, [t]);
+  }, []);
 
   if (loading) {
     return (
@@ -70,10 +70,10 @@ const ProfilePage: React.FC = () => {
     );
   }
 
-  if (error) {
+  if (errorKey) {
     return (
       <div className="profile-page">
-        <div className="error">{error}</div>
+        <div className="error">{t(errorKey)}</div>
       </div>
     );
   }

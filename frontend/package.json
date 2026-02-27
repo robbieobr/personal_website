@@ -20,7 +20,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "mock": "node ./mock/mockServer.js",
+    "mock": "tsx ./mock/mockServer.ts",
     "mock:install": "cd mock && npm install || true",
     "postinstall": "npm run mock:install"
   },
@@ -34,6 +34,7 @@
     "axios-mock-adapter": "^2.1.0",
     "cross-env": "^7.0.3",
     "jsdom": "^26.0.0",
+    "tsx": "^4.21.0",
     "vite": "^7.3.1",
     "vitest": "^4.0.18"
   },

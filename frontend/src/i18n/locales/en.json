@@ -5,7 +5,8 @@
   "profilePage": {
     "loading": "Loading profile...",
     "error": "Failed to load profile. Please make sure the backend is running.",
-    "noData": "No profile data available"
+    "noData": "No profile data available",
+    "downloadCV": "Download CV"
   },
   "userProfile": {
     "email": "Email:",

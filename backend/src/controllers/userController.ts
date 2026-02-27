@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
 import { UserModel, JobModel, EducationModel } from '../models/index';
+import { parseId } from '../utils/parseId';
 
 export const getUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
-    const userId = parseInt(id, 10);
-    if (isNaN(userId)) {
+    const userId = parseId(req.params.id);
+    if (userId === null) {
       res.status(400).json({ error: 'Invalid user ID' });
       return;
     }
@@ -35,9 +35,8 @@ export const getAllUsers = async (req: Request, res: Response): Promise<void> =>
 
 export const getUserProfile = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
-    const userId = parseInt(id, 10);
-    if (isNaN(userId)) {
+    const userId = parseId(req.params.id);
+    if (userId === null) {
       res.status(400).json({ error: 'Invalid user ID' });
       return;
     }
@@ -71,13 +70,13 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
       return;
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailRegex.test(email)) {
       res.status(400).json({ error: 'Invalid email format' });
       return;
     }
 
-    const phoneRegex = /^[0-9+\-\s()]{7,20}$/;
+    const phoneRegex = /^\+?[0-9][0-9\s\-().]{5,19}$/;
     if (!phoneRegex.test(phone)) {
       res.status(400).json({ error: 'Invalid phone format' });
       return;
@@ -100,9 +99,8 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
 
 export const updateUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
-    const userId = parseInt(id, 10);
-    if (isNaN(userId)) {
+    const userId = parseId(req.params.id);
+    if (userId === null) {
       res.status(400).json({ error: 'Invalid user ID' });
       return;
     }
@@ -123,9 +121,8 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
 
 export const deleteUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
-    const userId = parseInt(id, 10);
-    if (isNaN(userId)) {
+    const userId = parseId(req.params.id);
+    if (userId === null) {
       res.status(400).json({ error: 'Invalid user ID' });
       return;
     }
