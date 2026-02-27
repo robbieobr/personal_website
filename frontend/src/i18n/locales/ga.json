@@ -5,7 +5,8 @@
   "profilePage": {
     "loading": "Ag luchtú próifíle...",
     "error": "Theip ar an bpróifíl a luchtú. Cinntigh go bhfuil an cúl-deireadh ag rith.",
-    "noData": "Níl sonraí próifíle ar fáil"
+    "noData": "Níl sonraí próifíle ar fáil",
+    "downloadCV": "CV a Íoslódáil"
   },
   "userProfile": {
     "email": "Ríomhphost:",

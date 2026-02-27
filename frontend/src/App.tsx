@@ -16,16 +16,21 @@ const App: React.FC = () => {
         <h1>
           <a href="/" className="App-header-link">{t('app.title')}</a>
         </h1>
-        <div className="language-switcher">
-          <select
-            value={i18n.language}
-            onChange={handleLanguageChange}
-            aria-label="Select language"
-            className="language-select"
-          >
-            <option value="en">English</option>
-            <option value="ga">Gaeilge</option>
-          </select>
+        <div className="header-actions">
+          <button className="download-btn" onClick={() => window.print()}>
+            {t('profilePage.downloadCV')}
+          </button>
+          <div className="language-switcher">
+            <select
+              value={i18n.language}
+              onChange={handleLanguageChange}
+              aria-label="Select language"
+              className="language-select"
+            >
+              <option value="en">English</option>
+              <option value="ga">Gaeilge</option>
+            </select>
+          </div>
         </div>
       </header>
       <main>
