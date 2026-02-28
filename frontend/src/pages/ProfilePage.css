@@ -1,30 +1,42 @@
 .profile-page {
   min-height: 100vh;
-  background-image:
-    linear-gradient(to right, transparent 0%, var(--color-navy) calc(50% - 450px), var(--color-navy) calc(50% + 450px), transparent 100%),
-    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg"><defs><pattern id="a" width="29" height="50.115" patternTransform="scale(2)" patternUnits="userSpaceOnUse"><rect width="100%25" height="100%25" fill="%23003d5b"/><path fill="none" stroke="%23119da4" stroke-linecap="square" stroke-opacity=".69" d="M14.499 11.82 4.36 5.968l.002-11.706 10.14-5.855L24.638-5.74l-.001 11.707zm0 50.06L4.36 56.029l.002-11.706 10.14-5.855 10.137 5.852-.001 11.707zm14.498-25.117L18.858 30.91l.002-11.707L29 13.349l10.137 5.853-.001 11.706zm-29 0-10.139-5.852.002-11.707L0 13.349l10.138 5.853-.002 11.706zm14.501-19.905L0 8.488.002-8.257l14.5-8.374L29-8.26l-.002 16.745zm0 50.06L0 58.548l.002-16.745 14.5-8.373L29 41.8l-.002 16.744zM28.996 41.8l-14.498-8.37.002-16.744L29 8.312l14.498 8.37-.002 16.745zm-29 0-14.498-8.37.002-16.744L0 8.312l14.498 8.37-.002 16.745z"/></pattern></defs><rect width="800%25" height="800%25" fill="url(%23a)"/></svg>');
-  background-attachment: fixed;
-  background-repeat: repeat;
-  padding: 2rem 1rem;
+  background-color: var(--color-background);
+  padding: 2.5rem 1.5rem;
 }
 
 .container {
-  max-width: 1200px;
+  max-width: 1100px;
   margin: 0 auto;
 }
 
-.profile-skeleton-container {
-  background: linear-gradient(135deg, var(--color-navy) 0%, #0a5f6a 100%);
-  border: 2px solid var(--color-teal);
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-  margin-bottom: 2rem;
-  display: flex;
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr 300px;
   gap: 2.5rem;
+  margin-top: 2.5rem;
+  align-items: start;
+}
+
+.main-column {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.sidebar-column {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Loading skeletons */
+.profile-skeleton-container {
+  background: var(--color-navy);
+  padding: 2.5rem 3rem;
+  border-radius: 12px;
+  display: flex;
+  gap: 2rem;
   align-items: flex-start;
-  padding-bottom: 2rem;
-  border-bottom: 3px solid var(--color-teal-bright);
 }
 
 .profile-skeleton-image {
@@ -42,35 +54,24 @@
 }
 
 .history-skeleton-card {
-  background: white;
+  background: var(--color-surface);
   padding: 1.5rem;
   border-radius: 8px;
-  border-left: 4px solid var(--color-teal);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  flex: 1;
-}
-
-.history-section {
-  display: flex;
-  gap: 2rem;
-}
-
-.history-section > * {
-  flex: 1;
+  border: 1px solid var(--color-border);
 }
 
 .loading,
 .error {
-  background: white;
+  background: var(--color-surface);
   padding: 2rem;
   border-radius: 8px;
   text-align: center;
-  font-size: 1.1rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  font-size: 1rem;
+  border: 1px solid var(--color-border);
 }
 
 .loading {
-  color: #666;
+  color: var(--color-text-muted);
 }
 
 .error {
@@ -78,29 +79,32 @@
   border-left: 4px solid var(--color-error);
 }
 
-@media (max-width: 768px) {
-  .profile-page {
-    padding: 1rem;
+@media (max-width: 900px) {
+  .content-grid {
+    grid-template-columns: 1fr;
   }
+}
 
-  .history-section {
-    flex-direction: column;
+@media (max-width: 600px) {
+  .profile-page {
+    padding: 1.5rem 1rem;
   }
 }
 
 @media print {
   :root {
     --print-bg: #ffffff;
-    --print-text: #081a23;
-    --print-accent: #119da4;
-    --print-strong: #003d5b;
+    --print-text: #0d1f36;
+    --print-accent: #0a9ba4;
+    --print-strong: #0d1f36;
   }
 
-  /* Keep high-contrast themed colors for print while removing visual chrome */
   body,
   .profile-page {
     background: var(--print-bg) !important;
     color: var(--print-text) !important;
+    padding: 0 !important;
+    min-height: 0 !important;
   }
 
   * {
@@ -115,7 +119,6 @@
     padding: 0;
   }
 
-  /* Remove default page margins to allow content to use space efficiently */
   html, body {
     margin: 0 !important;
     padding: 0 !important;
@@ -126,70 +129,41 @@
     text-decoration: underline !important;
   }
 
-  .history-section {
-    display: block;
-    page-break-inside: avoid;
+  .content-grid {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: flex-start !important;
+    gap: 1.25rem !important;
+    margin-top: 0.75rem !important;
   }
 
-  .history-section > * {
-    page-break-inside: avoid;
-    margin-bottom: 1rem;
+  .main-column {
+    display: flex !important;
+    flex-direction: column;
+    flex: 1 !important;
+    gap: 0 !important;
   }
 
-  /* Hide interactive elements */
+  .sidebar-column {
+    display: flex !important;
+    flex-direction: column;
+    width: 200px !important;
+    flex-shrink: 0 !important;
+    gap: 0 !important;
+  }
+
   button,
   [role="button"] {
     display: none !important;
   }
 
-  /* Preserve themed headers and add clear borders for print */
-  .profile-header,
-  .user-profile .title {
-    color: var(--print-strong) !important;
-    background: transparent !important;
-  }
-
-  /* Reduce header and image sizes for A4 print */
-  .profile-header {
-    padding: 12px 8px !important;
-  }
-
-  .profile-header .profile-image,
-  .profile-image {
-    width: 72px !important;
-    height: 72px !important;
-  }
-
-  .profile-header .profile-info,
-  .user-profile .contact-info {
-    font-size: 12pt !important;
-  }
-
-  /* Prevent page breaks inside key sections */
   .user-profile,
   .job-history,
-  .education-history,
-  .resume {
+  .education-history {
     page-break-inside: avoid;
   }
 
-  /* Tighten vertical spacing before history so it appears directly below profile */
   .user-profile {
-    margin-bottom: 0.4rem !important;
-  }
-
-  .history-section {
-    margin-top: 0 !important;
-    padding-top: 0 !important;
-  }
-
-  /* Make borders visible and simple for print */
-  .card,
-  .user-profile,
-  .job-entry,
-  .education-entry,
-  .resume-section {
-    border: 1px solid var(--print-strong) !important;
-    background: transparent !important;
+    margin-bottom: 0.5rem !important;
   }
 }

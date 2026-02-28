@@ -1,65 +1,89 @@
-.skills {
-  margin: 2rem 0;
-}
-
+/* Section heading: "SKILLS ——————" */
 .skills h2 {
-  display: inline-block;
-  color: #ffffff;
-  background: rgba(0, 61, 91, 0.55);
-  border: 1px solid rgba(17, 157, 164, 0.45);
-  padding: 0.4rem 1rem;
-  border-radius: 4px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  font-size: 0.8rem;
-  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
   font-family: var(--font-body);
-  margin-bottom: 1.5rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-teal);
+  background: none;
+  border: none;
+  padding: 0;
+  border-radius: 0;
 }
 
+.skills h2::after {
+  content: '';
+  flex: 1;
+  display: block;
+  height: 1px;
+  background: var(--color-border);
+}
+
+/* Tag cloud */
 .skills-list {
-  background: white;
-  padding: 1.25rem 1.5rem 1.25rem 2.5rem;
-  border-radius: 8px;
-  border-left: 4px solid var(--color-teal);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  list-style: none;
+  padding: 0;
   margin: 0;
-  list-style: disc;
+  background: none;
+  border: none;
+  box-shadow: none;
 }
 
 .skill-item {
-  color: #333;
-  font-size: 0.95rem;
-  line-height: 1.8;
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
+  padding: 0.3rem 0.75rem;
+  border-radius: 100px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  line-height: normal;
+  transition: border-color 0.2s ease, color 0.2s ease;
+  cursor: default;
+}
+
+.skill-item:hover {
+  border-color: var(--color-teal);
+  color: var(--color-teal);
 }
 
 @media print {
   .skills {
-    margin: 1.5rem 0 1rem 0;
+    margin: 1rem 0 0.75rem 0;
   }
 
   .skills h2 {
     color: var(--color-navy) !important;
-    background: transparent !important;
-    border: none !important;
-    border-bottom: 2px solid var(--color-teal) !important;
-    border-radius: 0;
-    padding: 0 0 0.4rem 0;
-    margin-bottom: 0.8rem;
-    font-size: 1.1rem;
-    letter-spacing: 0;
-    text-transform: none;
+    margin-bottom: 0.75rem;
+    font-size: 0.82rem;
+  }
+
+  .skills h2::after {
+    background: var(--color-teal) !important;
   }
 
   .skills-list {
-    background: transparent !important;
-    border-left: none !important;
-    box-shadow: none !important;
-    padding: 0 0 0 1.5rem;
+    display: block !important;
+    list-style: disc !important;
+    padding-left: 1.1rem !important;
   }
 
   .skill-item {
+    display: list-item !important;
+    border: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
     color: #333 !important;
-    font-size: 0.8rem;
+    font-size: 0.78rem;
+    margin-bottom: 0.1rem;
   }
 }
