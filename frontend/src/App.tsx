@@ -14,7 +14,7 @@ const App: React.FC = () => {
     <div className="App">
       <header className="App-header">
         <h1>
-          <a href="/" className="App-header-link">{t('app.title')}</a>
+          <a href="/" className="App-header-link">{(import.meta.env.PROD && import.meta.env.VITE_APP_URL) || t('app.title')}</a>
         </h1>
         <div className="header-actions">
           <button className="download-btn" onClick={() => window.print()}>

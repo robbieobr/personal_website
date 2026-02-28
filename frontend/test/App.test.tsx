@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { screen, fireEvent } from '@testing-library/react';
 import App from '../src/App';
 import { renderWithProviders } from './utils';
@@ -41,5 +41,24 @@ describe('App', () => {
     renderWithProviders(<App />);
     const link = screen.getByRole('link', { name: 'My Portfolio' });
     expect(link).toHaveAttribute('href', '/');
+  });
+
+  describe('in production mode', () => {
+    afterEach(() => {
+      vi.unstubAllEnvs();
+    });
+
+    it('shows the production URL as header text', () => {
+      vi.stubEnv('PROD', true);
+      vi.stubEnv('VITE_APP_URL', 'https://example.com');
+      renderWithProviders(<App />);
+      expect(screen.getByText('https://example.com')).toBeInTheDocument();
+    });
+
+    it('falls back to the app title when VITE_APP_URL is not set', () => {
+      vi.stubEnv('PROD', true);
+      renderWithProviders(<App />);
+      expect(screen.getByText('My Portfolio')).toBeInTheDocument();
+    });
   });
 });

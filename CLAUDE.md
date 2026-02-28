@@ -56,6 +56,7 @@ personal_website/
 - **Services:** `src/services/api.ts` — Axios client (10s timeout), proxied via Vite to `/api` → `http://localhost:5000`
 - **Types:** `src/types/index.ts` — shared TypeScript interfaces (User, JobEntry, Education, UserProfile)
 - **i18n:** `src/i18n/` — react-i18next config, English (`en`) and Irish Gaeilge (`ga`) locales
+- **Header URL:** In production builds (`npm run build`), the header link text shows `VITE_APP_URL` from `frontend/.env.production`. In development it shows the i18n app title. See `frontend/.env.production.example`.
 
 Loading states use `react-loading-skeleton`. Language switcher is in `App.tsx`.
 
