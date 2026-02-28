@@ -1,0 +1,55 @@
+# Production overlay — use with:
+# docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+
+services:
+  caddy:
+    image: caddy:2-alpine
+    container_name: personal_website_caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"     # HTTP/3 (QUIC)
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - personal_website_network
+    depends_on:
+      - frontend
+
+  mysql:
+    ports: !reset []       # Do not expose MySQL to the host
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/prod-initdb.d:/docker-entrypoint-initdb.d  # Migrations + prod seed + readonly user
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: personal_website
+      DB_READONLY_USER: ${DB_READONLY_USER:-webapp}
+      DB_READONLY_PASSWORD: ${DB_READONLY_PASSWORD}
+
+  backend:
+    build:
+      target: production   # Use the production multi-stage build target
+    command: node dist/index.js
+    restart: unless-stopped
+    ports: !reset []       # Not exposed directly; only reachable within Docker network
+    volumes: !reset []     # No source code mounting in production
+    environment:
+      NODE_ENV: production
+      DB_USER: ${DB_READONLY_USER:-webapp}
+      DB_PASSWORD: ${DB_READONLY_PASSWORD}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS}
+
+  frontend:
+    build:
+      target: production   # nginx-based production image
+    restart: unless-stopped
+    ports: !reset []       # Not exposed directly; Caddy proxies to it
+    volumes: !reset []     # No source code mounting in production
+
+volumes:
+  caddy_data:
+  caddy_config:

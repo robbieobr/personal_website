@@ -28,7 +28,12 @@ database/
 │   ├── init.sh        # Initialize database with specified seed type
 │   └── reset.sh       # Reset the database to clean state
 │
-├── docker-entrypoint-initdb.d/  # Files used by Docker MySQL initialization
+├── docker-entrypoint-initdb.d/  # Files used by Docker MySQL initialization (dev)
+│
+├── prod-initdb.d/       # Files used by production Docker init (gitignored seed)
+│   ├── 001-004_*.sql   # Migration copies
+│   ├── 500_prod_seed.sql.example  # Template — copy to 500_prod_seed.sql and fill in
+│   └── 900_readonly_user.sh       # Creates read-only MySQL user for the backend
 │
 ├── init/                # Pre-combined init directories for compose override files
 │   ├── minimal/        # Migrations + minimal seed
@@ -48,7 +53,7 @@ The default configuration uses the **default seed dataset** with:
 To start with default configuration:
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 ## Seed Datasets
@@ -87,17 +92,17 @@ migrations and the appropriate seed data:
 
 Default dataset (already loaded):
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 Minimal dataset:
 ```bash
-docker-compose -f docker-compose.yml -f docker-compose.minimal.yml up -d
+docker compose -f docker-compose.yml -f docker-compose.minimal.yml up -d
 ```
 
 Full dataset:
 ```bash
-docker-compose -f docker-compose.yml -f docker-compose.full.yml up -d
+docker compose -f docker-compose.yml -f docker-compose.full.yml up -d
 ```
 
 Note: The MySQL data volume must be fresh (or reset) for initialization to take effect.
@@ -112,7 +117,7 @@ cd database/scripts
 
 Then start or restart Docker:
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 Note: The volume must be fresh for initialization to work. See "Resetting the Database" section below.
@@ -134,7 +139,7 @@ This will:
 After reset, to reinitialize with a specific seed:
 ```bash
 ./init.sh [seed_type]  # seed_type: default, minimal, or full
-docker-compose up -d
+docker compose up -d
 ```
 
 ## Adding New Migrations
@@ -177,7 +182,7 @@ To create a new seed dataset (e.g., `staging`):
    cp seeds/staging/003_education.sql init/staging/007_education.sql
    ```
 
-5. Create a corresponding docker-compose override file (optional):
+5. Create a corresponding docker compose override file (optional):
    ```yaml
    # docker-compose.staging.yml
    services:
@@ -191,7 +196,7 @@ To create a new seed dataset (e.g., `staging`):
 
 ### How It Works
 
-1. When `docker-compose up` is executed, Docker mounts the specified volumes to `/docker-entrypoint-initdb.d/` in the MySQL container
+1. When `docker compose up` is executed, Docker mounts the specified volumes to `/docker-entrypoint-initdb.d/` in the MySQL container
 
 2. The MySQL Docker image automatically executes all `.sql` files in `/docker-entrypoint-initdb.d/` in alphabetical order
 
@@ -242,7 +247,7 @@ The MySQL Docker volume persists data. You must reset before changes take effect
 ```bash
 ./scripts/reset.sh
 ./scripts/init.sh [seed_type]
-docker-compose up -d
+docker compose up -d
 ```
 
 ### Volume name mismatch

@@ -1,0 +1,21 @@
+-- Production seed data template
+-- Copy this file to 500_prod_seed.sql and fill in your real details.
+-- 500_prod_seed.sql is gitignored and must never be committed.
+
+USE personal_website;
+
+-- One row per person on the site
+INSERT INTO users (name, title, email, phone, profileImage, bio) VALUES
+('Your Name', 'Your Title', 'you@example.com', '+1 (555) 000-0000',
+ '/images/your-profile.png',
+ 'A short bio about yourself.');
+
+-- Job history — userId references the id assigned above (usually 1 for the first insert)
+-- endDate is NULL for a current role
+INSERT INTO job_history (userId, company, position, startDate, endDate, description) VALUES
+(1, 'Current Company', 'Current Role', '2022-01-01', NULL,       'What you do there.'),
+(1, 'Previous Company', 'Previous Role', '2019-06-01', '2021-12-31', 'What you did there.');
+
+-- Education — same userId convention
+INSERT INTO education (userId, institution, degree, field, startDate, endDate, description) VALUES
+(1, 'Your University', 'Bachelor of Science', 'Your Field', '2015-09-01', '2019-05-31', 'Any notes about your degree.');

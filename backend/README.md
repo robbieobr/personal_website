@@ -59,7 +59,7 @@ The backend is automatically built and started with Docker Compose:
 
 ```bash
 cd ..
-docker-compose up -d
+docker compose up -d
 ```
 
 Access at http://localhost:5000
@@ -132,25 +132,18 @@ Access at http://localhost:5000
 | GET | `/api/users` | Get all users |
 | GET | `/api/users/:id` | Get specific user by ID |
 | GET | `/api/users/:id/profile` | Get user with full job and education history |
-| POST | `/api/users` | Create a new user |
-| PUT | `/api/users/:id` | Update an existing user |
-| DELETE | `/api/users/:id` | Delete a user |
 
 ### Jobs
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | GET | `/api/jobs/user/:userId` | Get jobs for specific user |
-| POST | `/api/jobs` | Create a new job record |
-| DELETE | `/api/jobs/:id` | Delete a job record |
 
 ### Education
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | GET | `/api/education/user/:userId` | Get education records for specific user |
-| POST | `/api/education` | Create a new education record |
-| DELETE | `/api/education/:id` | Delete an education record |
 
 ## 🗄️ Database Connection
 
@@ -255,7 +248,7 @@ docker run \
 - **Builder Stage:** Installs all dependencies, compiles TypeScript to JavaScript
 - **Production Stage:** Installs only runtime dependencies (no devDependencies), runs compiled JS
 - **Port:** 5000
-- **Hot Reload:** Uses tsx watch when running with docker-compose (builder stage with `npm run dev`)
+- **Hot Reload:** Uses tsx watch when running with docker compose (builder stage with `npm run dev`)
 
 ## 🔧 Troubleshooting
 
@@ -369,17 +362,14 @@ router.get('/', async (req: Request, res: Response) => {
 
 ## 🚢 Production Deployment
 
-1. **Build:**
-   ```bash
-   npm run build
-   ```
+Production runs via the Docker Compose production overlay, which uses the `production` build target in the Dockerfile (compiled JS, no devDependencies, no source mounts) and connects to MySQL with a read-only user.
 
-2. **Set environment variables** for production
+```bash
+# From the project root
+docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+```
 
-3. **Run:**
-   ```bash
-   npm start
-   ```
+See the project root `TODO.md` for the full pre-deployment checklist and `.env.prod.example` for the required environment variables.
 
 ## 📚 Additional Resources
 

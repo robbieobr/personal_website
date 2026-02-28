@@ -7,9 +7,6 @@ vi.mock('../../src/models/index', () => ({
   UserModel: {
     findById: vi.fn(),
     findAll: vi.fn(),
-    create: vi.fn(),
-    update: vi.fn(),
-    delete: vi.fn(),
   },
   JobModel: {
     findByUserId: vi.fn(),
@@ -28,7 +25,7 @@ const buildApp = async () => {
 };
 
 describe('userRoutes', () => {
-  let UserModel: { findById: ReturnType<typeof vi.fn>; findAll: ReturnType<typeof vi.fn>; create: ReturnType<typeof vi.fn>; update: ReturnType<typeof vi.fn>; delete: ReturnType<typeof vi.fn> };
+  let UserModel: { findById: ReturnType<typeof vi.fn>; findAll: ReturnType<typeof vi.fn> };
   let JobModel: { findByUserId: ReturnType<typeof vi.fn> };
   let EducationModel: { findByUserId: ReturnType<typeof vi.fn> };
 
@@ -79,47 +76,6 @@ describe('userRoutes', () => {
       expect(res.body).toHaveProperty('user');
       expect(res.body).toHaveProperty('jobHistory');
       expect(res.body).toHaveProperty('education');
-    });
-  });
-
-  describe('POST /api/users', () => {
-    it('responds with 201 and the new user id', async () => {
-      UserModel.create.mockResolvedValue(42);
-      const app = await buildApp();
-      const res = await request(app).post('/api/users').send({
-        name: 'Jane Doe',
-        title: 'Engineer',
-        email: 'jane@example.com',
-        phone: '+1-555-123-4567',
-      });
-      expect(res.status).toBe(201);
-      expect(res.body.id).toBe(42);
-    });
-
-    it('responds with 400 when required fields are missing', async () => {
-      const app = await buildApp();
-      const res = await request(app).post('/api/users').send({ name: 'Jane' });
-      expect(res.status).toBe(400);
-    });
-  });
-
-  describe('PUT /api/users/:id', () => {
-    it('responds with 200 when user is updated', async () => {
-      UserModel.findById.mockResolvedValue(mockUser);
-      UserModel.update.mockResolvedValue(true);
-      const app = await buildApp();
-      const res = await request(app).put('/api/users/1').send({ name: 'Updated' });
-      expect(res.status).toBe(200);
-    });
-  });
-
-  describe('DELETE /api/users/:id', () => {
-    it('responds with 200 when user is deleted', async () => {
-      UserModel.findById.mockResolvedValue(mockUser);
-      UserModel.delete.mockResolvedValue(true);
-      const app = await buildApp();
-      const res = await request(app).delete('/api/users/1');
-      expect(res.status).toBe(200);
     });
   });
 });

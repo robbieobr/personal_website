@@ -6,9 +6,10 @@ This document describes all available ways to launch the personal website projec
 
 | Configuration | Command | Use Case | Database Seed |
 |---|---|---|---|
-| **Default** | `docker-compose up -d` | General development | Default (1 user) |
-| **Minimal** | `docker-compose -f docker-compose.yml -f docker-compose.minimal.yml up -d` | UI testing with minimal data | Minimal (1 user) |
-| **Full** | `docker-compose -f docker-compose.yml -f docker-compose.full.yml up -d` | Comprehensive testing | Full (3 users) |
+| **Default** | `docker compose up -d` | General development | Default (1 user) |
+| **Minimal** | `docker compose -f docker-compose.yml -f docker-compose.minimal.yml up -d` | UI testing with minimal data | Minimal (1 user) |
+| **Full** | `docker compose -f docker-compose.yml -f docker-compose.full.yml up -d` | Comprehensive testing | Full (3 users) |
+| **Production** | `docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build` | Production deployment | User-provided prod seed |
 | **Frontend Only** | `cd frontend && npm run dev` | Frontend development | N/A |
 | **Backend Only** | `cd backend && npm run dev` | Backend API development | Requires MySQL |
 | **Mock Frontend** | `cd frontend && npm run mock` + `npm run dev:mock` | Frontend with mock data | Mock data file |
@@ -20,7 +21,7 @@ This document describes all available ways to launch the personal website projec
 **Best for:** General development, testing features
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 **What starts:**
@@ -40,7 +41,7 @@ docker-compose up -d
 
 **Stop:**
 ```bash
-docker-compose down
+docker compose down
 ```
 
 ---
@@ -50,7 +51,7 @@ docker-compose down
 **Best for:** Testing UI with minimal data, edge cases
 
 ```bash
-docker-compose -f docker-compose.yml -f docker-compose.minimal.yml up -d
+docker compose -f docker-compose.yml -f docker-compose.minimal.yml up -d
 ```
 
 **What starts:**
@@ -71,7 +72,7 @@ docker-compose -f docker-compose.yml -f docker-compose.minimal.yml up -d
 
 **Stop:**
 ```bash
-docker-compose -f docker-compose.yml -f docker-compose.minimal.yml down
+docker compose -f docker-compose.yml -f docker-compose.minimal.yml down
 ```
 
 ---
@@ -81,7 +82,7 @@ docker-compose -f docker-compose.yml -f docker-compose.minimal.yml down
 **Best for:** Comprehensive testing, demo, extensive data testing
 
 ```bash
-docker-compose -f docker-compose.yml -f docker-compose.full.yml up -d
+docker compose -f docker-compose.yml -f docker-compose.full.yml up -d
 ```
 
 **What starts:**
@@ -106,12 +107,35 @@ docker-compose -f docker-compose.yml -f docker-compose.full.yml up -d
 
 **Stop:**
 ```bash
-docker-compose -f docker-compose.yml -f docker-compose.full.yml down
+docker compose -f docker-compose.yml -f docker-compose.full.yml down
 ```
 
 ---
 
-### 4. Frontend Only Development
+### 4. Production Deployment
+
+**Best for:** Hosting on a public server with HTTPS
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+```
+
+**Prerequisites:** See `TODO.md` for the full checklist (domain, `.env`, prod seed file).
+
+**What starts:**
+- Caddy (ports 80/443) — automatic HTTPS via Let's Encrypt, HTTP→HTTPS redirect
+- Frontend nginx (internal only)
+- Backend (internal only, read-only DB user)
+- MySQL (internal only, not exposed to host)
+
+**Stop:**
+```bash
+docker compose -f docker-compose.yml -f docker-compose.prod.yml down
+```
+
+---
+
+### 5. Frontend Only Development
 
 **Best for:** Frontend component development, styling
 
@@ -141,7 +165,7 @@ Ctrl+C in terminal
 
 ---
 
-### 5. Backend Only Development
+### 6. Backend Only Development
 
 **Best for:** API development, testing routes
 
@@ -167,8 +191,9 @@ npm run dev
 ```bash
 curl http://localhost:5000/api/users
 curl http://localhost:5000/api/users/1
-curl http://localhost:5000/api/jobs
-curl http://localhost:5000/api/education
+curl http://localhost:5000/api/users/1/profile
+curl http://localhost:5000/api/jobs/user/1
+curl http://localhost:5000/api/education/user/1
 ```
 
 **Setup MySQL for local backend development:**
@@ -196,7 +221,7 @@ Ctrl+C in terminal
 
 ---
 
-### 6. Frontend with Mock Server
+### 7. Frontend with Mock Server
 
 **Best for:** Frontend development without backend, prototyping
 
@@ -255,7 +280,7 @@ This will:
 Then reinitialize with desired seed:
 ```bash
 ./init.sh [seed_type]  # seed_type: default, minimal, or full
-docker-compose up -d
+docker compose up -d
 ```
 
 ### Clean Docker System
@@ -263,7 +288,7 @@ docker-compose up -d
 To remove all containers and volumes (complete cleanup):
 
 ```bash
-docker-compose down -v
+docker compose down -v
 docker system prune -a --volumes
 ```
 
@@ -273,24 +298,24 @@ docker system prune -a --volumes
 
 ### All Services
 ```bash
-docker-compose logs -f
+docker compose logs -f
 ```
 
 ### Specific Service
 ```bash
 # Frontend
-docker-compose logs -f frontend
+docker compose logs -f frontend
 
 # Backend
-docker-compose logs -f backend
+docker compose logs -f backend
 
 # MySQL
-docker-compose logs -f mysql
+docker compose logs -f mysql
 ```
 
 ### Follow live logs
 ```bash
-docker-compose logs -f --tail=50
+docker compose logs -f --tail=50
 ```
 
 ---
@@ -335,9 +360,9 @@ services:
 
 **Containers won't start:**
 ```bash
-docker-compose logs
-docker-compose down
-docker-compose up -d --build
+docker compose logs
+docker compose down
+docker compose up -d --build
 ```
 
 **Port already in use:**
@@ -356,7 +381,7 @@ kill -9 <PID>
 cd database/scripts
 ./reset.sh
 ./init.sh default
-docker-compose up -d
+docker compose up -d
 ```
 
 ### Local Development Issues
@@ -447,17 +472,17 @@ For production deployment, consider:
 
 ```bash
 # Start services
-docker-compose up -d
-docker-compose -f docker-compose.yml -f docker-compose.minimal.yml up -d
-docker-compose -f docker-compose.yml -f docker-compose.full.yml up -d
+docker compose up -d
+docker compose -f docker-compose.yml -f docker-compose.minimal.yml up -d
+docker compose -f docker-compose.yml -f docker-compose.full.yml up -d
 
 # Stop services
-docker-compose down
-docker-compose down -v  # With volume cleanup
+docker compose down
+docker compose down -v  # With volume cleanup
 
 # View status
-docker-compose ps
-docker-compose logs -f
+docker compose ps
+docker compose logs -f
 
 # Database operations
 cd database/scripts
@@ -489,7 +514,7 @@ docker exec -it <container-name> bash
 ### Workflow 1: Full Feature Development
 ```bash
 # Terminal 1: Start full stack
-docker-compose up -d
+docker compose up -d
 
 # Terminal 2: Frontend development
 cd frontend
@@ -501,7 +526,7 @@ npm run dev
 ### Workflow 2: Backend API Development
 ```bash
 # Terminal 1: Start MySQL and frontend mock
-docker-compose up -d mysql
+docker compose up -d mysql
 cd frontend
 npm run mock
 
@@ -523,19 +548,19 @@ cd database/scripts
 ./init.sh default
 
 # Restart containers
-docker-compose up -d
+docker compose up -d
 ```
 
 ### Workflow 4: Testing UI Variations
 ```bash
 # Test with minimal data
-docker-compose -f docker-compose.yml -f docker-compose.minimal.yml up -d
+docker compose -f docker-compose.yml -f docker-compose.minimal.yml up -d
 # Make UI adjustments...
 
 # Reset and test with full data
 cd database/scripts
 ./reset.sh
 ./init.sh full
-docker-compose up -d
+docker compose up -d
 # Verify with more data...
 ```
