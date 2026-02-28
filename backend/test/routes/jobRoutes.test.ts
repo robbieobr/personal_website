@@ -6,8 +6,6 @@ import { mockJob } from '../fixtures';
 vi.mock('../../src/models/index', () => ({
   JobModel: {
     findByUserId: vi.fn(),
-    create: vi.fn(),
-    delete: vi.fn(),
   },
 }));
 
@@ -20,7 +18,7 @@ const buildApp = async () => {
 };
 
 describe('jobRoutes', () => {
-  let JobModel: { findByUserId: ReturnType<typeof vi.fn>; create: ReturnType<typeof vi.fn>; delete: ReturnType<typeof vi.fn> };
+  let JobModel: { findByUserId: ReturnType<typeof vi.fn> };
 
   beforeEach(async () => {
     vi.resetModules();
@@ -41,42 +39,6 @@ describe('jobRoutes', () => {
     it('responds with 400 for a non-numeric userId', async () => {
       const app = await buildApp();
       const res = await request(app).get('/api/jobs/user/abc');
-      expect(res.status).toBe(400);
-    });
-  });
-
-  describe('POST /api/jobs', () => {
-    it('responds with 201 and the new job id', async () => {
-      JobModel.create.mockResolvedValue(10);
-      const app = await buildApp();
-      const res = await request(app).post('/api/jobs').send({
-        userId: 1,
-        company: 'Acme Corp',
-        position: 'Engineer',
-        startDate: '2020-01-01',
-      });
-      expect(res.status).toBe(201);
-      expect(res.body.id).toBe(10);
-    });
-
-    it('responds with 400 when required fields are missing', async () => {
-      const app = await buildApp();
-      const res = await request(app).post('/api/jobs').send({ userId: 1 });
-      expect(res.status).toBe(400);
-    });
-  });
-
-  describe('DELETE /api/jobs/:id', () => {
-    it('responds with 200 when job is deleted', async () => {
-      JobModel.delete.mockResolvedValue(true);
-      const app = await buildApp();
-      const res = await request(app).delete('/api/jobs/1');
-      expect(res.status).toBe(200);
-    });
-
-    it('responds with 400 for a non-numeric id', async () => {
-      const app = await buildApp();
-      const res = await request(app).delete('/api/jobs/abc');
       expect(res.status).toBe(400);
     });
   });

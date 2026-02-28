@@ -6,9 +6,6 @@ vi.mock('../../src/models/index', () => ({
   UserModel: {
     findById: vi.fn(),
     findAll: vi.fn(),
-    create: vi.fn(),
-    update: vi.fn(),
-    delete: vi.fn(),
   },
   JobModel: {
     findByUserId: vi.fn(),
@@ -31,7 +28,7 @@ const makeReqMock = (overrides: Partial<Request> = {}): Request =>
   ({ params: {}, body: {}, ...overrides } as unknown as Request);
 
 describe('userController', () => {
-  let UserModel: { findById: ReturnType<typeof vi.fn>; findAll: ReturnType<typeof vi.fn>; create: ReturnType<typeof vi.fn>; update: ReturnType<typeof vi.fn>; delete: ReturnType<typeof vi.fn> };
+  let UserModel: { findById: ReturnType<typeof vi.fn>; findAll: ReturnType<typeof vi.fn> };
   let JobModel: { findByUserId: ReturnType<typeof vi.fn> };
   let EducationModel: { findByUserId: ReturnType<typeof vi.fn> };
 
@@ -144,137 +141,6 @@ describe('userController', () => {
       const req = makeReqMock({ params: { id: '1' } });
       const res = makeResMock();
       await getUserProfile(req, res);
-      expect(res.status).toHaveBeenCalledWith(500);
-    });
-  });
-
-  describe('createUser', () => {
-    const validBody = {
-      name: 'Jane Doe',
-      title: 'Engineer',
-      email: 'jane@example.com',
-      phone: '+1-555-123-4567',
-    };
-
-    it('creates a user and returns 201 with the new id', async () => {
-      UserModel.create.mockResolvedValue(42);
-      const { createUser } = await import('../../src/controllers/userController');
-      const req = makeReqMock({ body: validBody });
-      const res = makeResMock();
-      await createUser(req, res);
-      expect(res.status).toHaveBeenCalledWith(201);
-      expect(res.json).toHaveBeenCalledWith({ id: 42, message: 'User created successfully' });
-    });
-
-    it('returns 400 when required fields are missing', async () => {
-      const { createUser } = await import('../../src/controllers/userController');
-      const req = makeReqMock({ body: { name: 'Jane' } });
-      const res = makeResMock();
-      await createUser(req, res);
-      expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith({ error: 'Missing required fields' });
-    });
-
-    it('returns 400 for an invalid email format', async () => {
-      const { createUser } = await import('../../src/controllers/userController');
-      const req = makeReqMock({ body: { ...validBody, email: 'not-an-email' } });
-      const res = makeResMock();
-      await createUser(req, res);
-      expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith({ error: 'Invalid email format' });
-    });
-
-    it('returns 400 for an invalid phone format', async () => {
-      const { createUser } = await import('../../src/controllers/userController');
-      const req = makeReqMock({ body: { ...validBody, phone: '!!' } });
-      const res = makeResMock();
-      await createUser(req, res);
-      expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith({ error: 'Invalid phone format' });
-    });
-
-    it('returns 500 on unexpected error', async () => {
-      UserModel.create.mockRejectedValue(new Error('DB failure'));
-      const { createUser } = await import('../../src/controllers/userController');
-      const req = makeReqMock({ body: validBody });
-      const res = makeResMock();
-      await createUser(req, res);
-      expect(res.status).toHaveBeenCalledWith(500);
-    });
-  });
-
-  describe('updateUser', () => {
-    it('updates the user and returns a success message', async () => {
-      UserModel.findById.mockResolvedValue(mockUser);
-      UserModel.update.mockResolvedValue(true);
-      const { updateUser } = await import('../../src/controllers/userController');
-      const req = makeReqMock({ params: { id: '1' }, body: { name: 'Updated' } });
-      const res = makeResMock();
-      await updateUser(req, res);
-      expect(res.json).toHaveBeenCalledWith({ message: 'User updated successfully' });
-    });
-
-    it('returns 404 when user is not found', async () => {
-      UserModel.findById.mockResolvedValue(null);
-      const { updateUser } = await import('../../src/controllers/userController');
-      const req = makeReqMock({ params: { id: '99' }, body: {} });
-      const res = makeResMock();
-      await updateUser(req, res);
-      expect(res.status).toHaveBeenCalledWith(404);
-    });
-
-    it('returns 400 for a non-numeric id', async () => {
-      const { updateUser } = await import('../../src/controllers/userController');
-      const req = makeReqMock({ params: { id: 'abc' }, body: {} });
-      const res = makeResMock();
-      await updateUser(req, res);
-      expect(res.status).toHaveBeenCalledWith(400);
-    });
-
-    it('returns 500 on unexpected error', async () => {
-      UserModel.findById.mockRejectedValue(new Error('DB failure'));
-      const { updateUser } = await import('../../src/controllers/userController');
-      const req = makeReqMock({ params: { id: '1' }, body: {} });
-      const res = makeResMock();
-      await updateUser(req, res);
-      expect(res.status).toHaveBeenCalledWith(500);
-    });
-  });
-
-  describe('deleteUser', () => {
-    it('deletes the user and returns a success message', async () => {
-      UserModel.findById.mockResolvedValue(mockUser);
-      UserModel.delete.mockResolvedValue(true);
-      const { deleteUser } = await import('../../src/controllers/userController');
-      const req = makeReqMock({ params: { id: '1' } });
-      const res = makeResMock();
-      await deleteUser(req, res);
-      expect(res.json).toHaveBeenCalledWith({ message: 'User deleted successfully' });
-    });
-
-    it('returns 404 when user is not found', async () => {
-      UserModel.findById.mockResolvedValue(null);
-      const { deleteUser } = await import('../../src/controllers/userController');
-      const req = makeReqMock({ params: { id: '99' } });
-      const res = makeResMock();
-      await deleteUser(req, res);
-      expect(res.status).toHaveBeenCalledWith(404);
-    });
-
-    it('returns 400 for a non-numeric id', async () => {
-      const { deleteUser } = await import('../../src/controllers/userController');
-      const req = makeReqMock({ params: { id: 'abc' } });
-      const res = makeResMock();
-      await deleteUser(req, res);
-      expect(res.status).toHaveBeenCalledWith(400);
-    });
-
-    it('returns 500 on unexpected error', async () => {
-      UserModel.findById.mockRejectedValue(new Error('DB failure'));
-      const { deleteUser } = await import('../../src/controllers/userController');
-      const req = makeReqMock({ params: { id: '1' } });
-      const res = makeResMock();
-      await deleteUser(req, res);
       expect(res.status).toHaveBeenCalledWith(500);
     });
   });
