@@ -70,7 +70,8 @@ const ContactInfoComponent: React.FC<ContactInfoProps> = ({ contactInfo }) => {
           <p key={entry.id} className="contact-info-item">
             <GlobeIcon />
             <a href={entry.value} target="_blank" rel="noopener noreferrer" aria-label={t('contactInfo.ariaWebsite', { value: entry.value })}>
-              {entry.value}
+              <span className="contact-link-label">{t('contactInfo.website')}</span>
+              <span className="contact-link-url">{entry.value}</span>
             </a>
           </p>
         );
@@ -79,7 +80,8 @@ const ContactInfoComponent: React.FC<ContactInfoProps> = ({ contactInfo }) => {
           <p key={entry.id} className="contact-info-item">
             <GitHubIcon />
             <a href={entry.value} target="_blank" rel="noopener noreferrer" aria-label={t('contactInfo.ariaGithub', { value: entry.value })}>
-              {entry.value}
+              <span className="contact-link-label">{t('contactInfo.github')}</span>
+              <span className="contact-link-url">{entry.value}</span>
             </a>
           </p>
         );
@@ -88,7 +90,8 @@ const ContactInfoComponent: React.FC<ContactInfoProps> = ({ contactInfo }) => {
           <p key={entry.id} className="contact-info-item">
             <LinkedInIcon />
             <a href={entry.value} target="_blank" rel="noopener noreferrer" aria-label={t('contactInfo.ariaLinkedin', { value: entry.value })}>
-              {entry.value}
+              <span className="contact-link-label">{t('contactInfo.linkedin')}</span>
+              <span className="contact-link-url">{entry.value}</span>
             </a>
           </p>
         );

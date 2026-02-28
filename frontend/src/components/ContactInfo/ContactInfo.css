@@ -33,6 +33,10 @@
   opacity: 0.5;
 }
 
+.contact-link-url {
+  display: none;
+}
+
 @media (max-width: 768px) {
   .contact-info {
     flex-direction: column;
@@ -66,5 +70,13 @@
     height: 10px !important;
     opacity: 1 !important;
     color: var(--color-teal) !important;
+  }
+
+  .contact-link-label {
+    display: none;
+  }
+
+  .contact-link-url {
+    display: inline;
   }
 }
