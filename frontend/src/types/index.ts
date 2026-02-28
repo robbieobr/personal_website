@@ -29,8 +29,33 @@ export interface Education {
   description: string | null;
 }
 
+export interface Project {
+  id: number;
+  userId: number;
+  title: string;
+  role: string;
+  description: string | null;
+}
+
+export interface Skill {
+  id: number;
+  userId: number;
+  skill: string;
+}
+
+export interface Achievement {
+  id: number;
+  userId: number;
+  title: string;
+  date: string;
+  description: string | null;
+}
+
 export interface UserProfile {
   user: User;
   jobHistory: JobEntry[];
   education: Education[];
+  projects: Project[];
+  skills: Skill[];
+  achievements: Achievement[];
 }

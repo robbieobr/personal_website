@@ -34,3 +34,31 @@ export interface Education {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface Project {
+  id: number;
+  userId: number;
+  title: string;
+  role: string;
+  description: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface Skill {
+  id: number;
+  userId: number;
+  skill: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface Achievement {
+  id: number;
+  userId: number;
+  title: string;
+  date: Date;
+  description: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+}

@@ -4,10 +4,13 @@ This document describes the structure of the personal website database schema.
 
 ## Overview
 
-The database consists of three main tables:
+The database consists of six tables:
 - **users** - User profile information
 - **job_history** - Employment history records
 - **education** - Educational background records
+- **projects** - Project portfolio entries
+- **skills** - Skill list entries
+- **achievements** - Career achievement records
 
 ## Tables
 
@@ -86,40 +89,124 @@ Stores educational background records for users.
 
 ---
 
+### projects
+
+Stores project portfolio entries for users.
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| `id` | INT | PRIMARY KEY, AUTO_INCREMENT | Unique project identifier |
+| `userId` | INT | NOT NULL, FOREIGN KEY → users(id) | Reference to user (ON DELETE CASCADE) |
+| `title` | VARCHAR(255) | NOT NULL | Project title |
+| `role` | VARCHAR(255) | NOT NULL | User's role on the project |
+| `description` | TEXT | Nullable | Project description |
+| `createdAt` | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Record creation timestamp |
+| `updatedAt` | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP | Record last update timestamp |
+
+**Indexes:**
+- PRIMARY KEY: `id`
+- FOREIGN KEY: `userId` → users(id)
+
+**Relationships:**
+- One-to-many relationship with `users` table
+- When a user is deleted, all associated project records are automatically deleted (CASCADE)
+
+---
+
+### skills
+
+Stores skill entries for users.
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| `id` | INT | PRIMARY KEY, AUTO_INCREMENT | Unique skill identifier |
+| `userId` | INT | NOT NULL, FOREIGN KEY → users(id) | Reference to user (ON DELETE CASCADE) |
+| `skill` | VARCHAR(255) | NOT NULL | Skill name |
+| `createdAt` | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Record creation timestamp |
+| `updatedAt` | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP | Record last update timestamp |
+
+**Indexes:**
+- PRIMARY KEY: `id`
+- FOREIGN KEY: `userId` → users(id)
+
+**Relationships:**
+- One-to-many relationship with `users` table
+- When a user is deleted, all associated skill records are automatically deleted (CASCADE)
+
+---
+
+### achievements
+
+Stores career achievement records for users.
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| `id` | INT | PRIMARY KEY, AUTO_INCREMENT | Unique achievement identifier |
+| `userId` | INT | NOT NULL, FOREIGN KEY → users(id) | Reference to user (ON DELETE CASCADE) |
+| `title` | VARCHAR(255) | NOT NULL | Achievement title |
+| `date` | DATE | NOT NULL | Date the achievement was awarded |
+| `description` | TEXT | Nullable | Achievement description |
+| `createdAt` | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Record creation timestamp |
+| `updatedAt` | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP | Record last update timestamp |
+
+**Indexes:**
+- PRIMARY KEY: `id`
+- FOREIGN KEY: `userId` → users(id)
+
+**Relationships:**
+- One-to-many relationship with `users` table
+- When a user is deleted, all associated achievement records are automatically deleted (CASCADE)
+
+---
+
 ## Entity Relationship Diagram
 
 ```
-┌─────────────────┐
-│     users       │
-├─────────────────┤
-│ id (PK)         │
-│ name            │
-│ title           │
-│ email (UNIQUE)  │
-│ phone           │
-│ profileImage    │
-│ bio             │
-│ createdAt       │
-│ updatedAt       │
-└────────┬────────┘
-         │
-         │ 1:N
-         ├─────────────────────────────┐
-         │                             │
-    ┌────▼──────────────┐     ┌────────▼────────┐
-    │  job_history      │     │   education     │
-    ├───────────────────┤     ├─────────────────┤
-    │ id (PK)           │     │ id (PK)         │
-    │ userId (FK)       │     │ userId (FK)     │
-    │ company           │     │ institution     │
-    │ position          │     │ degree          │
-    │ startDate         │     │ field           │
-    │ endDate           │     │ startDate       │
-    │ description       │     │ endDate         │
-    │ createdAt         │     │ description     │
-    │ updatedAt         │     │ createdAt       │
-    └───────────────────┘     │ updatedAt       │
-                              └─────────────────┘
+                    ┌─────────────────┐
+                    │     users       │
+                    ├─────────────────┤
+                    │ id (PK)         │
+                    │ name            │
+                    │ title           │
+                    │ email (UNIQUE)  │
+                    │ phone           │
+                    │ profileImage    │
+                    │ bio             │
+                    │ createdAt       │
+                    │ updatedAt       │
+                    └────────┬────────┘
+                             │
+                             │ 1:N (all child tables)
+          ┌──────────────────┼──────────────────┐
+          │                  │                  │
+    ┌─────▼──────────┐ ┌─────▼──────────┐ ┌────▼────────────┐
+    │  job_history   │ │   education    │ │    projects     │
+    ├────────────────┤ ├────────────────┤ ├─────────────────┤
+    │ id (PK)        │ │ id (PK)        │ │ id (PK)         │
+    │ userId (FK)    │ │ userId (FK)    │ │ userId (FK)     │
+    │ company        │ │ institution    │ │ title           │
+    │ position       │ │ degree         │ │ role            │
+    │ startDate      │ │ field          │ │ description     │
+    │ endDate        │ │ startDate      │ │ createdAt       │
+    │ description    │ │ endDate        │ │ updatedAt       │
+    │ createdAt      │ │ description    │ └─────────────────┘
+    │ updatedAt      │ │ createdAt      │
+    └────────────────┘ │ updatedAt      │
+                       └────────────────┘
+
+          ┌──────────────────┐
+          │                  │
+    ┌─────▼──────────┐ ┌─────▼──────────┐
+    │    skills      │ │  achievements  │
+    ├────────────────┤ ├────────────────┤
+    │ id (PK)        │ │ id (PK)        │
+    │ userId (FK)    │ │ userId (FK)    │
+    │ skill          │ │ title          │
+    │ createdAt      │ │ date           │
+    │ updatedAt      │ │ description    │
+    └────────────────┘ │ createdAt      │
+                       │ updatedAt      │
+                       └────────────────┘
 ```
 
 ---
@@ -178,16 +265,42 @@ WHERE u.id = 1
 ORDER BY ed.startDate DESC;
 ```
 
-### Count jobs and education records per user
+### Get all projects for a specific user
 ```sql
-SELECT 
+SELECT * FROM projects
+WHERE userId = 1;
+```
+
+### Get all skills for a specific user
+```sql
+SELECT skill FROM skills
+WHERE userId = 1
+ORDER BY skill ASC;
+```
+
+### Get all achievements for a specific user
+```sql
+SELECT * FROM achievements
+WHERE userId = 1
+ORDER BY date DESC;
+```
+
+### Count all records per user
+```sql
+SELECT
   u.id,
   u.name,
   COUNT(DISTINCT jh.id) as job_count,
-  COUNT(DISTINCT ed.id) as education_count
+  COUNT(DISTINCT ed.id) as education_count,
+  COUNT(DISTINCT p.id)  as project_count,
+  COUNT(DISTINCT s.id)  as skill_count,
+  COUNT(DISTINCT a.id)  as achievement_count
 FROM users u
 LEFT JOIN job_history jh ON u.id = jh.userId
-LEFT JOIN education ed ON u.id = ed.userId
+LEFT JOIN education ed   ON u.id = ed.userId
+LEFT JOIN projects p     ON u.id = p.userId
+LEFT JOIN skills s       ON u.id = s.userId
+LEFT JOIN achievements a ON u.id = a.userId
 GROUP BY u.id, u.name;
 ```
 
@@ -201,5 +314,8 @@ The schema is created through the following migration files in order:
 2. **002_create_users_table.sql** - Creates the users table
 3. **003_create_job_history_table.sql** - Creates the job_history table
 4. **004_create_education_table.sql** - Creates the education table
+5. **005_create_projects_table.sql** - Creates the projects table
+6. **006_create_skills_table.sql** - Creates the skills table
+7. **007_create_achievements_table.sql** - Creates the achievements table
 
 See the `migrations/` directory for the actual SQL definitions.

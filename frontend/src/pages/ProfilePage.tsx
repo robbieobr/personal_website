@@ -5,6 +5,9 @@ import { useTranslation } from 'react-i18next';
 import UserProfileComponent from '../components/UserProfile';
 import JobHistory from '../components/JobHistory';
 import EducationHistory from '../components/EducationHistory';
+import Projects from '../components/Projects';
+import Skills from '../components/Skills';
+import Achievements from '../components/Achievements';
 import { getUserProfile } from '../services/api';
 import { UserProfile as UserProfileType } from '../types/index';
 import './ProfilePage.css';
@@ -93,6 +96,9 @@ const ProfilePage: React.FC = () => {
         <div className="history-section">
           <JobHistory jobs={profile.jobHistory} />
           <EducationHistory education={profile.education} />
+          <Projects projects={profile.projects} />
+          <Skills skills={profile.skills} />
+          <Achievements achievements={profile.achievements} />
         </div>
       </div>
     </div>

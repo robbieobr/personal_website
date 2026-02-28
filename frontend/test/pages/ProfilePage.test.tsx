@@ -32,6 +32,9 @@ describe('ProfilePage', () => {
     });
     expect(screen.getByText(mockUserProfile.jobHistory[0].position)).toBeInTheDocument();
     expect(screen.getByText(mockUserProfile.education[0].degree)).toBeInTheDocument();
+    expect(screen.getByText(mockUserProfile.projects[0].title)).toBeInTheDocument();
+    expect(screen.getByText(mockUserProfile.skills[0].skill)).toBeInTheDocument();
+    expect(screen.getByText(mockUserProfile.achievements[0].title)).toBeInTheDocument();
   });
 
   it('shows error message when fetch fails', async () => {

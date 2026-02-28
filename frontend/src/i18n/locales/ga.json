@@ -22,5 +22,17 @@
     "title": "Oideachas",
     "noHistory": "Níl stair oideachais ar fáil",
     "present": "Faoi láthair"
+  },
+  "projects": {
+    "title": "Tionscadail",
+    "noProjects": "Níl aon tionscadal ar fáil"
+  },
+  "skills": {
+    "title": "Scileanna",
+    "noSkills": "Níl scileanna ar fáil"
+  },
+  "achievements": {
+    "title": "Éachtaí",
+    "noAchievements": "Níl éachtaí ar fáil"
   }
 }

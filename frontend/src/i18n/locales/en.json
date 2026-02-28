@@ -22,5 +22,17 @@
     "title": "Education",
     "noHistory": "No education history available",
     "present": "Present"
+  },
+  "projects": {
+    "title": "Projects",
+    "noProjects": "No projects available"
+  },
+  "skills": {
+    "title": "Skills",
+    "noSkills": "No skills available"
+  },
+  "achievements": {
+    "title": "Achievements",
+    "noAchievements": "No achievements available"
   }
 }

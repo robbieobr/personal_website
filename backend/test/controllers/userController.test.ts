@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import type { Request, Response } from 'express';
-import { mockUser, mockJob, mockEducation } from '../fixtures';
+import { mockUser, mockJob, mockEducation, mockProject, mockSkill, mockAchievement } from '../fixtures';
 
 vi.mock('../../src/models/index', () => ({
   UserModel: {
@@ -11,6 +11,15 @@ vi.mock('../../src/models/index', () => ({
     findByUserId: vi.fn(),
   },
   EducationModel: {
+    findByUserId: vi.fn(),
+  },
+  ProjectModel: {
+    findByUserId: vi.fn(),
+  },
+  SkillModel: {
+    findByUserId: vi.fn(),
+  },
+  AchievementModel: {
     findByUserId: vi.fn(),
   },
 }));
@@ -31,6 +40,9 @@ describe('userController', () => {
   let UserModel: { findById: ReturnType<typeof vi.fn>; findAll: ReturnType<typeof vi.fn> };
   let JobModel: { findByUserId: ReturnType<typeof vi.fn> };
   let EducationModel: { findByUserId: ReturnType<typeof vi.fn> };
+  let ProjectModel: { findByUserId: ReturnType<typeof vi.fn> };
+  let SkillModel: { findByUserId: ReturnType<typeof vi.fn> };
+  let AchievementModel: { findByUserId: ReturnType<typeof vi.fn> };
 
   beforeEach(async () => {
     vi.resetModules();
@@ -38,6 +50,9 @@ describe('userController', () => {
     UserModel = models.UserModel as typeof UserModel;
     JobModel = models.JobModel as typeof JobModel;
     EducationModel = models.EducationModel as typeof EducationModel;
+    ProjectModel = models.ProjectModel as typeof ProjectModel;
+    SkillModel = models.SkillModel as typeof SkillModel;
+    AchievementModel = models.AchievementModel as typeof AchievementModel;
     vi.clearAllMocks();
   });
 
@@ -107,6 +122,9 @@ describe('userController', () => {
       UserModel.findById.mockResolvedValue(mockUser);
       JobModel.findByUserId.mockResolvedValue([mockJob]);
       EducationModel.findByUserId.mockResolvedValue([mockEducation]);
+      ProjectModel.findByUserId.mockResolvedValue([mockProject]);
+      SkillModel.findByUserId.mockResolvedValue([mockSkill]);
+      AchievementModel.findByUserId.mockResolvedValue([mockAchievement]);
       const { getUserProfile } = await import('../../src/controllers/userController');
       const req = makeReqMock({ params: { id: '1' } });
       const res = makeResMock();
@@ -115,6 +133,9 @@ describe('userController', () => {
         user: mockUser,
         jobHistory: [mockJob],
         education: [mockEducation],
+        projects: [mockProject],
+        skills: [mockSkill],
+        achievements: [mockAchievement],
       });
     });
 
