@@ -46,6 +46,6 @@ body,
 
 @media print {
   html, body, #root {
-    height: auto !important;
+    height: auto;
   }
 }

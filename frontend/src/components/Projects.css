@@ -87,13 +87,13 @@
   }
 
   .projects h2 {
-    color: var(--color-navy) !important;
+    color: var(--color-navy);
     margin-bottom: 0.75rem;
     font-size: 0.82rem;
   }
 
   .projects h2::after {
-    background: var(--color-teal) !important;
+    background: var(--color-teal);
   }
 
   .projects-container {
@@ -101,22 +101,22 @@
   }
 
   .project-card {
-    background: transparent !important;
-    border: none !important;
-    border-top: 1px solid #ddd !important;
+    background: transparent;
+    border: none;
+    border-top: 1px solid #ddd;
     border-radius: 0;
     padding: 0.5rem 0;
     page-break-inside: avoid;
   }
 
   .project-header h3 {
-    color: var(--color-navy) !important;
+    color: var(--color-navy);
     font-size: 0.9rem;
   }
 
   .project-role {
-    background: transparent !important;
-    color: var(--color-teal) !important;
+    background: transparent;
+    color: var(--color-teal);
     padding: 0;
     font-size: 0.75rem;
     border-radius: 0;
@@ -124,7 +124,7 @@
   }
 
   .project-description {
-    color: #444 !important;
+    color: #444;
     font-size: 0.78rem;
   }
 }

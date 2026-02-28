@@ -46,30 +46,30 @@
 
 @media print {
   .contact-info {
-    flex-direction: column !important;
-    gap: 0.25rem !important;
-    align-items: flex-end !important;
+    flex-direction: column;
+    gap: 0.25rem;
+    align-items: flex-end;
   }
 
   .contact-info-item {
-    color: #333 !important;
-    font-size: 0.75rem !important;
-    justify-content: flex-end !important;
-    gap: 0.3rem !important;
+    color: #333;
+    font-size: 0.75rem;
+    justify-content: flex-end;
+    gap: 0.3rem;
   }
 
   .contact-info-item a {
-    color: #333 !important;
-    text-decoration: none !important;
-    font-family: var(--font-body) !important;
-    font-size: 0.75rem !important;
+    color: #333;
+    text-decoration: none;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
   }
 
   .contact-icon {
-    width: 10px !important;
-    height: 10px !important;
-    opacity: 1 !important;
-    color: var(--color-teal) !important;
+    width: 10px;
+    height: 10px;
+    opacity: 1;
+    color: var(--color-teal);
   }
 
   .contact-link-label {
