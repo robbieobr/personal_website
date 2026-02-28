@@ -75,7 +75,7 @@ The frontend is automatically built and started with Docker Compose:
 
 ```bash
 cd ..
-docker-compose up -d
+docker compose up -d
 ```
 
 Access at http://localhost:3000
@@ -142,7 +142,8 @@ The application supports multiple languages through the i18n system.
 
 ### Available Languages
 
-- English (en) - Default
+- English (`en`) - Default
+- Irish Gaeilge (`ga`)
 
 ### Adding New Languages
 
@@ -198,7 +199,7 @@ docker run -p 3000:3000 personal_website_frontend
 - **Build Stage:** Installs only frontend workspace dependencies, builds React app with Vite
 - **Production Stage:** Serves the built app with nginx on port 3000; proxies `/api` to the backend
 - **Port:** 3000
-- **Hot Reload:** Uses Vite HMR when running with docker-compose (builder stage with `npm run dev`)
+- **Hot Reload:** Uses Vite HMR when running with docker compose (builder stage with `npm run dev`)
 
 ## � Security
 
@@ -270,7 +271,7 @@ npm run dev
 
 ```bash
 # Clear build cache
-rm -rf dist/
+rm -rf build/
 
 # Rebuild
 npm run build
@@ -323,7 +324,7 @@ export const Component: React.FC<ComponentProps> = ({ title, onAction }) => {
 npm run build
 ```
 
-This creates an optimized production build in the `dist/` directory. The Dockerfile automatically handles this when building the image.
+This creates an optimized production build in the `build/` directory. The Dockerfile automatically handles this when building the image.
 
 ## 📝 Notes
 

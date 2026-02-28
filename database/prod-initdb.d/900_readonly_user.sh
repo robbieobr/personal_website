@@ -1,0 +1,7 @@
+#!/bin/bash
+set -e
+mysql -u root -p"${MYSQL_ROOT_PASSWORD}" <<-EOSQL
+    CREATE USER IF NOT EXISTS '${DB_READONLY_USER}'@'%' IDENTIFIED BY '${DB_READONLY_PASSWORD}';
+    GRANT SELECT ON personal_website.* TO '${DB_READONLY_USER}'@'%';
+    FLUSH PRIVILEGES;
+EOSQL

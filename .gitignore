@@ -13,3 +13,6 @@ yarn-error.log*
 *.swo
 .git/
 .claude/settings.local.json
+
+# Production seed data — never commit real personal data
+database/prod-initdb.d/500_prod_seed.sql

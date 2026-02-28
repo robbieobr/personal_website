@@ -19,7 +19,7 @@ Create a `.env` file in the project root (optional for local development):
 cp .env.example .env
 ```
 
-This file contains variables for `docker-compose` commands.
+This file contains variables for `docker compose` commands.
 
 ### 2. Backend (.env)
 
@@ -128,10 +128,17 @@ Used by `docker-compose.yml`:
 | `VITE_API_BACKEND` | Frontend API backend URL | `http://backend:5000` | URL |
 | `VITE_API_URL` | Frontend direct API URL | `http://localhost:5000/api` | URL |
 
+Additional variables required by the production overlay (`docker-compose.prod.yml`):
+
+| Variable | Description | Type |
+|----------|-------------|------|
+| `DB_READONLY_USER` | MySQL username for the backend in production | string |
+| `DB_READONLY_PASSWORD` | Password for the read-only MySQL user | string |
+
 **Example for Docker:**
 
 ```bash
-docker-compose up \
+docker compose up \
   -e MYSQL_ROOT_PASSWORD=secretpassword \
   -e DB_PASSWORD=secretpassword
 ```
@@ -159,7 +166,7 @@ MOCK_ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5001,http://localhos
 Uses Docker for everything (MySQL, Backend, Frontend):
 
 ```bash
-docker-compose up
+docker compose up
 ```
 
 **Environment:** Uses variables from root `.env` file
@@ -227,30 +234,36 @@ npm run dev:mock
 4. **Set NODE_ENV=production** for backend
 5. **Use environment-specific variables** (dev, staging, production)
 
-### Example Production Setup
+### Production Setup
 
-**backend/.env (Production):**
+Production uses a dedicated Docker Compose overlay (`docker-compose.prod.yml`) with a root-level `.env` file. Copy the template and fill in real values:
 
-```env
-DB_HOST=prod-db.example.com
-DB_PORT=3306
-DB_USER=prod_user
-DB_PASSWORD=<strong_password>
-DB_NAME=personal_website_prod
-PORT=5000
-NODE_ENV=production
-ALLOWED_ORIGINS=https://example.com,https://www.example.com
+```bash
+cp .env.prod.example .env
+# edit .env with strong passwords and your actual domain
 ```
 
-**Root .env (Production Docker):**
+**`.env` (Production — from `.env.prod.example`):**
 
 ```env
 MYSQL_ROOT_PASSWORD=<strong_password>
-DB_PASSWORD=<strong_password>
-ALLOWED_ORIGINS=https://example.com,https://www.example.com
-VITE_API_BACKEND=https://api.example.com
-VITE_API_URL=https://api.example.com/api
+DB_READONLY_USER=webapp
+DB_READONLY_PASSWORD=<strong_password>
+DB_HOST=mysql
+DB_PORT=3306
+DB_NAME=personal_website
+PORT=5000
+NODE_ENV=production
+ALLOWED_ORIGINS=https://yourdomain.com
 ```
+
+Then deploy:
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+```
+
+See `TODO.md` for the full pre-deployment checklist.
 
 ## Troubleshooting
 

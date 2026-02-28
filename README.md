@@ -108,6 +108,7 @@ personal_website/
 │   │   ├── init.sh          # Initialize database
 │   │   └── reset.sh         # Reset database
 │   ├── docker-entrypoint-initdb.d/  # Docker init files (default seed)
+│   ├── prod-initdb.d/       # Production Docker init files (migrations + prod seed + readonly user)
 │   ├── init/                # Pre-combined init directories for compose overrides
 │   │   ├── minimal/         # Migrations + minimal seed
 │   │   └── full/            # Migrations + full seed
@@ -140,7 +141,7 @@ Before running this project, ensure you have:
 
 2. **Start all services with default configuration:**
    ```bash
-   docker-compose up -d
+   docker compose up -d
    ```
 
 3. **Access the application:**
@@ -150,12 +151,12 @@ Before running this project, ensure you have:
 
 4. **View logs:**
    ```bash
-   docker-compose logs -f
+   docker compose logs -f
    ```
 
 5. **Stop services:**
    ```bash
-   docker-compose down
+   docker compose down
    ```
 
 ### Local Development (Without Docker)
@@ -194,7 +195,7 @@ Before running this project, ensure you have:
 The default configuration includes 1 user with 3 job positions and 2 education records.
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 **Services:**
@@ -207,7 +208,7 @@ docker-compose up -d
 Useful for testing with only 1 user and no job/education history.
 
 ```bash
-docker-compose -f docker-compose.yml -f docker-compose.minimal.yml up -d
+docker compose -f docker-compose.yml -f docker-compose.minimal.yml up -d
 ```
 
 **database/seeds/minimal/** contains:
@@ -220,7 +221,7 @@ docker-compose -f docker-compose.yml -f docker-compose.minimal.yml up -d
 Extended dataset with 3 users with complete professional history.
 
 ```bash
-docker-compose -f docker-compose.yml -f docker-compose.full.yml up -d
+docker compose -f docker-compose.yml -f docker-compose.full.yml up -d
 ```
 
 **database/seeds/full/** contains:
@@ -253,15 +254,15 @@ The database can be reinitialized with different seed datasets using the init sc
 # Initialize with default seed
 cd database/scripts
 ./init.sh default
-docker-compose up -d
+docker compose up -d
 
 # Initialize with minimal seed
 ./init.sh minimal
-docker-compose up -d
+docker compose up -d
 
 # Initialize with full seed
 ./init.sh full
-docker-compose up -d
+docker compose up -d
 ```
 
 #### Reset Database to Clean State
@@ -281,7 +282,7 @@ This will:
 Then reinitialize with desired seed:
 ```bash
 ./init.sh [seed_type]
-docker-compose up -d
+docker compose up -d
 ```
 
 ### Adding Custom Seeds
@@ -304,7 +305,7 @@ To create a new seed dataset:
    ```bash
    cd database/scripts
    ./init.sh custom
-   docker-compose up -d
+   docker compose up -d
    ```
 
 ## 💻 Development
@@ -375,7 +376,7 @@ Database migrations and seeds are in `database/` directory.
    cd database/scripts
    ./reset.sh
    ./init.sh default
-   docker-compose up -d
+   docker compose up -d
    ```
 
 ## 🐳 Docker Services
@@ -406,7 +407,7 @@ All services are defined in `docker-compose.yml`:
 - **Dependencies:** Depends on backend service
 - **Hot Reload:** Watches /frontend/src and /frontend/public for changes (Vite HMR)
 
-> **Production builds:** Running `docker build` without docker-compose produces
+> **Production builds:** Running `docker build` without docker compose produces
 > lean, multi-stage images — the backend runs compiled JS without devDependencies,
 > and the frontend is served by nginx.
 
@@ -414,27 +415,27 @@ All services are defined in `docker-compose.yml`:
 
 ```bash
 # Start services in background
-docker-compose up -d
+docker compose up -d
 
 # View logs
-docker-compose logs -f
+docker compose logs -f
 
 # View specific service logs
-docker-compose logs -f backend
-docker-compose logs -f mysql
+docker compose logs -f backend
+docker compose logs -f mysql
 
 # Stop services
-docker-compose down
+docker compose down
 
 # Rebuild containers
-docker-compose up -d --build
+docker compose up -d --build
 
 # Remove all data (volumes)
-docker-compose down -v
+docker compose down -v
 
 # Execute command in running container
-docker-compose exec mysql mysql -u root -p personal_website < dump.sql
-docker-compose exec backend npm run build
+docker compose exec mysql mysql -u root -p personal_website < dump.sql
+docker compose exec backend npm run build
 ```
 ## 🔒 Security
 
@@ -482,21 +483,21 @@ npm audit fix  # To fix issues
 #### Containers won't start
 ```bash
 # Check logs
-docker-compose logs
+docker compose logs
 
 # Rebuild containers
-docker-compose down
-docker-compose up -d --build
+docker compose down
+docker compose up -d --build
 ```
 
 #### MySQL connection errors
 ```bash
 # Check logs
-docker-compose logs mysql
+docker compose logs mysql
 
 # Wait for MySQL to be ready (health check)
 # Restart MySQL
-docker-compose restart mysql
+docker compose restart mysql
 ```
 
 #### Port already in use
@@ -519,16 +520,16 @@ kill -9 <PID>
 cd database/scripts
 ./reset.sh
 ./init.sh default
-docker-compose up -d
+docker compose up -d
 ```
 
 #### Cannot connect to database
 ```bash
 # Check MySQL is running
-docker-compose ps
+docker compose ps
 
 # Check logs
-docker-compose logs mysql
+docker compose logs mysql
 
 # Verify credentials in .env or docker-compose.yml
 ```
@@ -536,32 +537,32 @@ docker-compose logs mysql
 #### Tables not created
 ```bash
 # Check if migrations ran
-docker-compose exec mysql mysql -u root -p -e "SHOW TABLES;"
+docker compose exec mysql mysql -u root -p -e "SHOW TABLES;"
 
 # Reinitialize database
 cd database/scripts
 ./reset.sh
 ./init.sh default
-docker-compose down
-docker-compose up -d
+docker compose down
+docker compose up -d
 ```
 
 ### Frontend Issues
 
 #### Port 3000 in use or frontend won't load
 ```bash
-docker-compose logs frontend
-docker-compose down
-docker-compose up -d --build
+docker compose logs frontend
+docker compose down
+docker compose up -d --build
 ```
 
 #### API calls failing
 ```bash
 # Check backend is running
-docker-compose ps
+docker compose ps
 
 # Check backend logs
-docker-compose logs backend
+docker compose logs backend
 
 # Verify API_URL in frontend environment
 ```
@@ -571,10 +572,10 @@ docker-compose logs backend
 #### Cannot connect to database
 ```bash
 # Check database credentials
-docker-compose logs backend
+docker compose logs backend
 
 # Verify all required environment variables are set
-docker-compose config | grep DB_
+docker compose config | grep DB_
 ```
 
 #### Port 5000 in use
