@@ -58,6 +58,17 @@ cp frontend/.env.example frontend/.env.development
 cp frontend/.env.mock frontend/.env.local
 ```
 
+**Option C: Production Build**
+
+Create `frontend/.env.production` from the example and set your domain:
+
+```bash
+cp frontend/.env.production.example frontend/.env.production
+# edit frontend/.env.production — set VITE_APP_URL to your real domain
+```
+
+This file is loaded automatically by `npm run build`.
+
 ### 4. Mock Server (.env)
 
 (Optional) If you want to customize the mock server:
@@ -100,6 +111,7 @@ ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5001,http://localhost:500
 |----------|-------------|---------|------|
 | `VITE_API_BACKEND` | Backend API server URL | `http://localhost:5000` | URL |
 | `VITE_API_URL` | Full API endpoint URL | `http://localhost:5000/api` | URL |
+| `VITE_APP_URL` | Public site URL — shown as header link text in production builds | *(unset in dev)* | URL |
 
 **Development (.env.development):**
 
@@ -256,6 +268,15 @@ PORT=5000
 NODE_ENV=production
 ALLOWED_ORIGINS=https://yourdomain.com
 ```
+
+**Frontend production environment (`frontend/.env.production`):**
+
+```env
+VITE_API_BACKEND=http://backend:5000
+VITE_APP_URL=https://yourdomain.com
+```
+
+Create this from `frontend/.env.production.example` before running a production build.
 
 Then deploy:
 
