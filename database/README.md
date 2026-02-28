@@ -13,20 +13,22 @@ database/
 │   ├── 004_create_education_table.sql
 │   ├── 005_create_projects_table.sql
 │   ├── 006_create_skills_table.sql
-│   └── 007_create_achievements_table.sql
+│   ├── 007_create_achievements_table.sql
+│   ├── 008_create_contact_info_table.sql
+│   └── 009_remove_contact_from_users.sql
 │
 ├── seeds/               # Seed data for different dataset configurations
 │   ├── default/        # Default seed data (1 user with full career history)
-│   │   ├── 001_users.sql
+│   │   ├── 001_users.sql        # includes contact_info inserts
 │   │   ├── 002_job_history.sql
 │   │   ├── 003_education.sql
 │   │   ├── 004_projects.sql
 │   │   ├── 005_skills.sql
 │   │   └── 006_achievements.sql
 │   ├── minimal/        # Minimal seed data (1 user only)
-│   │   └── 001_users.sql
+│   │   └── 001_users.sql        # includes contact_info inserts
 │   └── full/           # Full seed data (3 users with complete history)
-│       ├── 001_users.sql
+│       ├── 001_users.sql        # includes contact_info inserts
 │       ├── 002_job_history.sql
 │       ├── 003_education.sql
 │       ├── 004_projects.sql
@@ -213,17 +215,17 @@ To create a new seed dataset (e.g., `staging`):
 3. Populate with your desired data
 
 4. Create a pre-combined init directory with migrations and seeds.
-   Seed files must be numbered to execute **after** all migrations (currently 001–007),
-   so start seeds at 008:
+   Seed files must be numbered to execute **after** all migrations (currently 001–009),
+   so start seeds at 010:
    ```bash
    mkdir -p init/staging
    cp migrations/*.sql init/staging/
-   cp seeds/staging/001_users.sql init/staging/008_users.sql
-   cp seeds/staging/002_job_history.sql init/staging/009_job_history.sql
-   cp seeds/staging/003_education.sql init/staging/010_education.sql
-   cp seeds/staging/004_projects.sql init/staging/011_projects.sql
-   cp seeds/staging/005_skills.sql init/staging/012_skills.sql
-   cp seeds/staging/006_achievements.sql init/staging/013_achievements.sql
+   cp seeds/staging/001_users.sql init/staging/010_users.sql
+   cp seeds/staging/002_job_history.sql init/staging/011_job_history.sql
+   cp seeds/staging/003_education.sql init/staging/012_education.sql
+   cp seeds/staging/004_projects.sql init/staging/013_projects.sql
+   cp seeds/staging/005_skills.sql init/staging/014_skills.sql
+   cp seeds/staging/006_achievements.sql init/staging/015_achievements.sql
    ```
 
 5. Create a corresponding docker compose override file (optional):
@@ -260,25 +262,26 @@ This directory is pre-populated with the default seed dataset for quick startup.
 
 ### Migrations
 Migration files use a three-digit prefix that reflects their creation order:
-- `001_create_database.sql` through `007_create_achievements_table.sql`
+- `001_create_database.sql` through `009_remove_contact_from_users.sql`
 
 ### Seeds (within `seeds/` directories)
 Seed files within each `seeds/<profile>/` directory use three-digit prefixes starting at `001`:
-- `001_users.sql`, `002_job_history.sql`, ..., `006_achievements.sql`
+- `001_users.sql` (also seeds `contact_info`), `002_job_history.sql`, ..., `006_achievements.sql`
 
 ### Pre-combined init directories (`init/`, `docker-entrypoint-initdb.d/`)
 When migrations and seeds are combined into a single directory for Docker, seed files must be
-numbered to execute **after** all migrations. With 7 migrations, seeds start at `008`:
-- Migrations: `001_create_database.sql` … `007_create_achievements_table.sql`
-- Seeds: `008_users.sql` … `013_achievements.sql`
+numbered to execute **after** all migrations. With 9 migrations, seeds start at `010`:
+- Migrations: `001_create_database.sql` … `009_remove_contact_from_users.sql`
+- Seeds: `010_users.sql` … `015_achievements.sql`
 
 The `init.sh` script handles this renumbering automatically.
 
 ## Reference: Schema History
 
 The schema was originally defined in a single `schema.sql` file that has since been split into
-numbered migration files. The current schema (migrations 001–007) covers:
-- `users` — user profile information
+numbered migration files. The current schema (migrations 001–009) covers:
+- `users` — user profile information (name, title, bio, profile image)
+- `contact_info` — contact details per user (email, phone, website, GitHub, LinkedIn) — added in migration 008/009 as a BCNF normalisation of the original `email` and `phone` columns on `users`
 - `job_history` — employment records
 - `education` — educational background
 - `projects` — project portfolio entries

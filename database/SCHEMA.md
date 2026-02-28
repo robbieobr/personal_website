@@ -4,8 +4,9 @@ This document describes the structure of the personal website database schema.
 
 ## Overview
 
-The database consists of six tables:
-- **users** - User profile information
+The database consists of seven tables:
+- **users** - User profile information (name, title, bio, profile image)
+- **contact_info** - Contact details per user (email, phone, website, GitHub, LinkedIn)
 - **job_history** - Employment history records
 - **education** - Educational background records
 - **projects** - Project portfolio entries
@@ -16,15 +17,13 @@ The database consists of six tables:
 
 ### users
 
-Stores user profile information.
+Stores user profile information. Contact details (email, phone, etc.) are stored in the separate `contact_info` table.
 
 | Column | Type | Constraints | Description |
 |--------|------|-------------|-------------|
 | `id` | INT | PRIMARY KEY, AUTO_INCREMENT | Unique user identifier |
 | `name` | VARCHAR(255) | NOT NULL | User's full name |
 | `title` | VARCHAR(255) | NOT NULL | Professional title/role |
-| `email` | VARCHAR(255) | NOT NULL, UNIQUE | User's email address |
-| `phone` | VARCHAR(20) | NOT NULL | User's phone number |
 | `profileImage` | VARCHAR(500) | Nullable | URL to profile image |
 | `bio` | TEXT | Nullable | User's biography/about section |
 | `createdAt` | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Record creation timestamp |
@@ -32,7 +31,31 @@ Stores user profile information.
 
 **Indexes:**
 - PRIMARY KEY: `id`
-- UNIQUE: `email`
+
+---
+
+### contact_info
+
+Stores contact details for users. Each row represents one contact method (email, phone, website, GitHub, or LinkedIn). A user can have at most one entry per type (enforced by unique constraint).
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| `id` | INT | PRIMARY KEY, AUTO_INCREMENT | Unique contact info identifier |
+| `user_id` | INT | NOT NULL, FOREIGN KEY → users(id) | Reference to user (ON DELETE CASCADE) |
+| `type` | ENUM('email','phone','website','github','linkedin') | NOT NULL | Contact method type |
+| `value` | VARCHAR(500) | NOT NULL | The contact value (URL, email address, phone number, etc.) |
+| `display_order` | INT | DEFAULT 0 | Order in which entries are displayed |
+| `createdAt` | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Record creation timestamp |
+| `updatedAt` | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP | Record last update timestamp |
+
+**Indexes:**
+- PRIMARY KEY: `id`
+- UNIQUE: `(user_id, type)` — one entry per contact type per user
+- INDEX: `user_id`
+
+**Relationships:**
+- Many-to-one relationship with `users` table
+- When a user is deleted, all associated contact info records are automatically deleted (CASCADE)
 
 ---
 
@@ -168,8 +191,6 @@ Stores career achievement records for users.
                     │ id (PK)         │
                     │ name            │
                     │ title           │
-                    │ email (UNIQUE)  │
-                    │ phone           │
                     │ profileImage    │
                     │ bio             │
                     │ createdAt       │
@@ -177,36 +198,36 @@ Stores career achievement records for users.
                     └────────┬────────┘
                              │
                              │ 1:N (all child tables)
-          ┌──────────────────┼──────────────────┐
-          │                  │                  │
-    ┌─────▼──────────┐ ┌─────▼──────────┐ ┌────▼────────────┐
-    │  job_history   │ │   education    │ │    projects     │
-    ├────────────────┤ ├────────────────┤ ├─────────────────┤
-    │ id (PK)        │ │ id (PK)        │ │ id (PK)         │
-    │ userId (FK)    │ │ userId (FK)    │ │ userId (FK)     │
-    │ company        │ │ institution    │ │ title           │
-    │ position       │ │ degree         │ │ role            │
-    │ startDate      │ │ field          │ │ description     │
-    │ endDate        │ │ startDate      │ │ createdAt       │
-    │ description    │ │ endDate        │ │ updatedAt       │
-    │ createdAt      │ │ description    │ └─────────────────┘
-    │ updatedAt      │ │ createdAt      │
-    └────────────────┘ │ updatedAt      │
-                       └────────────────┘
+    ┌────────────────────────┼──────────────────────────┐
+    │                        │                          │
+┌───▼──────────────┐  ┌──────▼─────────┐  ┌────────────▼────┐
+│  contact_info    │  │  job_history   │  │   education     │
+├──────────────────┤  ├────────────────┤  ├─────────────────┤
+│ id (PK)          │  │ id (PK)        │  │ id (PK)         │
+│ user_id (FK)     │  │ userId (FK)    │  │ userId (FK)     │
+│ type (ENUM)      │  │ company        │  │ institution     │
+│ value            │  │ position       │  │ degree          │
+│ display_order    │  │ startDate      │  │ field           │
+│ createdAt        │  │ endDate        │  │ startDate       │
+│ updatedAt        │  │ description    │  │ endDate         │
+│                  │  │ createdAt      │  │ description     │
+│ UNIQUE(user_id,  │  │ updatedAt      │  │ createdAt       │
+│  type)           │  └────────────────┘  │ updatedAt       │
+└──────────────────┘                      └─────────────────┘
 
-          ┌──────────────────┐
-          │                  │
-    ┌─────▼──────────┐ ┌─────▼──────────┐
-    │    skills      │ │  achievements  │
-    ├────────────────┤ ├────────────────┤
-    │ id (PK)        │ │ id (PK)        │
-    │ userId (FK)    │ │ userId (FK)    │
-    │ skill          │ │ title          │
-    │ createdAt      │ │ date           │
-    │ updatedAt      │ │ description    │
-    └────────────────┘ │ createdAt      │
-                       │ updatedAt      │
-                       └────────────────┘
+    ┌─────────────────────────────────────┐
+    │                                     │
+┌───▼────────────┐  ┌──────────────┐  ┌──▼─────────────┐
+│    projects    │  │    skills    │  │  achievements  │
+├────────────────┤  ├──────────────┤  ├────────────────┤
+│ id (PK)        │  │ id (PK)      │  │ id (PK)        │
+│ userId (FK)    │  │ userId (FK)  │  │ userId (FK)    │
+│ title          │  │ skill        │  │ title          │
+│ role           │  │ createdAt    │  │ date           │
+│ description    │  │ updatedAt    │  │ description    │
+│ createdAt      │  └──────────────┘  │ createdAt      │
+│ updatedAt      │                    │ updatedAt      │
+└────────────────┘                    └────────────────┘
 ```
 
 ---
@@ -239,6 +260,14 @@ Stores career achievement records for users.
 ---
 
 ## Sample Queries
+
+### Get all contact info for a specific user
+```sql
+SELECT id, user_id AS userId, type, value, display_order AS displayOrder
+FROM contact_info
+WHERE user_id = 1
+ORDER BY display_order ASC;
+```
 
 ### Get all jobs for a specific user
 ```sql
@@ -290,17 +319,19 @@ ORDER BY date DESC;
 SELECT
   u.id,
   u.name,
+  COUNT(DISTINCT ci.id) as contact_count,
   COUNT(DISTINCT jh.id) as job_count,
   COUNT(DISTINCT ed.id) as education_count,
   COUNT(DISTINCT p.id)  as project_count,
   COUNT(DISTINCT s.id)  as skill_count,
   COUNT(DISTINCT a.id)  as achievement_count
 FROM users u
-LEFT JOIN job_history jh ON u.id = jh.userId
-LEFT JOIN education ed   ON u.id = ed.userId
-LEFT JOIN projects p     ON u.id = p.userId
-LEFT JOIN skills s       ON u.id = s.userId
-LEFT JOIN achievements a ON u.id = a.userId
+LEFT JOIN contact_info ci ON u.id = ci.user_id
+LEFT JOIN job_history jh  ON u.id = jh.userId
+LEFT JOIN education ed    ON u.id = ed.userId
+LEFT JOIN projects p      ON u.id = p.userId
+LEFT JOIN skills s        ON u.id = s.userId
+LEFT JOIN achievements a  ON u.id = a.userId
 GROUP BY u.id, u.name;
 ```
 
@@ -317,5 +348,7 @@ The schema is created through the following migration files in order:
 5. **005_create_projects_table.sql** - Creates the projects table
 6. **006_create_skills_table.sql** - Creates the skills table
 7. **007_create_achievements_table.sql** - Creates the achievements table
+8. **008_create_contact_info_table.sql** - Creates the contact_info table (BCNF normalisation)
+9. **009_remove_contact_from_users.sql** - Drops `email` and `phone` columns from users
 
 See the `migrations/` directory for the actual SQL definitions.

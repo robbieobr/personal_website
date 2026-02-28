@@ -9,9 +9,19 @@
     "downloadCV": "CV a Íoslódáil"
   },
   "userProfile": {
-    "email": "Ríomhphost:",
-    "phone": "Fón:",
     "about": "Faoi"
+  },
+  "contactInfo": {
+    "email": "Ríomhphost",
+    "phone": "Fón",
+    "website": "Láithreán gréasáin",
+    "github": "GitHub",
+    "linkedin": "LinkedIn",
+    "ariaEmail": "Seol ríomhphost chuig {{value}}",
+    "ariaPhone": "Glaoigh ar {{value}}",
+    "ariaWebsite": "Tabhair cuairt ar láithreán gréasáin {{value}}",
+    "ariaGithub": "Féach ar phróifíl GitHub {{value}}",
+    "ariaLinkedin": "Féach ar phróifíl LinkedIn {{value}}"
   },
   "jobHistory": {
     "title": "Stair Poist",

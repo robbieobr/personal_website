@@ -1,13 +1,51 @@
-import { UserProfile, User, JobEntry, Education, Project, Skill, Achievement } from '../src/types/index';
+import { UserProfile, User, JobEntry, Education, Project, Skill, Achievement, ContactInfo } from '../src/types/index';
 
 export const mockUser: User = {
   id: 1,
   name: 'Jane Doe',
   title: 'Software Engineer',
-  email: 'jane@example.com',
-  phone: '+1-555-0100',
   profileImage: null,
   bio: 'A passionate engineer.',
+};
+
+export const mockContactInfo: ContactInfo = {
+  id: 1,
+  userId: 1,
+  type: 'email',
+  value: 'jane@example.com',
+  displayOrder: 1,
+};
+
+export const mockContactInfoPhone: ContactInfo = {
+  id: 2,
+  userId: 1,
+  type: 'phone',
+  value: '+44 7700 900001',
+  displayOrder: 2,
+};
+
+export const mockContactInfoWebsite: ContactInfo = {
+  id: 3,
+  userId: 1,
+  type: 'website',
+  value: 'https://www.jane.example.com',
+  displayOrder: 3,
+};
+
+export const mockContactInfoGithub: ContactInfo = {
+  id: 4,
+  userId: 1,
+  type: 'github',
+  value: 'https://github.com/janedoe',
+  displayOrder: 4,
+};
+
+export const mockContactInfoLinkedin: ContactInfo = {
+  id: 5,
+  userId: 1,
+  type: 'linkedin',
+  value: 'https://www.linkedin.com/in/janedoe',
+  displayOrder: 5,
 };
 
 export const mockJob: JobEntry = {
@@ -98,6 +136,7 @@ export const mockAchievementNoDescription: Achievement = {
 
 export const mockUserProfile: UserProfile = {
   user: mockUser,
+  contactInfo: [mockContactInfo, mockContactInfoPhone],
   jobHistory: [mockJob, mockPastJob],
   education: [mockEducation, mockCurrentEducation],
   projects: [mockProject, mockProjectNoDescription],

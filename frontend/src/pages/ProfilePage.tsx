@@ -106,7 +106,7 @@ const ProfilePage: React.FC = () => {
   return (
     <div className="profile-page">
       <div className="container">
-        <UserProfileComponent user={profile.user} />
+        <UserProfileComponent user={profile.user} contactInfo={profile.contactInfo} />
         <div className="content-grid">
           <main className="main-column">
             <JobHistory jobs={profile.jobHistory} />

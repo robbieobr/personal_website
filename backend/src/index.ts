@@ -10,6 +10,7 @@ import educationRoutes from './routes/educationRoutes';
 import projectRoutes from './routes/projectRoutes';
 import skillRoutes from './routes/skillRoutes';
 import achievementRoutes from './routes/achievementRoutes';
+import contactInfoRoutes from './routes/contactInfoRoutes';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -34,6 +35,7 @@ app.use('/api/education', educationRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/skills', skillRoutes);
 app.use('/api/achievements', achievementRoutes);
+app.use('/api/contact-info', contactInfoRoutes);
 
 // Health check — verifies database connectivity
 app.get('/api/health', async (req, res) => {

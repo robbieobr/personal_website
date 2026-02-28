@@ -2,12 +2,17 @@
   "user": {
     "id": 1,
     "name": "John Doe",
-    "email": "john.doe@example.com",
     "title": "Full Stack Developer",
-    "phone": "+1 (555) 123-4567",
     "profileImage": "/images/placeholder-profile.png",
     "bio": "Passionate full-stack developer with a focus on creating scalable and user-friendly web applications. Experienced with TypeScript, React, Node.js, and MySQL."
   },
+  "contactInfo": [
+    { "id": 1, "userId": 1, "type": "email", "value": "john.doe@example.com", "displayOrder": 1 },
+    { "id": 2, "userId": 1, "type": "phone", "value": "+44 7700 900001", "displayOrder": 2 },
+    { "id": 3, "userId": 1, "type": "website", "value": "https://www.johndoe.example.com", "displayOrder": 3 },
+    { "id": 4, "userId": 1, "type": "github", "value": "https://github.com/johndoe", "displayOrder": 4 },
+    { "id": 5, "userId": 1, "type": "linkedin", "value": "https://www.linkedin.com/in/johndoe", "displayOrder": 5 }
+  ],
   "jobHistory": [
     {
       "id": 1,

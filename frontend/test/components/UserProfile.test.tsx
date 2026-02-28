@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { screen } from '@testing-library/react';
 import UserProfileComponent from '../../src/components/UserProfile';
 import { renderWithProviders } from '../utils';
-import { mockUser } from '../fixtures';
+import { mockUser, mockContactInfo, mockContactInfoPhone } from '../fixtures';
 
 describe('UserProfile', () => {
   it('renders user name and title', () => {
@@ -11,12 +11,24 @@ describe('UserProfile', () => {
     expect(screen.getByText(mockUser.title)).toBeInTheDocument();
   });
 
-  it('renders email and phone as links', () => {
+  it('renders contact info links when contactInfo is provided', () => {
+    renderWithProviders(
+      <UserProfileComponent user={mockUser} contactInfo={[mockContactInfo, mockContactInfoPhone]} />
+    );
+    const emailLink = screen.getByRole('link', { name: /jane@example.com/i });
+    expect(emailLink).toHaveAttribute('href', `mailto:${mockContactInfo.value}`);
+    const phoneLink = screen.getByRole('link', { name: /\+44 7700 900001/i });
+    expect(phoneLink).toHaveAttribute('href', `tel:${mockContactInfoPhone.value}`);
+  });
+
+  it('renders nothing for contact info when contactInfo is empty', () => {
+    renderWithProviders(<UserProfileComponent user={mockUser} contactInfo={[]} />);
+    expect(screen.queryByRole('link')).not.toBeInTheDocument();
+  });
+
+  it('renders nothing for contact info when contactInfo is undefined', () => {
     renderWithProviders(<UserProfileComponent user={mockUser} />);
-    const emailLink = screen.getByRole('link', { name: mockUser.email });
-    expect(emailLink).toHaveAttribute('href', `mailto:${mockUser.email}`);
-    const phoneLink = screen.getByRole('link', { name: mockUser.phone });
-    expect(phoneLink).toHaveAttribute('href', `tel:${mockUser.phone}`);
+    expect(screen.queryByRole('link')).not.toBeInTheDocument();
   });
 
   it('renders bio when provided', () => {

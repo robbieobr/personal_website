@@ -1,9 +1,15 @@
+export interface ContactInfo {
+  id: number;
+  userId: number;
+  type: 'email' | 'phone' | 'website' | 'github' | 'linkedin';
+  value: string;
+  displayOrder: number;
+}
+
 export interface User {
   id: number;
   name: string;
   title: string;
-  email: string;
-  phone: string;
   profileImage: string | null;
   bio: string | null;
 }
@@ -53,6 +59,7 @@ export interface Achievement {
 
 export interface UserProfile {
   user: User;
+  contactInfo?: ContactInfo[];
   jobHistory: JobEntry[];
   education: Education[];
   projects: Project[];

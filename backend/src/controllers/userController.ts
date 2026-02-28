@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { UserModel, JobModel, EducationModel, ProjectModel, SkillModel, AchievementModel } from '../models/index';
+import { UserModel, JobModel, EducationModel, ProjectModel, SkillModel, AchievementModel, ContactInfoModel } from '../models/index';
 import { parseId } from '../utils/parseId';
 
 export const getUser = async (req: Request, res: Response): Promise<void> => {
@@ -47,7 +47,8 @@ export const getUserProfile = async (req: Request, res: Response): Promise<void>
       return;
     }
 
-    const [jobHistory, education, projects, skills, achievements] = await Promise.all([
+    const [contactInfo, jobHistory, education, projects, skills, achievements] = await Promise.all([
+      ContactInfoModel.getByUserId(userId),
       JobModel.findByUserId(userId),
       EducationModel.findByUserId(userId),
       ProjectModel.findByUserId(userId),
@@ -57,6 +58,7 @@ export const getUserProfile = async (req: Request, res: Response): Promise<void>
 
     res.json({
       user,
+      contactInfo,
       jobHistory,
       education,
       projects,

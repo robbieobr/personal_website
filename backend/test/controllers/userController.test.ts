@@ -1,11 +1,14 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import type { Request, Response } from 'express';
-import { mockUser, mockJob, mockEducation, mockProject, mockSkill, mockAchievement } from '../fixtures';
+import { mockUser, mockJob, mockEducation, mockProject, mockSkill, mockAchievement, mockContactInfo } from '../fixtures';
 
 vi.mock('../../src/models/index', () => ({
   UserModel: {
     findById: vi.fn(),
     findAll: vi.fn(),
+  },
+  ContactInfoModel: {
+    getByUserId: vi.fn(),
   },
   JobModel: {
     findByUserId: vi.fn(),
@@ -38,6 +41,7 @@ const makeReqMock = (overrides: Partial<Request> = {}): Request =>
 
 describe('userController', () => {
   let UserModel: { findById: ReturnType<typeof vi.fn>; findAll: ReturnType<typeof vi.fn> };
+  let ContactInfoModel: { getByUserId: ReturnType<typeof vi.fn> };
   let JobModel: { findByUserId: ReturnType<typeof vi.fn> };
   let EducationModel: { findByUserId: ReturnType<typeof vi.fn> };
   let ProjectModel: { findByUserId: ReturnType<typeof vi.fn> };
@@ -48,6 +52,7 @@ describe('userController', () => {
     vi.resetModules();
     const models = await import('../../src/models/index');
     UserModel = models.UserModel as typeof UserModel;
+    ContactInfoModel = models.ContactInfoModel as typeof ContactInfoModel;
     JobModel = models.JobModel as typeof JobModel;
     EducationModel = models.EducationModel as typeof EducationModel;
     ProjectModel = models.ProjectModel as typeof ProjectModel;
@@ -120,6 +125,7 @@ describe('userController', () => {
   describe('getUserProfile', () => {
     it('returns the full profile when user exists', async () => {
       UserModel.findById.mockResolvedValue(mockUser);
+      ContactInfoModel.getByUserId.mockResolvedValue([mockContactInfo]);
       JobModel.findByUserId.mockResolvedValue([mockJob]);
       EducationModel.findByUserId.mockResolvedValue([mockEducation]);
       ProjectModel.findByUserId.mockResolvedValue([mockProject]);
@@ -131,6 +137,7 @@ describe('userController', () => {
       await getUserProfile(req, res);
       expect(res.json).toHaveBeenCalledWith({
         user: mockUser,
+        contactInfo: [mockContactInfo],
         jobHistory: [mockJob],
         education: [mockEducation],
         projects: [mockProject],

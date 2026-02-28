@@ -1,13 +1,31 @@
-import type { User, JobEntry, Education, Project, Skill, Achievement } from '../src/types/index';
+import type { User, JobEntry, Education, Project, Skill, Achievement, ContactInfo } from '../src/types/index';
 
 export const mockUser: User = {
   id: 1,
   name: 'Jane Doe',
   title: 'Software Engineer',
-  email: 'jane@example.com',
-  phone: '+1-555-123-4567',
   profileImage: 'https://example.com/image.jpg',
   bio: 'Experienced software engineer.',
+  createdAt: new Date('2024-01-01T00:00:00.000Z'),
+  updatedAt: new Date('2024-01-01T00:00:00.000Z'),
+};
+
+export const mockContactInfo: ContactInfo = {
+  id: 1,
+  userId: 1,
+  type: 'email',
+  value: 'jane@example.com',
+  displayOrder: 1,
+  createdAt: new Date('2024-01-01T00:00:00.000Z'),
+  updatedAt: new Date('2024-01-01T00:00:00.000Z'),
+};
+
+export const mockContactInfoPhone: ContactInfo = {
+  id: 2,
+  userId: 1,
+  type: 'phone',
+  value: '+44 7700 900001',
+  displayOrder: 2,
   createdAt: new Date('2024-01-01T00:00:00.000Z'),
   updatedAt: new Date('2024-01-01T00:00:00.000Z'),
 };
