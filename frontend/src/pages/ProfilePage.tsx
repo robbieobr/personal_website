@@ -5,6 +5,9 @@ import { useTranslation } from 'react-i18next';
 import UserProfileComponent from '../components/UserProfile';
 import JobHistory from '../components/JobHistory';
 import EducationHistory from '../components/EducationHistory';
+import Projects from '../components/Projects';
+import Skills from '../components/Skills';
+import Achievements from '../components/Achievements';
 import { getUserProfile } from '../services/api';
 import { UserProfile as UserProfileType } from '../types/index';
 import './ProfilePage.css';
@@ -40,29 +43,43 @@ const ProfilePage: React.FC = () => {
         <div className="container">
           <div className="profile-skeleton-container">
             <div className="profile-skeleton-image">
-              <Skeleton circle height={160} width={160} />
+              <Skeleton circle height={96} width={96} />
             </div>
             <div className="profile-skeleton-info">
-              <Skeleton height={44} width={200} style={{ marginBottom: 12 }} />
-              <Skeleton height={32} width={140} style={{ marginBottom: 24 }} />
+              <Skeleton height={48} width={220} style={{ marginBottom: 10 }} />
+              <Skeleton height={12} width={130} style={{ marginBottom: 20 }} />
               <div className="profile-skeleton-contact">
-                <Skeleton height={18} width={220} />
-                <Skeleton height={18} width={180} />
+                <Skeleton height={12} width={180} />
+                <Skeleton height={12} width={150} />
               </div>
             </div>
           </div>
-          <div className="history-section">
-            <div className="history-skeleton-card">
-              <Skeleton height={28} width={140} style={{ marginBottom: 16 }} />
-              <Skeleton height={18} width={100} style={{ marginBottom: 8 }} />
-              <Skeleton height={18} width={140} style={{ marginBottom: 8 }} />
-              <Skeleton height={18} width={160} />
+          <div className="content-grid">
+            <div className="main-column">
+              <div className="history-skeleton-card">
+                <Skeleton height={12} width={100} style={{ marginBottom: 18 }} />
+                <Skeleton height={18} width={200} style={{ marginBottom: 8 }} />
+                <Skeleton height={12} width={140} style={{ marginBottom: 8 }} />
+                <Skeleton height={12} count={2} />
+              </div>
+              <div className="history-skeleton-card">
+                <Skeleton height={12} width={100} style={{ marginBottom: 18 }} />
+                <Skeleton height={18} width={180} style={{ marginBottom: 8 }} />
+                <Skeleton height={12} width={120} style={{ marginBottom: 8 }} />
+                <Skeleton height={12} count={2} />
+              </div>
             </div>
-            <div className="history-skeleton-card">
-              <Skeleton height={28} width={140} style={{ marginBottom: 16 }} />
-              <Skeleton height={18} width={100} style={{ marginBottom: 8 }} />
-              <Skeleton height={18} width={140} style={{ marginBottom: 8 }} />
-              <Skeleton height={18} width={160} />
+            <div className="sidebar-column">
+              <div className="history-skeleton-card">
+                <Skeleton height={12} width={80} style={{ marginBottom: 14 }} />
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                  <Skeleton height={28} width={70} borderRadius={100} />
+                  <Skeleton height={28} width={85} borderRadius={100} />
+                  <Skeleton height={28} width={60} borderRadius={100} />
+                  <Skeleton height={28} width={90} borderRadius={100} />
+                  <Skeleton height={28} width={75} borderRadius={100} />
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -89,10 +106,17 @@ const ProfilePage: React.FC = () => {
   return (
     <div className="profile-page">
       <div className="container">
-        <UserProfileComponent user={profile.user} />
-        <div className="history-section">
-          <JobHistory jobs={profile.jobHistory} />
-          <EducationHistory education={profile.education} />
+        <UserProfileComponent user={profile.user} contactInfo={profile.contactInfo} />
+        <div className="content-grid">
+          <main className="main-column">
+            <JobHistory jobs={profile.jobHistory} />
+            <EducationHistory education={profile.education} />
+            <Projects projects={profile.projects} />
+          </main>
+          <aside className="sidebar-column">
+            <Skills skills={profile.skills} />
+            <Achievements achievements={profile.achievements} />
+          </aside>
         </div>
       </div>
     </div>

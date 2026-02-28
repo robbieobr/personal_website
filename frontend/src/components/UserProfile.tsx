@@ -3,15 +3,17 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
-import { User } from '../types/index';
+import { User, ContactInfo } from '../types/index';
+import ContactInfoComponent from './ContactInfo/ContactInfo';
 import './UserProfile.css';
 
 interface UserProfileProps {
   user?: User;
+  contactInfo?: ContactInfo[];
   loading?: boolean;
 }
 
-const UserProfileComponent: React.FC<UserProfileProps> = ({ user, loading }) => {
+const UserProfileComponent: React.FC<UserProfileProps> = ({ user, contactInfo, loading }) => {
   const { t } = useTranslation();
   const profileImage = user?.profileImage || '/images/placeholder-profile.png';
 
@@ -28,16 +30,14 @@ const UserProfileComponent: React.FC<UserProfileProps> = ({ user, loading }) => 
         <div className="profile-info">
           <h1>{loading ? <Skeleton width={120} /> : user?.name}</h1>
           <h2 className="title">{loading ? <Skeleton width={80} /> : user?.title}</h2>
-          <div className="contact-info">
-            <p>
-              <strong>{t('userProfile.email')}</strong>{' '}
-              {loading ? <Skeleton width={140} /> : <a href={`mailto:${user?.email}`}>{user?.email}</a>}
-            </p>
-            <p>
-              <strong>{t('userProfile.phone')}</strong>{' '}
-              {loading ? <Skeleton width={100} /> : <a href={`tel:${user?.phone}`}>{user?.phone}</a>}
-            </p>
-          </div>
+          {loading ? (
+            <div className="contact-info">
+              <p><Skeleton width={140} /></p>
+              <p><Skeleton width={100} /></p>
+            </div>
+          ) : (
+            <ContactInfoComponent contactInfo={contactInfo} />
+          )}
         </div>
       </div>
       {(user?.bio || loading) && (

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { UserModel, JobModel, EducationModel } from '../models/index';
+import { UserModel, JobModel, EducationModel, ProjectModel, SkillModel, AchievementModel, ContactInfoModel } from '../models/index';
 import { parseId } from '../utils/parseId';
 
 export const getUser = async (req: Request, res: Response): Promise<void> => {
@@ -47,13 +47,23 @@ export const getUserProfile = async (req: Request, res: Response): Promise<void>
       return;
     }
 
-    const jobHistory = await JobModel.findByUserId(userId);
-    const education = await EducationModel.findByUserId(userId);
+    const [contactInfo, jobHistory, education, projects, skills, achievements] = await Promise.all([
+      ContactInfoModel.getByUserId(userId),
+      JobModel.findByUserId(userId),
+      EducationModel.findByUserId(userId),
+      ProjectModel.findByUserId(userId),
+      SkillModel.findByUserId(userId),
+      AchievementModel.findByUserId(userId),
+    ]);
 
     res.json({
       user,
+      contactInfo,
       jobHistory,
       education,
+      projects,
+      skills,
+      achievements,
     });
   } catch (error) {
     console.error('Error fetching profile:', error);

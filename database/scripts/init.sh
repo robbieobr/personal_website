@@ -19,10 +19,20 @@ rm -f "$DOCKER_INIT_DIR"/*.sql
 echo "Copying migration files..."
 cp "$DB_DIR/migrations"/*.sql "$DOCKER_INIT_DIR/"
 
-# Copy seed files for the specified seed type
+# Copy seed files with renumbered prefixes starting after the last migration.
+# Seeds are numbered sequentially beginning at (migration_count + 1) to ensure
+# they always execute after all CREATE TABLE scripts.
 if [ -d "$DB_DIR/seeds/$SEED_TYPE" ]; then
   echo "Copying $SEED_TYPE seed files..."
-  cp "$DB_DIR/seeds/$SEED_TYPE"/*.sql "$DOCKER_INIT_DIR/"
+  migration_count=$(ls "$DB_DIR/migrations"/*.sql | wc -l)
+  seed_num=$((migration_count + 1))
+  for seed_file in $(ls -1 "$DB_DIR/seeds/$SEED_TYPE"/*.sql | sort); do
+    filename=$(basename "$seed_file")
+    name_without_prefix="${filename:4}"  # Strip the "NNN_" prefix
+    new_name=$(printf "%03d_%s" "$seed_num" "$name_without_prefix")
+    cp "$seed_file" "$DOCKER_INIT_DIR/$new_name"
+    seed_num=$((seed_num + 1))
+  done
 else
   echo "Error: Seed type '$SEED_TYPE' not found in $DB_DIR/seeds/"
   echo "Available seed types:"

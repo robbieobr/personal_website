@@ -10,19 +10,30 @@ database/
 │   ├── 001_create_database.sql
 │   ├── 002_create_users_table.sql
 │   ├── 003_create_job_history_table.sql
-│   └── 004_create_education_table.sql
+│   ├── 004_create_education_table.sql
+│   ├── 005_create_projects_table.sql
+│   ├── 006_create_skills_table.sql
+│   ├── 007_create_achievements_table.sql
+│   ├── 008_create_contact_info_table.sql
+│   └── 009_remove_contact_from_users.sql
 │
 ├── seeds/               # Seed data for different dataset configurations
-│   ├── default/        # Default seed data (1 user, 3 jobs, 2 education records)
-│   │   ├── 001_users.sql
+│   ├── default/        # Default seed data (1 user with full career history)
+│   │   ├── 001_users.sql        # includes contact_info inserts
 │   │   ├── 002_job_history.sql
-│   │   └── 003_education.sql
+│   │   ├── 003_education.sql
+│   │   ├── 004_projects.sql
+│   │   ├── 005_skills.sql
+│   │   └── 006_achievements.sql
 │   ├── minimal/        # Minimal seed data (1 user only)
-│   │   └── 001_users.sql
-│   └── full/           # Full seed data (3 users, 7 jobs, 6 education records)
-│       ├── 001_users.sql
+│   │   └── 001_users.sql        # includes contact_info inserts
+│   └── full/           # Full seed data (3 users with complete history)
+│       ├── 001_users.sql        # includes contact_info inserts
 │       ├── 002_job_history.sql
-│       └── 003_education.sql
+│       ├── 003_education.sql
+│       ├── 004_projects.sql
+│       ├── 005_skills.sql
+│       └── 006_achievements.sql
 │
 ├── scripts/            # Helper scripts for database management
 │   ├── init.sh        # Initialize database with specified seed type
@@ -31,7 +42,7 @@ database/
 ├── docker-entrypoint-initdb.d/  # Files used by Docker MySQL initialization (dev)
 │
 ├── prod-initdb.d/       # Files used by production Docker init (gitignored seed)
-│   ├── 001-004_*.sql   # Migration copies
+│   ├── 001-007_*.sql   # Migration copies
 │   ├── 500_prod_seed.sql.example  # Template — copy to 500_prod_seed.sql and fill in
 │   └── 900_readonly_user.sh       # Creates read-only MySQL user for the backend
 │
@@ -49,6 +60,9 @@ The default configuration uses the **default seed dataset** with:
 - 1 user (John Doe)
 - 3 job history entries
 - 2 education entries
+- 2 projects
+- 6 skills
+- 2 achievements
 
 To start with default configuration:
 
@@ -64,7 +78,7 @@ Contains a standard test dataset with one primary user (John Doe) and their care
 **Location:** `seeds/default/`
 
 ### Minimal Seed
-Contains only a single user (Jane Smith) with no job or education history. Use this for:
+Contains only a single user (Jane Smith) with no other records. Use this for:
 - Testing UI with minimal data
 - Performance testing
 - Testing edge cases
@@ -77,7 +91,7 @@ Contains an extended dataset with three users and their complete history:
 - Jane Smith (DevOps Engineer)
 - Alice Johnson (Product Manager)
 
-This dataset includes 7 job history entries and 6 education records.
+This dataset includes job history, education, projects, skills, and achievements for all three users.
 
 **Location:** `seeds/full/`
 
@@ -148,12 +162,36 @@ To add a new table or modify the schema:
 
 1. Create a new SQL file in `migrations/` with the next sequential number:
    ```bash
-   # Example: 005_create_projects_table.sql
+   # Example: 008_create_new_table.sql
    ```
 
-2. The file will be automatically included when Docker initializes (if you've set it up with init.sh)
+2. Add corresponding seed data to each seed profile under `seeds/`:
+   ```bash
+   seeds/default/007_new_table.sql
+   seeds/full/007_new_table.sql
+   # (minimal only if needed)
+   ```
 
-3. For existing running containers, you'll need to run the migration manually via MySQL client
+3. Rebuild the `init/` directories by adding the new migration and renumbering seed files if needed:
+   ```bash
+   cp migrations/008_create_new_table.sql init/full/008_create_new_table.sql
+   cp migrations/008_create_new_table.sql init/minimal/008_create_new_table.sql
+   # Add seed files starting after the last migration number
+   # e.g., if there are now 8 migrations, seeds start at 009
+   ```
+
+4. Add the new migration to `prod-initdb.d/`:
+   ```bash
+   cp migrations/008_create_new_table.sql prod-initdb.d/008_create_new_table.sql
+   ```
+
+5. For existing running containers, run the migration manually via MySQL client.
+
+6. Reinitialize `docker-entrypoint-initdb.d/` for fresh-start parity:
+   ```bash
+   cd database/scripts
+   ./init.sh default
+   ```
 
 ## Adding New Seed Datasets
 
@@ -169,17 +207,25 @@ To create a new seed dataset (e.g., `staging`):
    seeds/staging/001_users.sql
    seeds/staging/002_job_history.sql
    seeds/staging/003_education.sql
+   seeds/staging/004_projects.sql
+   seeds/staging/005_skills.sql
+   seeds/staging/006_achievements.sql
    ```
 
 3. Populate with your desired data
 
-4. Create a pre-combined init directory with migrations and seeds:
+4. Create a pre-combined init directory with migrations and seeds.
+   Seed files must be numbered to execute **after** all migrations (currently 001–009),
+   so start seeds at 010:
    ```bash
    mkdir -p init/staging
    cp migrations/*.sql init/staging/
-   cp seeds/staging/001_users.sql init/staging/005_users.sql
-   cp seeds/staging/002_job_history.sql init/staging/006_job_history.sql
-   cp seeds/staging/003_education.sql init/staging/007_education.sql
+   cp seeds/staging/001_users.sql init/staging/010_users.sql
+   cp seeds/staging/002_job_history.sql init/staging/011_job_history.sql
+   cp seeds/staging/003_education.sql init/staging/012_education.sql
+   cp seeds/staging/004_projects.sql init/staging/013_projects.sql
+   cp seeds/staging/005_skills.sql init/staging/014_skills.sql
+   cp seeds/staging/006_achievements.sql init/staging/015_achievements.sql
    ```
 
 5. Create a corresponding docker compose override file (optional):
@@ -198,7 +244,7 @@ To create a new seed dataset (e.g., `staging`):
 
 1. When `docker compose up` is executed, Docker mounts the specified volumes to `/docker-entrypoint-initdb.d/` in the MySQL container
 
-2. The MySQL Docker image automatically executes all `.sql` files in `/docker-entrypoint-initdb.d/` in alphabetical order
+2. The MySQL Docker image automatically executes all `.sql` and `.sh` files in `/docker-entrypoint-initdb.d/` in alphabetical order
 
 3. Files are executed only once, when the volume is first created. Subsequent containers reuse the existing data volume.
 
@@ -214,20 +260,33 @@ This directory is pre-populated with the default seed dataset for quick startup.
 
 ## File Naming Convention
 
-Both migrations and seed files use a three-digit prefix for ordering:
-- `001_*` - First to execute
-- `002_*` - Second to execute
-- etc.
+### Migrations
+Migration files use a three-digit prefix that reflects their creation order:
+- `001_create_database.sql` through `009_remove_contact_from_users.sql`
 
-This ensures proper execution order when Docker processes the files alphabetically.
+### Seeds (within `seeds/` directories)
+Seed files within each `seeds/<profile>/` directory use three-digit prefixes starting at `001`:
+- `001_users.sql` (also seeds `contact_info`), `002_job_history.sql`, ..., `006_achievements.sql`
+
+### Pre-combined init directories (`init/`, `docker-entrypoint-initdb.d/`)
+When migrations and seeds are combined into a single directory for Docker, seed files must be
+numbered to execute **after** all migrations. With 9 migrations, seeds start at `010`:
+- Migrations: `001_create_database.sql` … `009_remove_contact_from_users.sql`
+- Seeds: `010_users.sql` … `015_achievements.sql`
+
+The `init.sh` script handles this renumbering automatically.
 
 ## Reference: Schema History
 
-The schema was originally defined in a single `schema.sql` file that has since been split into:
-- **Migrations** - Table definitions (`001*.sql` to `004*.sql`)
-- **Seeds/Default** - Sample data (in `seeds/default/`)
-
-The original file is no longer present in the repository.
+The schema was originally defined in a single `schema.sql` file that has since been split into
+numbered migration files. The current schema (migrations 001–009) covers:
+- `users` — user profile information (name, title, bio, profile image)
+- `contact_info` — contact details per user (email, phone, website, GitHub, LinkedIn) — added in migration 008/009 as a BCNF normalisation of the original `email` and `phone` columns on `users`
+- `job_history` — employment records
+- `education` — educational background
+- `projects` — project portfolio entries
+- `skills` — skill list entries
+- `achievements` — career achievements
 
 ## Troubleshooting
 

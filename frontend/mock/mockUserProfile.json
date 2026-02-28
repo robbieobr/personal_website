@@ -2,12 +2,17 @@
   "user": {
     "id": 1,
     "name": "John Doe",
-    "email": "john.doe@example.com",
     "title": "Full Stack Developer",
-    "phone": "+1 (555) 123-4567",
     "profileImage": "/images/placeholder-profile.png",
     "bio": "Passionate full-stack developer with a focus on creating scalable and user-friendly web applications. Experienced with TypeScript, React, Node.js, and MySQL."
   },
+  "contactInfo": [
+    { "id": 1, "userId": 1, "type": "email", "value": "john.doe@example.com", "displayOrder": 1 },
+    { "id": 2, "userId": 1, "type": "phone", "value": "+44 7700 900001", "displayOrder": 2 },
+    { "id": 3, "userId": 1, "type": "website", "value": "https://www.johndoe.example.com", "displayOrder": 3 },
+    { "id": 4, "userId": 1, "type": "github", "value": "https://github.com/johndoe", "displayOrder": 4 },
+    { "id": 5, "userId": 1, "type": "linkedin", "value": "https://www.linkedin.com/in/johndoe", "displayOrder": 5 }
+  ],
   "jobHistory": [
     {
       "id": 1,
@@ -57,6 +62,46 @@
       "startDate": "2018-09-01",
       "endDate": "2020-05-31",
       "description": "Specialized in full-stack development and cloud computing. Completed thesis on microservices architecture."
+    }
+  ],
+  "projects": [
+    {
+      "id": 1,
+      "userId": 1,
+      "title": "Personal Portfolio Website",
+      "role": "Lead Developer",
+      "description": "Designed and built a full-stack personal portfolio site using React, Node.js, and MySQL, deployed via Docker Compose."
+    },
+    {
+      "id": 2,
+      "userId": 1,
+      "title": "E-Commerce Platform",
+      "role": "Backend Developer",
+      "description": "Developed RESTful APIs for an e-commerce platform handling product listings, orders, and payments."
+    }
+  ],
+  "skills": [
+    { "id": 1, "userId": 1, "skill": "TypeScript" },
+    { "id": 2, "userId": 1, "skill": "React" },
+    { "id": 3, "userId": 1, "skill": "Node.js" },
+    { "id": 4, "userId": 1, "skill": "MySQL" },
+    { "id": 5, "userId": 1, "skill": "Docker" },
+    { "id": 6, "userId": 1, "skill": "REST API Design" }
+  ],
+  "achievements": [
+    {
+      "id": 1,
+      "userId": 1,
+      "title": "Employee of the Year",
+      "date": "2022-12-01",
+      "description": "Recognised for outstanding contributions to the engineering team and delivering key projects ahead of schedule."
+    },
+    {
+      "id": 2,
+      "userId": 1,
+      "title": "Open Source Contributor",
+      "date": "2021-06-15",
+      "description": "Merged a significant performance improvement into a widely-used open source library with over 10,000 weekly downloads."
     }
   ]
 }

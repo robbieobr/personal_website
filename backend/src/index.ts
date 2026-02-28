@@ -7,6 +7,10 @@ import pool from './config/database';
 import userRoutes from './routes/userRoutes';
 import jobRoutes from './routes/jobRoutes';
 import educationRoutes from './routes/educationRoutes';
+import projectRoutes from './routes/projectRoutes';
+import skillRoutes from './routes/skillRoutes';
+import achievementRoutes from './routes/achievementRoutes';
+import contactInfoRoutes from './routes/contactInfoRoutes';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -28,6 +32,10 @@ app.use(express.json({ limit: '10mb' }));
 app.use('/api/users', userRoutes);
 app.use('/api/jobs', jobRoutes);
 app.use('/api/education', educationRoutes);
+app.use('/api/projects', projectRoutes);
+app.use('/api/skills', skillRoutes);
+app.use('/api/achievements', achievementRoutes);
+app.use('/api/contact-info', contactInfoRoutes);
 
 // Health check — verifies database connectivity
 app.get('/api/health', async (req, res) => {

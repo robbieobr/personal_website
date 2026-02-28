@@ -9,9 +9,19 @@
     "downloadCV": "Download CV"
   },
   "userProfile": {
-    "email": "Email:",
-    "phone": "Phone:",
     "about": "About"
+  },
+  "contactInfo": {
+    "email": "Email",
+    "phone": "Phone",
+    "website": "Website",
+    "github": "GitHub",
+    "linkedin": "LinkedIn",
+    "ariaEmail": "Send email to {{value}}",
+    "ariaPhone": "Call {{value}}",
+    "ariaWebsite": "Visit website {{value}}",
+    "ariaGithub": "View GitHub profile {{value}}",
+    "ariaLinkedin": "View LinkedIn profile {{value}}"
   },
   "jobHistory": {
     "title": "Job History",
@@ -22,5 +32,17 @@
     "title": "Education",
     "noHistory": "No education history available",
     "present": "Present"
+  },
+  "projects": {
+    "title": "Projects",
+    "noProjects": "No projects available"
+  },
+  "skills": {
+    "title": "Skills",
+    "noSkills": "No skills available"
+  },
+  "achievements": {
+    "title": "Achievements",
+    "noAchievements": "No achievements available"
   }
 }

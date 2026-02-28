@@ -1,17 +1,29 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import request from 'supertest';
 import express from 'express';
-import { mockUser, mockJob, mockEducation } from '../fixtures';
+import { mockUser, mockJob, mockEducation, mockProject, mockSkill, mockAchievement, mockContactInfo } from '../fixtures';
 
 vi.mock('../../src/models/index', () => ({
   UserModel: {
     findById: vi.fn(),
     findAll: vi.fn(),
   },
+  ContactInfoModel: {
+    getByUserId: vi.fn(),
+  },
   JobModel: {
     findByUserId: vi.fn(),
   },
   EducationModel: {
+    findByUserId: vi.fn(),
+  },
+  ProjectModel: {
+    findByUserId: vi.fn(),
+  },
+  SkillModel: {
+    findByUserId: vi.fn(),
+  },
+  AchievementModel: {
     findByUserId: vi.fn(),
   },
 }));
@@ -26,15 +38,23 @@ const buildApp = async () => {
 
 describe('userRoutes', () => {
   let UserModel: { findById: ReturnType<typeof vi.fn>; findAll: ReturnType<typeof vi.fn> };
+  let ContactInfoModel: { getByUserId: ReturnType<typeof vi.fn> };
   let JobModel: { findByUserId: ReturnType<typeof vi.fn> };
   let EducationModel: { findByUserId: ReturnType<typeof vi.fn> };
+  let ProjectModel: { findByUserId: ReturnType<typeof vi.fn> };
+  let SkillModel: { findByUserId: ReturnType<typeof vi.fn> };
+  let AchievementModel: { findByUserId: ReturnType<typeof vi.fn> };
 
   beforeEach(async () => {
     vi.resetModules();
     const models = await import('../../src/models/index');
     UserModel = models.UserModel as typeof UserModel;
+    ContactInfoModel = models.ContactInfoModel as typeof ContactInfoModel;
     JobModel = models.JobModel as typeof JobModel;
     EducationModel = models.EducationModel as typeof EducationModel;
+    ProjectModel = models.ProjectModel as typeof ProjectModel;
+    SkillModel = models.SkillModel as typeof SkillModel;
+    AchievementModel = models.AchievementModel as typeof AchievementModel;
     vi.clearAllMocks();
   });
 
@@ -68,14 +88,22 @@ describe('userRoutes', () => {
   describe('GET /api/users/:id/profile', () => {
     it('responds with 200 and the full profile', async () => {
       UserModel.findById.mockResolvedValue(mockUser);
+      ContactInfoModel.getByUserId.mockResolvedValue([mockContactInfo]);
       JobModel.findByUserId.mockResolvedValue([mockJob]);
       EducationModel.findByUserId.mockResolvedValue([mockEducation]);
+      ProjectModel.findByUserId.mockResolvedValue([mockProject]);
+      SkillModel.findByUserId.mockResolvedValue([mockSkill]);
+      AchievementModel.findByUserId.mockResolvedValue([mockAchievement]);
       const app = await buildApp();
       const res = await request(app).get('/api/users/1/profile');
       expect(res.status).toBe(200);
       expect(res.body).toHaveProperty('user');
+      expect(res.body).toHaveProperty('contactInfo');
       expect(res.body).toHaveProperty('jobHistory');
       expect(res.body).toHaveProperty('education');
+      expect(res.body).toHaveProperty('projects');
+      expect(res.body).toHaveProperty('skills');
+      expect(res.body).toHaveProperty('achievements');
     });
   });
 });
