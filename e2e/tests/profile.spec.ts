@@ -19,11 +19,11 @@ test.describe('Profile Page', () => {
 
   test.describe('User Profile section', () => {
     test('displays name and job title', async ({ page }) => {
-      // Name is in <h1>, title is in <h2 class="title"> inside .user-profile.
+      // Name is in <h1>, title is in <p class="title"> inside .user-profile.
       // Scope to .user-profile to avoid colliding with job position <h3>s that
       // may share the same text (e.g. "Full Stack Developer" is also a job position).
       await expect(page.locator('.user-profile h1')).toContainText('John Doe');
-      await expect(page.locator('.user-profile h2.title')).toContainText('Full Stack Developer');
+      await expect(page.locator('.user-profile p.title')).toContainText('Full Stack Developer');
     });
 
     test('displays a profile image', async ({ page }) => {
@@ -31,8 +31,8 @@ test.describe('Profile Page', () => {
     });
 
     test('displays the About / bio section', async ({ page }) => {
-      // .profile-bio contains the <h3> heading and the bio <p>
-      await expect(page.locator('.profile-bio h3')).toBeVisible();
+      // .profile-bio contains the <h2 class="profile-bio-heading"> heading and the bio <p>
+      await expect(page.locator('.profile-bio h2')).toBeVisible();
       await expect(page.locator('.profile-bio p')).toContainText('Passionate full-stack developer');
     });
 

@@ -9,7 +9,7 @@ test.describe('Smoke', () => {
     await page.goto('/');
 
     await expect(page.locator('.App-header')).toBeVisible();
-    await expect(page.locator('.App-header h1')).toBeVisible();
+    await expect(page.locator('.App-header .site-title')).toBeVisible();
     await expect(page.getByRole('button', { name: 'Download CV' })).toBeVisible();
     await expect(page.getByLabel('Select language')).toBeVisible();
   });
