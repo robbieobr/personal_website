@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, afterEach } from 'vitest';
+import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
 import { screen, fireEvent } from '@testing-library/react';
 import App from '../src/App';
 import { renderWithProviders } from './utils';
@@ -8,6 +8,16 @@ vi.mock('../src/pages/ProfilePage', () => ({
 }));
 
 describe('App', () => {
+  beforeEach(() => {
+    vi.spyOn(Storage.prototype, 'getItem').mockReturnValue(null);
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {});
+    vi.spyOn(document.documentElement.style, 'setProperty').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   it('renders the page title', () => {
     renderWithProviders(<App />);
     expect(screen.getByText('My Portfolio')).toBeInTheDocument();
@@ -41,6 +51,36 @@ describe('App', () => {
     renderWithProviders(<App />);
     const link = screen.getByRole('link', { name: 'My Portfolio' });
     expect(link).toHaveAttribute('href', '/');
+  });
+
+  describe('theme switcher', () => {
+    it('renders the theme selector with correct aria-label', () => {
+      renderWithProviders(<App />);
+      const select = screen.getByRole('combobox', { name: /select theme/i });
+      expect(select).toBeInTheDocument();
+    });
+
+    it('renders all 5 theme options', () => {
+      renderWithProviders(<App />);
+      expect(screen.getByRole('option', { name: 'Light' })).toBeInTheDocument();
+      expect(screen.getByRole('option', { name: 'Dark' })).toBeInTheDocument();
+      expect(screen.getByRole('option', { name: 'High Contrast' })).toBeInTheDocument();
+      expect(screen.getByRole('option', { name: 'Colour Blind' })).toBeInTheDocument();
+      expect(screen.getByRole('option', { name: 'Colour Blind HC' })).toBeInTheDocument();
+    });
+
+    it('defaults to the light theme', () => {
+      renderWithProviders(<App />);
+      const select = screen.getByRole('combobox', { name: /select theme/i }) as HTMLSelectElement;
+      expect(select.value).toBe('light');
+    });
+
+    it('updates the selected theme when changed', () => {
+      renderWithProviders(<App />);
+      const select = screen.getByRole('combobox', { name: /select theme/i });
+      fireEvent.change(select, { target: { value: 'dark' } });
+      expect((select as HTMLSelectElement).value).toBe('dark');
+    });
   });
 
   describe('in production mode', () => {

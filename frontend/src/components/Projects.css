@@ -63,7 +63,7 @@
 .project-role {
   display: inline-block;
   background: var(--color-teal-light);
-  color: #065f65; /* A-012: was var(--color-teal) — 3.02:1 → ~8.3:1 on #e3f6f8 */
+  color: var(--color-teal-accessible); /* A-012: ~8.3:1 on teal-light bg */
   font-size: 0.7rem;
   font-weight: 700;
   padding: 0.2rem 0.65rem;

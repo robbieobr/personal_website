@@ -12,6 +12,9 @@
   --color-border: #dcd6ce;
   --color-bio-text: #c8dde8;
   --color-error: #d32f2f;
+  --color-profile-bg-start: #0d1f36;
+  --color-profile-bg-end: #0a2740;
+  --color-focus-ring: #12bdc8;
   --font-display: 'Cormorant Garamond', Georgia, serif;
   --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'JetBrains Mono', source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
