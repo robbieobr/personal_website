@@ -1,13 +1,14 @@
 :root {
   --color-navy: #0d1f36;
   --color-teal: #0a9ba4;
+  --color-teal-accessible: #065f65; /* A-003/A-005: ~7.1:1 contrast on #f0ece7 */
   --color-teal-bright: #12bdc8;
   --color-teal-light: #e3f6f8;
   --color-background: #f0ece7;
   --color-surface: #ffffff;
   --color-text-primary: #0d1f36;
   --color-text-secondary: #445566;
-  --color-text-muted: #8a9aaa;
+  --color-text-muted: #5a6470; /* A-004: was #8a9aaa — now ~4.6:1 on #f0ece7 */
   --color-border: #dcd6ce;
   --color-bio-text: #c8dde8;
   --color-error: #d32f2f;

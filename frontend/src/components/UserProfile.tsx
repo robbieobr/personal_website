@@ -29,7 +29,7 @@ const UserProfileComponent: React.FC<UserProfileProps> = ({ user, contactInfo, l
         </div>
         <div className="profile-info">
           <h1>{loading ? <Skeleton width={120} /> : user?.name}</h1>
-          <h2 className="title">{loading ? <Skeleton width={80} /> : user?.title}</h2>
+          <p className="title">{loading ? <Skeleton width={80} /> : user?.title}</p>
           {loading ? (
             <div className="contact-info">
               <p><Skeleton width={140} /></p>
@@ -42,7 +42,7 @@ const UserProfileComponent: React.FC<UserProfileProps> = ({ user, contactInfo, l
       </div>
       {(user?.bio || loading) && (
         <div className="profile-bio">
-          <h3>{t('userProfile.about')}</h3>
+          <h2 className="profile-bio-heading">{t('userProfile.about')}</h2>
           <p>{loading ? <Skeleton count={2} /> : user?.bio}</p>
         </div>
       )}

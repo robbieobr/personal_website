@@ -71,7 +71,7 @@
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.profile-bio h3 {
+.profile-bio-heading {
   font-family: var(--font-body);
   font-size: 0.65rem;
   font-weight: 700;
@@ -84,7 +84,7 @@
 }
 
 .profile-bio p {
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(255, 255, 255, 0.8); /* A-011: was 0.55 — now ~10.5:1 on dark profile bg */
   line-height: 1.75;
   margin: 0;
   font-size: 0.93rem;
@@ -190,7 +190,7 @@
     border-top: none;
   }
 
-  .profile-bio h3 {
+  .profile-bio-heading {
     display: none;
   }
 

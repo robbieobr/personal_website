@@ -12,10 +12,13 @@ const App: React.FC = () => {
 
   return (
     <div className="App">
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
       <header className="App-header">
-        <h1>
+        <p className="site-title">
           <a href="/" className="App-header-link">{(import.meta.env.PROD && import.meta.env.VITE_APP_URL) || t('app.title')}</a>
-        </h1>
+        </p>
         <div className="header-actions">
           <button className="download-btn" onClick={() => window.print()}>
             {t('profilePage.downloadCV')}
@@ -33,9 +36,12 @@ const App: React.FC = () => {
           </div>
         </div>
       </header>
-      <main>
+      <div id="main-content">
         <ProfilePage />
-      </main>
+      </div>
+      <footer className="App-footer">
+        <p>{new Date().getFullYear()} — My Portfolio</p>
+      </footer>
     </div>
   );
 };
