@@ -47,3 +47,48 @@ jobs:
       - name: Run frontend tests
         working-directory: ./frontend
         run: npm test
+
+  e2e-tests:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Start Docker Compose stack
+        run: docker compose up -d
+
+      - name: Install e2e dependencies
+        working-directory: ./e2e
+        run: npm install
+
+      - name: Install Playwright browsers
+        working-directory: ./e2e
+        run: npx playwright install --with-deps chromium
+
+      - name: Wait for frontend to be ready
+        # Docker startup order: MySQL healthcheck → backend → frontend.
+        # Installing Playwright above gives the stack ~60 s head-start.
+        # Poll until port 3000 responds (2 min hard timeout).
+        run: |
+          echo "Waiting for frontend on http://localhost:3000 ..."
+          timeout 120 bash -c 'until curl -sf http://localhost:3000 > /dev/null; do sleep 3; done'
+          echo "Frontend is ready."
+
+      - name: Run e2e tests
+        working-directory: ./e2e
+        run: npm test
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: e2e/playwright-report/
+          retention-days: 7
