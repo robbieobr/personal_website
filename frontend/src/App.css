@@ -1,3 +1,29 @@
+/* A-001: Skip navigation link */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.skip-link:focus {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: auto;
+  height: auto;
+  padding: 0.75rem 1.5rem;
+  background: var(--color-navy);
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  z-index: 9999;
+  outline: 2px solid var(--color-teal-bright);
+  outline-offset: 2px;
+}
+
 .App-header {
   background-color: var(--color-navy);
   min-height: 52px;
@@ -13,7 +39,8 @@
   z-index: 100;
 }
 
-.App-header h1 {
+/* A-008: Demoted from h1 to p.site-title */
+.App-header .site-title {
   font-family: var(--font-display);
   font-size: 1.55rem;
   font-weight: 600;
@@ -32,9 +59,19 @@
   text-decoration: none;
 }
 
-.App-header-link:hover,
+.App-header-link:hover {
+  text-decoration: none;
+}
+
+/* A-007: Separate focus from hover, add visible focus indicator */
 .App-header-link:focus {
   text-decoration: none;
+}
+
+.App-header-link:focus-visible {
+  outline: 2px solid var(--color-teal-bright);
+  outline-offset: 3px;
+  border-radius: 2px;
 }
 
 .header-actions {
@@ -64,11 +101,20 @@
   border-color: rgba(255, 255, 255, 0.45);
 }
 
+/* A-002: Visible focus indicator for download button */
+.download-btn:focus-visible {
+  outline: 2px solid var(--color-teal-bright);
+  outline-offset: 2px;
+  color: white;
+  border-color: rgba(255, 255, 255, 0.45);
+}
+
 .language-switcher {
   display: flex;
   align-items: center;
 }
 
+/* A-010: Remove outline: none, replace with proper focus-visible */
 .language-select {
   background-color: rgba(255, 255, 255, 0.08);
   color: rgba(255, 255, 255, 0.7);
@@ -79,7 +125,6 @@
   font-size: 0.8rem;
   font-family: var(--font-body);
   transition: all 0.2s ease;
-  outline: none;
 }
 
 .language-select:hover {
@@ -87,8 +132,8 @@
   color: white;
 }
 
-.language-select:focus {
-  outline: 1px solid rgba(255, 255, 255, 0.4);
+.language-select:focus-visible {
+  outline: 2px solid #ffffff;
   outline-offset: 2px;
 }
 
@@ -96,6 +141,20 @@
   background-color: var(--color-navy);
   color: white;
   font-family: var(--font-body);
+}
+
+/* A-016: Footer / contentinfo landmark */
+.App-footer {
+  text-align: center;
+  padding: 1rem 2rem;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+@media print {
+  .App-footer {
+    display: none;
+  }
 }
 
 @media (max-width: 600px) {

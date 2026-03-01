@@ -19,9 +19,9 @@
     "linkedin": "LinkedIn",
     "ariaEmail": "Send email to {{value}}",
     "ariaPhone": "Call {{value}}",
-    "ariaWebsite": "Visit website {{value}}",
-    "ariaGithub": "View GitHub profile {{value}}",
-    "ariaLinkedin": "View LinkedIn profile {{value}}"
+    "ariaWebsite": "Visit website {{value}} (opens in new tab)",
+    "ariaGithub": "View GitHub profile {{value}} (opens in new tab)",
+    "ariaLinkedin": "View LinkedIn profile {{value}} (opens in new tab)"
   },
   "jobHistory": {
     "title": "Job History",
