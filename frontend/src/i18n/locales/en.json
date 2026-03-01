@@ -44,5 +44,13 @@
   "achievements": {
     "title": "Achievements",
     "noAchievements": "No achievements available"
+  },
+  "themes": {
+    "label": "Select theme",
+    "light": "Light",
+    "dark": "Dark",
+    "highContrast": "High Contrast",
+    "colourBlind": "Colour Blind",
+    "colourBlindHC": "Colour Blind HC"
   }
 }

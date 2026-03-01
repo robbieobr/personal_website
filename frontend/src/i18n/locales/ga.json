@@ -44,5 +44,13 @@
   "achievements": {
     "title": "Éachtaí",
     "noAchievements": "Níl éachtaí ar fáil"
+  },
+  "themes": {
+    "label": "Roghnaigh téama",
+    "light": "Éadrom",
+    "dark": "Dorcha",
+    "highContrast": "Ard-chodarsnacht",
+    "colourBlind": "Dallachas Dath",
+    "colourBlindHC": "Dallachas Dath Ard"
   }
 }

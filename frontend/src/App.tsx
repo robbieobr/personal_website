@@ -1,13 +1,20 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import ProfilePage from './pages/ProfilePage';
+import { useTheme } from './hooks/useTheme';
+import { themes, type ThemeId } from './themes';
 import './App.css';
 
 const App: React.FC = () => {
   const { t, i18n } = useTranslation();
+  const { themeId, setThemeId } = useTheme();
 
   const handleLanguageChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     i18n.changeLanguage(event.target.value);
+  };
+
+  const handleThemeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setThemeId(event.target.value as ThemeId);
   };
 
   return (
@@ -23,6 +30,20 @@ const App: React.FC = () => {
           <button className="download-btn" onClick={() => window.print()}>
             {t('profilePage.downloadCV')}
           </button>
+          <div className="theme-switcher">
+            <select
+              value={themeId}
+              onChange={handleThemeChange}
+              aria-label={t('themes.label')}
+              className="theme-select"
+            >
+              {themes.map(theme => (
+                <option key={theme.id} value={theme.id}>
+                  {t(`themes.${theme.i18nKey}`)}
+                </option>
+              ))}
+            </select>
+          </div>
           <div className="language-switcher">
             <select
               value={i18n.language}
