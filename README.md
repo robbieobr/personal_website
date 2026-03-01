@@ -82,12 +82,20 @@ personal_website/
 │   │   │   └── database.ts
 │   │   ├── controllers/     # Request handlers
 │   │   │   ├── userController.ts
+│   │   │   ├── contactInfoController.ts
 │   │   │   ├── jobController.ts
-│   │   │   └── educationController.ts
+│   │   │   ├── educationController.ts
+│   │   │   ├── projectController.ts
+│   │   │   ├── skillController.ts
+│   │   │   └── achievementController.ts
 │   │   ├── routes/          # Route definitions
 │   │   │   ├── userRoutes.ts
+│   │   │   ├── contactInfoRoutes.ts
 │   │   │   ├── jobRoutes.ts
-│   │   │   └── educationRoutes.ts
+│   │   │   ├── educationRoutes.ts
+│   │   │   ├── projectRoutes.ts
+│   │   │   ├── skillRoutes.ts
+│   │   │   └── achievementRoutes.ts
 │   │   ├── models/          # Data models
 │   │   └── types/           # TypeScript type definitions
 │   ├── Dockerfile
@@ -95,11 +103,16 @@ personal_website/
 │   └── tsconfig.json
 │
 ├── database/                # Database schema and seeds
-│   ├── migrations/          # Table definitions
+│   ├── migrations/          # Table definitions (001–009)
 │   │   ├── 001_create_database.sql
 │   │   ├── 002_create_users_table.sql
 │   │   ├── 003_create_job_history_table.sql
-│   │   └── 004_create_education_table.sql
+│   │   ├── 004_create_education_table.sql
+│   │   ├── 005_create_projects_table.sql
+│   │   ├── 006_create_skills_table.sql
+│   │   ├── 007_create_achievements_table.sql
+│   │   ├── 008_create_contact_info_table.sql
+│   │   └── 009_remove_contact_from_users.sql
 │   ├── seeds/               # Test data
 │   │   ├── default/         # Default seed (1 user)
 │   │   ├── minimal/         # Minimal seed (1 user, no history)
@@ -167,7 +180,7 @@ Before running this project, ensure you have:
    npm install
    npm run dev
    ```
-   Access at http://localhost:3000
+   Access at http://localhost:5173
 
 2. **Backend:**
    ```bash
@@ -236,11 +249,15 @@ docker compose -f docker-compose.yml -f docker-compose.full.yml up -d
 
 ### Database Structure
 
-The database consists of three main tables:
+The database consists of seven tables:
 
-- **users** - User profile information
+- **users** - User profile information (name, title, bio, profile image)
+- **contact_info** - Contact details per user (email, phone, website, GitHub, LinkedIn)
 - **job_history** - Employment history records
 - **education** - Educational background records
+- **projects** - Project portfolio entries
+- **skills** - Skill list entries
+- **achievements** - Career achievement records
 
 For detailed schema documentation, see [database/SCHEMA.md](database/SCHEMA.md).
 
@@ -318,14 +335,14 @@ npm install
 npm run dev
 ```
 
-The frontend will start on http://localhost:3000 with hot module reloading via Vite.
+The frontend will start on http://localhost:5173 with hot module reloading via Vite.
 
 #### Available Scripts:
-- `npm run dev` - Start development server (uses real backend at localhost:5000)
-- `npm run dev:mock` - Start dev server configured to use mock server
+- `npm run dev` - Start development server on port 5173 (uses real backend at localhost:5000)
+- `npm run dev:mock` - Start dev server on port 5173, proxying /api to mock server at localhost:5001
+- `npm run mock` - Start mock API server on port 5001 (run alongside `dev:mock`)
 - `npm run build` - Build for production
 - `npm run preview` - Preview production build locally
-- `npm run mock` - Start mock Express server for testing
 
 ### Backend Development
 
@@ -549,7 +566,7 @@ docker compose up -d
 
 ### Frontend Issues
 
-#### Port 3000 in use or frontend won't load
+#### Frontend won't load
 ```bash
 docker compose logs frontend
 docker compose down
