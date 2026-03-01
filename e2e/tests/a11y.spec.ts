@@ -22,7 +22,8 @@ import { test, expect } from '@playwright/test';
  *   1. .skip-link            (off-screen, revealed on focus)
  *   2. a.App-header-link     (site title)
  *   3. button.download-btn
- *   4. select.language-select
+ *   4. select.theme-select
+ *   5. select.language-select
  */
 test.describe('Accessibility', () => {
   test.beforeEach(async ({ page }) => {
@@ -245,10 +246,22 @@ test.describe('Accessibility', () => {
       expect(hasFocusVisible).toBe(true);
     });
 
+    test('theme select is keyboard-focusable and :focus-visible is active', async ({ page }) => {
+      await page.keyboard.press('Tab'); // .skip-link
+      await page.keyboard.press('Tab'); // .App-header-link
+      await page.keyboard.press('Tab'); // .download-btn
+      await page.keyboard.press('Tab'); // .theme-select
+      const select = page.locator('.theme-select');
+      await expect(select).toBeFocused();
+      const hasFocusVisible = await select.evaluate((el) => el.matches(':focus-visible'));
+      expect(hasFocusVisible).toBe(true);
+    });
+
     test('language select is keyboard-focusable and :focus-visible is active (A-010)', async ({ page }) => {
       await page.keyboard.press('Tab'); // .skip-link
       await page.keyboard.press('Tab'); // .App-header-link
       await page.keyboard.press('Tab'); // .download-btn
+      await page.keyboard.press('Tab'); // .theme-select
       await page.keyboard.press('Tab'); // .language-select
       const select = page.locator('.language-select');
       await expect(select).toBeFocused();
@@ -282,6 +295,146 @@ test.describe('Accessibility', () => {
           .trim(),
       );
       expect(value).toBe('#5a6470');
+    });
+
+    test('--color-focus-ring is set to the light-theme value', async ({ page }) => {
+      const value = await page.evaluate(() =>
+        getComputedStyle(document.documentElement)
+          .getPropertyValue('--color-focus-ring')
+          .trim(),
+      );
+      expect(value).toBe('#12bdc8');
+    });
+
+    test('--color-profile-bg-start is set to the light-theme value', async ({ page }) => {
+      const value = await page.evaluate(() =>
+        getComputedStyle(document.documentElement)
+          .getPropertyValue('--color-profile-bg-start')
+          .trim(),
+      );
+      expect(value).toBe('#0d1f36');
+    });
+
+    test('--color-profile-bg-end is set to the light-theme value', async ({ page }) => {
+      const value = await page.evaluate(() =>
+        getComputedStyle(document.documentElement)
+          .getPropertyValue('--color-profile-bg-end')
+          .trim(),
+      );
+      expect(value).toBe('#0a2740');
+    });
+  });
+
+  // ---------------------------------------------------------------------------
+  // Theme switcher
+  //
+  // Verifies that the theme <select> is accessible, covers all 5 palettes, and
+  // that switching themes rewrites the CSS custom properties on <html> so every
+  // component immediately re-renders in the new palette.
+  // ---------------------------------------------------------------------------
+
+  test.describe('Theme switcher', () => {
+    test('theme select has an accessible aria-label', async ({ page }) => {
+      await expect(page.getByLabel('Select theme')).toBeVisible();
+    });
+
+    test('theme select renders all 5 palette options', async ({ page }) => {
+      const select = page.locator('.theme-select');
+      await expect(select.locator('option[value="light"]')).toHaveCount(1);
+      await expect(select.locator('option[value="dark"]')).toHaveCount(1);
+      await expect(select.locator('option[value="high-contrast"]')).toHaveCount(1);
+      await expect(select.locator('option[value="colour-blind"]')).toHaveCount(1);
+      await expect(select.locator('option[value="colour-blind-hc"]')).toHaveCount(1);
+    });
+
+    test('theme select defaults to the light theme', async ({ page }) => {
+      const value = await page.locator('.theme-select').inputValue();
+      expect(value).toBe('light');
+    });
+
+    test('switching to dark theme updates --color-background CSS variable', async ({ page }) => {
+      await page.locator('.theme-select').selectOption('dark');
+      const bg = await page.evaluate(() =>
+        getComputedStyle(document.documentElement)
+          .getPropertyValue('--color-background')
+          .trim(),
+      );
+      expect(bg).toBe('#0f172a');
+    });
+
+    test('switching to dark theme updates --color-focus-ring CSS variable', async ({ page }) => {
+      await page.locator('.theme-select').selectOption('dark');
+      const ring = await page.evaluate(() =>
+        getComputedStyle(document.documentElement)
+          .getPropertyValue('--color-focus-ring')
+          .trim(),
+      );
+      expect(ring).toBe('#67e8f9');
+    });
+
+    test('switching to high-contrast theme sets --color-background to white', async ({ page }) => {
+      await page.locator('.theme-select').selectOption('high-contrast');
+      const bg = await page.evaluate(() =>
+        getComputedStyle(document.documentElement)
+          .getPropertyValue('--color-background')
+          .trim(),
+      );
+      expect(bg).toBe('#ffffff');
+    });
+
+    test('switching to high-contrast theme sets --color-focus-ring to yellow', async ({ page }) => {
+      await page.locator('.theme-select').selectOption('high-contrast');
+      const ring = await page.evaluate(() =>
+        getComputedStyle(document.documentElement)
+          .getPropertyValue('--color-focus-ring')
+          .trim(),
+      );
+      expect(ring).toBe('#ffff00');
+    });
+
+    test('switching to colour-blind theme sets --color-focus-ring to orange', async ({ page }) => {
+      await page.locator('.theme-select').selectOption('colour-blind');
+      const ring = await page.evaluate(() =>
+        getComputedStyle(document.documentElement)
+          .getPropertyValue('--color-focus-ring')
+          .trim(),
+      );
+      expect(ring).toBe('#ff9900');
+    });
+
+    test('switching to colour-blind-hc theme sets --color-focus-ring to orange', async ({ page }) => {
+      await page.locator('.theme-select').selectOption('colour-blind-hc');
+      const ring = await page.evaluate(() =>
+        getComputedStyle(document.documentElement)
+          .getPropertyValue('--color-focus-ring')
+          .trim(),
+      );
+      expect(ring).toBe('#ff8c00');
+    });
+
+    test('selected theme is persisted to localStorage', async ({ page }) => {
+      await page.locator('.theme-select').selectOption('dark');
+      const stored = await page.evaluate(() => localStorage.getItem('portfolio-theme'));
+      expect(stored).toBe('dark');
+    });
+
+    test('theme is restored from localStorage on page reload', async ({ page }) => {
+      await page.locator('.theme-select').selectOption('high-contrast');
+      await page.reload();
+      await expect(page.locator('.user-profile h1')).toBeVisible({ timeout: 15_000 });
+      const value = await page.locator('.theme-select').inputValue();
+      expect(value).toBe('high-contrast');
+    });
+
+    test('switching back to light theme restores light --color-background', async ({ page }) => {
+      await page.locator('.theme-select').selectOption('dark');
+      await page.locator('.theme-select').selectOption('light');
+      const bg = await page.evaluate(() =>
+        getComputedStyle(document.documentElement)
+          .getPropertyValue('--color-background')
+          .trim(),
+      );
+      expect(bg).toBe('#f0ece7');
     });
   });
 });
