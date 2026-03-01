@@ -209,7 +209,7 @@ npm run dev
 - Frontend: `frontend/.env.development`
 
 **Access:**
-- Frontend: http://localhost:3000 (hot reload)
+- Frontend: http://localhost:5173 (hot reload)
 - Backend: http://localhost:5000/api
 - MySQL: localhost:3306
 
@@ -232,7 +232,7 @@ npm run dev:mock
 - Mock Server: `frontend/mock/.env` (optional)
 
 **Access:**
-- Frontend: http://localhost:3000 (hot reload)
+- Frontend: http://localhost:5173 (hot reload)
 - Mock API: http://localhost:5001/api
 - No database required
 
@@ -296,8 +296,8 @@ If a port is already in use, set a different one:
 # Backend
 PORT=5001
 
-# Frontend (vite.config.ts already supports this)
-# Frontend runs on next available port automatically
+# Frontend — set PORT env var (defaults to 5173 locally, 3000 in Docker)
+PORT=5174
 
 # Mock server
 MOCK_PORT=5002

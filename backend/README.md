@@ -29,14 +29,22 @@ backend/
 │   │   └── database.ts         # Database connection setup
 │   │
 │   ├── controllers/            # Request handlers
-│   │   ├── userController.ts   # User endpoints
-│   │   ├── jobController.ts    # Job endpoints
-│   │   └── educationController.ts  # Education endpoints
+│   │   ├── userController.ts           # User endpoints
+│   │   ├── contactInfoController.ts    # Contact info endpoints
+│   │   ├── jobController.ts            # Job endpoints
+│   │   ├── educationController.ts      # Education endpoints
+│   │   ├── projectController.ts        # Project endpoints
+│   │   ├── skillController.ts          # Skill endpoints
+│   │   └── achievementController.ts    # Achievement endpoints
 │   │
 │   ├── routes/                 # Route definitions
-│   │   ├── userRoutes.ts       # /api/users routes
-│   │   ├── jobRoutes.ts        # /api/jobs routes
-│   │   └── educationRoutes.ts  # /api/education routes
+│   │   ├── userRoutes.ts           # /api/users routes
+│   │   ├── contactInfoRoutes.ts    # /api/contact-info routes
+│   │   ├── jobRoutes.ts            # /api/jobs routes
+│   │   ├── educationRoutes.ts      # /api/education routes
+│   │   ├── projectRoutes.ts        # /api/projects routes
+│   │   ├── skillRoutes.ts          # /api/skills routes
+│   │   └── achievementRoutes.ts    # /api/achievements routes
 │   │
 │   ├── models/                 # Data models
 │   │   └── index.ts            # Model definitions
@@ -131,7 +139,13 @@ Access at http://localhost:5000
 |--------|----------|-------------|
 | GET | `/api/users` | Get all users |
 | GET | `/api/users/:id` | Get specific user by ID |
-| GET | `/api/users/:id/profile` | Get user with full job and education history |
+| GET | `/api/users/:id/profile` | Get user with full profile (all sections) |
+
+### Contact Info
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/contact-info/:userId` | Get contact info for specific user |
 
 ### Jobs
 
@@ -144,6 +158,30 @@ Access at http://localhost:5000
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | GET | `/api/education/user/:userId` | Get education records for specific user |
+
+### Projects
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/projects/user/:userId` | Get projects for specific user |
+
+### Skills
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/skills/user/:userId` | Get skills for specific user |
+
+### Achievements
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/achievements/user/:userId` | Get achievements for specific user |
+
+### Health
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/health` | Health check (verifies database connectivity) |
 
 ## 🗄️ Database Connection
 

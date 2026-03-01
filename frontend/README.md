@@ -57,7 +57,7 @@ frontend/
 │   └── images/               # Image assets
 │
 ├── mock/                      # Mock server for development
-│   ├── mockServer.js         # Mock server setup
+│   ├── mockServer.ts         # Mock server setup (TypeScript)
 │   ├── mockUserProfile.json  # Mock user data
 │   └── package.json          # Mock server dependencies
 │
@@ -92,7 +92,7 @@ Access at http://localhost:3000
    npm run dev
    ```
 
-   The app will start on http://localhost:3000
+   The app will start on http://localhost:5173
 
 ### Using Mock Server
 
@@ -112,11 +112,11 @@ This starts the Vite dev server configured to proxy requests to the mock server 
 
 | Script | Description |
 |--------|-------------|
-| `npm run dev` | Start Vite development server at http://localhost:3000 (connects to real backend) |
-| `npm run dev:mock` | Start Vite dev server configured to use mock server |
+| `npm run dev` | Start Vite development server at http://localhost:5173 (connects to real backend) |
+| `npm run dev:mock` | Start Vite dev server at http://localhost:5173, proxying /api to mock server |
+| `npm run mock` | Start mock API server on port 5001 (run alongside `dev:mock`) |
 | `npm run build` | Build for production using TypeScript and Vite |
 | `npm run preview` | Preview production build locally |
-| `npm run mock` | Start mock Express server for development testing |
 
 ## 🔌 API Integration
 
@@ -134,7 +134,13 @@ This approach avoids CORS issues during development by serving API requests from
 ### Available API Endpoints
 
 - `GET /api/users/:id` - Get specific user
-- `GET /api/users/:id/profile` - Get user profile with job history and education
+- `GET /api/users/:id/profile` - Get user profile with all sections
+- `GET /api/contact-info/:userId` - Get contact info for a user
+- `GET /api/jobs/user/:userId` - Get job history for a user
+- `GET /api/education/user/:userId` - Get education records for a user
+- `GET /api/projects/user/:userId` - Get projects for a user
+- `GET /api/skills/user/:userId` - Get skills for a user
+- `GET /api/achievements/user/:userId` - Get achievements for a user
 
 ## 🌐 Internationalization (i18n)
 
@@ -236,17 +242,17 @@ The frontend uses **Vite** instead of react-scripts for the following advantages
 
 ## �🔧 Troubleshooting
 
-### Port 3000 Already in Use
+### Port 5173 Already in Use
 
 ```bash
-# Find process using port 3000
-lsof -i :3000
+# Find process using port 5173
+lsof -i :5173
 
 # Kill process
 kill -9 <PID>
 
 # Or use different port
-VITE_PORT=3001 npm run dev
+PORT=5174 npm run dev
 ```
 
 ### Module Not Found Errors

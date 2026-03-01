@@ -21,8 +21,9 @@ docker compose down -v                         # Stop and remove volumes (resets
 ### Frontend (`cd frontend`)
 
 ```bash
-npm run dev          # Dev server on port 3000 (requires backend running)
-npm run dev:mock     # Dev server with mock backend on port 5001 (no DB needed)
+npm run dev          # Dev server on port 5173 (requires backend running)
+npm run dev:mock     # Dev server on port 5173, proxying /api to mock server at 5001 (no DB needed)
+npm run mock         # Mock API server on port 5001 (run alongside dev:mock)
 npm run build        # Build to /build directory
 npm run test         # Run tests
 npm run test:watch   # Tests in watch mode
@@ -87,6 +88,6 @@ Error responses use generic messages; details are logged server-side only.
 
 - **Types:** Frontend types omit DB timestamps; backend types include `createdAt`/`updatedAt`
 - **Coverage:** 90% threshold on all metrics (branches, functions, lines, statements)
-- **Mock server:** `frontend/mock/mockServer.js` runs on port 5001 for frontend-only dev
+- **Mock server:** `frontend/mock/mockServer.ts` runs on port 5001 for frontend-only dev
 - **Env vars:** Copy `.env.example` → `.env` in both root and `backend/` before running locally
 - **Node.js:** ≥20.0.0 required; npm ≥10.0.0
