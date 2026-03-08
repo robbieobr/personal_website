@@ -3,8 +3,8 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
-import { Achievement } from '../types/index';
-import { formatDate } from '../utils/date';
+import { Achievement } from '../../types/index';
+import { formatDate } from '../../utils/date';
 import './Achievements.css';
 
 interface AchievementsProps {

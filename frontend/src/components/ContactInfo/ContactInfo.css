@@ -45,6 +45,10 @@
 }
 
 @media print {
+  .contact-info-item--social {
+    display: none;
+  }
+
   .contact-info {
     flex-direction: column;
     gap: 0.25rem;
@@ -78,5 +82,9 @@
 
   .contact-link-url {
     display: inline;
+  }
+
+  .url-protocol {
+    display: none;
   }
 }

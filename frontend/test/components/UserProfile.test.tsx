@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { screen } from '@testing-library/react';
-import UserProfileComponent from '../../src/components/UserProfile';
+import UserProfileComponent from '../../src/components/UserProfile/UserProfile';
 import { renderWithProviders } from '../utils';
 import { mockUser, mockContactInfo, mockContactInfoPhone } from '../fixtures';
 

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { screen } from '@testing-library/react';
-import Skills from '../../src/components/Skills';
+import Skills from '../../src/components/Skills/Skills';
 import { renderWithProviders } from '../utils';
 import { mockSkill, mockSkill2 } from '../fixtures';
 

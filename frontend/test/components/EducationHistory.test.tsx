@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { screen } from '@testing-library/react';
-import EducationHistory from '../../src/components/EducationHistory';
+import EducationHistory from '../../src/components/EducationHistory/EducationHistory';
 import { renderWithProviders } from '../utils';
 import { mockEducation, mockCurrentEducation } from '../fixtures';
 
