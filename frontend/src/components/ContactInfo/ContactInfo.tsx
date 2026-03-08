@@ -40,7 +40,17 @@ const LinkedInIcon: React.FC = () => (
 
 const stripProtocol = (url: string) => {
   const match = url.match(/^(https?:\/\/)(.*)/);
-  return match ? { protocol: match[1], rest: match[2] } : { protocol: '', rest: url };
+  if (match) {
+    return { protocol: match[1], rest: match[2] };
+  }
+
+  // If the URL looks like a bare domain (e.g. "www.example.com"), assume https for linking
+  const looksLikeDomain = /^[\w.-]+\.[a-z]{2,}(\/.*)?$/i.test(url);
+  if (looksLikeDomain) {
+    return { protocol: 'https://', rest: url };
+  }
+
+  return { protocol: '', rest: url };
 };
 
 const ContactInfoComponent: React.FC<ContactInfoProps> = ({ contactInfo }) => {
