@@ -41,4 +41,4 @@ else
 fi
 
 echo "Database initialization completed."
-echo "To start MySQL with these configurations, run: docker-compose up -d"
+echo "To start MySQL with these configurations, run: docker compose up -d"
