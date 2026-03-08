@@ -14,7 +14,7 @@ if [ "$confirm" != "yes" ]; then
 fi
 
 echo "Stopping Docker containers..."
-docker-compose -f "$PROJECT_DIR/docker-compose.yml" down
+docker compose -f "$PROJECT_DIR/docker-compose.yml" down
 
 echo "Removing MySQL volume..."
 COMPOSE_FILE="$PROJECT_DIR/docker-compose.yml"
@@ -32,4 +32,4 @@ rm -f "$DB_DIR/docker-entrypoint-initdb.d"/*.sql
 
 echo "Database reset completed."
 echo "To reinitialize the database, run: ./scripts/init.sh [seed_type]"
-echo "Then start Docker: docker-compose up -d"
+echo "Then start Docker: docker compose up -d"
