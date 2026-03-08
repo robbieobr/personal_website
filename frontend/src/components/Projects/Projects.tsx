@@ -3,7 +3,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
-import { Project } from '../types/index';
+import { Project } from '../../types/index';
 import './Projects.css';
 
 interface ProjectsProps {

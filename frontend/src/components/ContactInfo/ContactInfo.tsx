@@ -38,6 +38,11 @@ const LinkedInIcon: React.FC = () => (
   </svg>
 );
 
+const stripProtocol = (url: string) => {
+  const match = url.match(/^(https?:\/\/)(.*)/);
+  return match ? { protocol: match[1], rest: match[2] } : { protocol: '', rest: url };
+};
+
 const ContactInfoComponent: React.FC<ContactInfoProps> = ({ contactInfo }) => {
   const { t } = useTranslation();
 
@@ -65,36 +70,42 @@ const ContactInfoComponent: React.FC<ContactInfoProps> = ({ contactInfo }) => {
             </a>
           </p>
         );
-      case 'website':
+      case 'website': {
+        const { protocol, rest } = stripProtocol(entry.value);
         return (
           <p key={entry.id} className="contact-info-item">
             <GlobeIcon />
             <a href={entry.value} target="_blank" rel="noopener noreferrer" aria-label={t('contactInfo.ariaWebsite', { value: entry.value })}>
               <span className="contact-link-label">{t('contactInfo.website')}</span>
-              <span className="contact-link-url">{entry.value}</span>
+              <span className="contact-link-url"><span className="url-protocol">{protocol}</span>{rest}</span>
             </a>
           </p>
         );
-      case 'github':
+      }
+      case 'github': {
+        const { protocol, rest } = stripProtocol(entry.value);
         return (
-          <p key={entry.id} className="contact-info-item">
+          <p key={entry.id} className="contact-info-item contact-info-item--social">
             <GitHubIcon />
             <a href={entry.value} target="_blank" rel="noopener noreferrer" aria-label={t('contactInfo.ariaGithub', { value: entry.value })}>
               <span className="contact-link-label">{t('contactInfo.github')}</span>
-              <span className="contact-link-url">{entry.value}</span>
+              <span className="contact-link-url"><span className="url-protocol">{protocol}</span>{rest}</span>
             </a>
           </p>
         );
-      case 'linkedin':
+      }
+      case 'linkedin': {
+        const { protocol, rest } = stripProtocol(entry.value);
         return (
-          <p key={entry.id} className="contact-info-item">
+          <p key={entry.id} className="contact-info-item contact-info-item--social">
             <LinkedInIcon />
             <a href={entry.value} target="_blank" rel="noopener noreferrer" aria-label={t('contactInfo.ariaLinkedin', { value: entry.value })}>
               <span className="contact-link-label">{t('contactInfo.linkedin')}</span>
-              <span className="contact-link-url">{entry.value}</span>
+              <span className="contact-link-url"><span className="url-protocol">{protocol}</span>{rest}</span>
             </a>
           </p>
         );
+      }
       default:
         return null;
     }

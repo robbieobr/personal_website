@@ -3,7 +3,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
-import { Skill } from '../types/index';
+import { Skill } from '../../types/index';
 import './Skills.css';
 
 interface SkillsProps {

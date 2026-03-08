@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { screen } from '@testing-library/react';
-import Projects from '../../src/components/Projects';
+import Projects from '../../src/components/Projects/Projects';
 import { renderWithProviders } from '../utils';
 import { mockProject, mockProjectNoDescription } from '../fixtures';
 

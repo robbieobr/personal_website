@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { screen } from '@testing-library/react';
 import { render } from '@testing-library/react';
-import ErrorBoundary from '../../src/components/ErrorBoundary';
+import ErrorBoundary from '../../src/components/ErrorBoundary/ErrorBoundary';
 
 const ThrowingComponent = () => {
   throw new Error('Test error');

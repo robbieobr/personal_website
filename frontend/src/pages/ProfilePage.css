@@ -157,9 +157,7 @@
     display: none;
   }
 
-  .user-profile,
-  .job-history,
-  .education-history {
+  .user-profile {
     page-break-inside: avoid;
   }
 

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { screen } from '@testing-library/react';
-import JobHistory from '../../src/components/JobHistory';
+import JobHistory from '../../src/components/JobHistory/JobHistory';
 import { renderWithProviders } from '../utils';
 import { mockJob, mockPastJob } from '../fixtures';
 

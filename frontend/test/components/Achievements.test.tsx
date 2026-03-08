@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { screen } from '@testing-library/react';
-import Achievements from '../../src/components/Achievements';
+import Achievements from '../../src/components/Achievements/Achievements';
 import { renderWithProviders } from '../utils';
 import { mockAchievement, mockAchievementNoDescription } from '../fixtures';
 
