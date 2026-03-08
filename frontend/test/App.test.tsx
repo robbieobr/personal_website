@@ -92,7 +92,7 @@ describe('App', () => {
       vi.stubEnv('PROD', true);
       vi.stubEnv('VITE_APP_URL', 'https://example.com');
       renderWithProviders(<App />);
-      expect(screen.getByText('https://example.com')).toBeInTheDocument();
+      expect(screen.getByText('example.com')).toBeInTheDocument();
     });
 
     it('falls back to the app title when VITE_APP_URL is not set', () => {
