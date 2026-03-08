@@ -5,9 +5,14 @@ import { useTheme } from './hooks/useTheme';
 import { themes, type ThemeId } from './themes';
 import './App.css';
 
+const stripProtocol = (url: string) => url.replace(/^https?:\/\//, '');
+
 const App: React.FC = () => {
   const { t, i18n } = useTranslation();
   const { themeId, setThemeId } = useTheme();
+  const displayUrl = import.meta.env.PROD && import.meta.env.VITE_APP_URL
+    ? stripProtocol(import.meta.env.VITE_APP_URL)
+    : null;
 
   const handleLanguageChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     i18n.changeLanguage(event.target.value);
@@ -24,7 +29,7 @@ const App: React.FC = () => {
       </a>
       <header className="App-header">
         <p className="site-title">
-          <a href="/" className="App-header-link">{(import.meta.env.PROD && import.meta.env.VITE_APP_URL) || t('app.title')}</a>
+          <a href="/" className="App-header-link">{displayUrl || t('app.title')}</a>
         </p>
         <div className="header-actions">
           <button className="download-btn" onClick={() => window.print()}>
@@ -61,7 +66,7 @@ const App: React.FC = () => {
         <ProfilePage />
       </div>
       <footer className="App-footer">
-        <p>{new Date().getFullYear()} — My Portfolio</p>
+        <p>{new Date().getFullYear()} — {displayUrl || t('app.title')}</p>
       </footer>
     </div>
   );

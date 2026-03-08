@@ -47,6 +47,7 @@ services:
     build:
       target: production   # nginx-based production image
     restart: unless-stopped
+    command: ["nginx", "-g", "daemon off;"]
     ports: !reset []       # Not exposed directly; Caddy proxies to it
     volumes: !reset []     # No source code mounting in production
 

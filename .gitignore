@@ -16,3 +16,6 @@ yarn-error.log*
 
 # Production seed data — never commit real personal data
 database/prod-initdb.d/500_prod_seed.sql
+
+# Production env files with real values
+frontend/.env.production
