@@ -1,6 +1,14 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import type { Request, Response } from 'express';
-import { mockUser, mockJob, mockEducation, mockProject, mockSkill, mockAchievement, mockContactInfo } from '../fixtures';
+import {
+  mockUser,
+  mockJob,
+  mockEducation,
+  mockProject,
+  mockSkill,
+  mockAchievement,
+  mockContactInfo,
+} from '../fixtures';
 
 vi.mock('../../src/models/index', () => ({
   UserModel: {
@@ -37,7 +45,7 @@ const makeResMock = () => {
 };
 
 const makeReqMock = (overrides: Partial<Request> = {}): Request =>
-  ({ params: {}, body: {}, ...overrides } as unknown as Request);
+  ({ params: {}, body: {}, ...overrides }) as unknown as Request;
 
 describe('userController', () => {
   let UserModel: { findById: ReturnType<typeof vi.fn>; findAll: ReturnType<typeof vi.fn> };

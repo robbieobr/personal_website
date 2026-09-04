@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import Skeleton from 'react-loading-skeleton';
@@ -38,7 +37,9 @@ const Skills: React.FC<SkillsProps> = ({ skills, loading }) => {
       <h2>{t('skills.title')}</h2>
       <ul className="skills-list">
         {skills.map((s) => (
-          <li key={s.id} className="skill-item">{s.skill}</li>
+          <li key={s.id} className="skill-item">
+            {s.skill}
+          </li>
         ))}
       </ul>
     </div>

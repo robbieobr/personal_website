@@ -12,15 +12,13 @@ const resources = {
   },
 };
 
-i18n
-  .use(initReactI18next)
-  .init({
-    resources,
-    lng: 'en',
-    fallbackLng: 'en',
-    interpolation: {
-      escapeValue: false, // react-i18next handles escaping by default
-    },
-  });
+i18n.use(initReactI18next).init({
+  resources,
+  lng: 'en',
+  fallbackLng: 'en',
+  interpolation: {
+    escapeValue: false, // react-i18next handles escaping by default
+  },
+});
 
 export default i18n;

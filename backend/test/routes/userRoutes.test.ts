@@ -1,7 +1,15 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import request from 'supertest';
 import express from 'express';
-import { mockUser, mockJob, mockEducation, mockProject, mockSkill, mockAchievement, mockContactInfo } from '../fixtures';
+import {
+  mockUser,
+  mockJob,
+  mockEducation,
+  mockProject,
+  mockSkill,
+  mockAchievement,
+  mockContactInfo,
+} from '../fixtures';
 
 vi.mock('../../src/models/index', () => ({
   UserModel: {

@@ -57,6 +57,7 @@ database/
 ### Default Setup (Docker)
 
 The default configuration uses the **default seed dataset** with:
+
 - 1 user (John Doe)
 - 3 job history entries
 - 2 education entries
@@ -73,12 +74,15 @@ docker compose up -d
 ## Seed Datasets
 
 ### Default Seed
+
 Contains a standard test dataset with one primary user (John Doe) and their career history.
 
 **Location:** `seeds/default/`
 
 ### Minimal Seed
+
 Contains only a single user (Jane Smith) with no other records. Use this for:
+
 - Testing UI with minimal data
 - Performance testing
 - Testing edge cases
@@ -86,7 +90,9 @@ Contains only a single user (Jane Smith) with no other records. Use this for:
 **Location:** `seeds/minimal/`
 
 ### Full Seed
+
 Contains an extended dataset with three users and their complete history:
+
 - John Doe (Full Stack Developer)
 - Jane Smith (DevOps Engineer)
 - Alice Johnson (Product Manager)
@@ -105,16 +111,19 @@ Each override file mounts a pre-combined directory (`database/init/`) that conta
 migrations and the appropriate seed data:
 
 Default dataset (already loaded):
+
 ```bash
 docker compose up -d
 ```
 
 Minimal dataset:
+
 ```bash
 docker compose -f docker-compose.yml -f docker-compose.minimal.yml up -d
 ```
 
 Full dataset:
+
 ```bash
 docker compose -f docker-compose.yml -f docker-compose.full.yml up -d
 ```
@@ -124,12 +133,14 @@ Note: The MySQL data volume must be fresh (or reset) for initialization to take 
 **Option 2: Using init.sh script (for re-initialization)**
 
 First, initialize with desired seed type:
+
 ```bash
 cd database/scripts
 ./init.sh default    # Load default seed (or minimal, full)
 ```
 
 Then start or restart Docker:
+
 ```bash
 docker compose up -d
 ```
@@ -146,11 +157,13 @@ cd database/scripts
 ```
 
 This will:
+
 1. Stop all Docker containers
 2. Remove the MySQL data volume
 3. Clear the initialization files
 
 After reset, to reinitialize with a specific seed:
+
 ```bash
 ./init.sh [seed_type]  # seed_type: default, minimal, or full
 docker compose up -d
@@ -161,11 +174,13 @@ docker compose up -d
 To add a new table or modify the schema:
 
 1. Create a new SQL file in `migrations/` with the next sequential number:
+
    ```bash
    # Example: 008_create_new_table.sql
    ```
 
 2. Add corresponding seed data to each seed profile under `seeds/`:
+
    ```bash
    seeds/default/007_new_table.sql
    seeds/full/007_new_table.sql
@@ -173,6 +188,7 @@ To add a new table or modify the schema:
    ```
 
 3. Rebuild the `init/` directories by adding the new migration and renumbering seed files if needed:
+
    ```bash
    cp migrations/008_create_new_table.sql init/full/008_create_new_table.sql
    cp migrations/008_create_new_table.sql init/minimal/008_create_new_table.sql
@@ -181,6 +197,7 @@ To add a new table or modify the schema:
    ```
 
 4. Add the new migration to `prod-initdb.d/`:
+
    ```bash
    cp migrations/008_create_new_table.sql prod-initdb.d/008_create_new_table.sql
    ```
@@ -198,11 +215,13 @@ To add a new table or modify the schema:
 To create a new seed dataset (e.g., `staging`):
 
 1. Create a new directory under `seeds/`:
+
    ```bash
    mkdir -p seeds/staging
    ```
 
 2. Create SQL files for each table:
+
    ```bash
    seeds/staging/001_users.sql
    seeds/staging/002_job_history.sql
@@ -217,6 +236,7 @@ To create a new seed dataset (e.g., `staging`):
 4. Create a pre-combined init directory with migrations and seeds.
    Seed files must be numbered to execute **after** all migrations (currently 001–009),
    so start seeds at 010:
+
    ```bash
    mkdir -p init/staging
    cp migrations/*.sql init/staging/
@@ -251,6 +271,7 @@ To create a new seed dataset (e.g., `staging`):
 ### Current Configuration
 
 The `docker-compose.yml` is configured to mount:
+
 ```yaml
 volumes:
   - ./database/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
@@ -261,16 +282,22 @@ This directory is pre-populated with the default seed dataset for quick startup.
 ## File Naming Convention
 
 ### Migrations
+
 Migration files use a three-digit prefix that reflects their creation order:
+
 - `001_create_database.sql` through `009_remove_contact_from_users.sql`
 
 ### Seeds (within `seeds/` directories)
+
 Seed files within each `seeds/<profile>/` directory use three-digit prefixes starting at `001`:
+
 - `001_users.sql` (also seeds `contact_info`), `002_job_history.sql`, ..., `006_achievements.sql`
 
 ### Pre-combined init directories (`init/`, `docker-entrypoint-initdb.d/`)
+
 When migrations and seeds are combined into a single directory for Docker, seed files must be
 numbered to execute **after** all migrations. With 9 migrations, seeds start at `010`:
+
 - Migrations: `001_create_database.sql` … `009_remove_contact_from_users.sql`
 - Seeds: `010_users.sql` … `015_achievements.sql`
 
@@ -280,6 +307,7 @@ The `init.sh` script handles this renumbering automatically.
 
 The schema was originally defined in a single `schema.sql` file that has since been split into
 numbered migration files. The current schema (migrations 001–009) covers:
+
 - `users` — user profile information (name, title, bio, profile image)
 - `contact_info` — contact details per user (email, phone, website, GitHub, LinkedIn) — added in migration 008/009 as a BCNF normalisation of the original `email` and `phone` columns on `users`
 - `job_history` — employment records
@@ -293,7 +321,9 @@ numbered migration files. The current schema (migrations 001–009) covers:
 ### "Database initialization failed" or data not loaded
 
 This usually means:
+
 1. The volume already exists with data. You need to reset it:
+
    ```bash
    ./scripts/reset.sh
    ```
@@ -303,6 +333,7 @@ This usually means:
 ### Changes not taking effect after running init.sh
 
 The MySQL Docker volume persists data. You must reset before changes take effect:
+
 ```bash
 ./scripts/reset.sh
 ./scripts/init.sh [seed_type]

@@ -5,6 +5,7 @@ React + TypeScript web application for the personal website.
 ## 📋 Overview
 
 This is the frontend React application that displays:
+
 - User profile information
 - Job history with dates and descriptions
 - Educational background
@@ -83,11 +84,13 @@ Access at http://localhost:3000
 ### Local Development (Without Docker)
 
 1. **Install dependencies:**
+
    ```bash
    npm install
    ```
 
 2. **Start development server:**
+
    ```bash
    npm run dev
    ```
@@ -110,13 +113,13 @@ This starts the Vite dev server configured to proxy requests to the mock server 
 
 ## 📦 Available Scripts
 
-| Script | Description |
-|--------|-------------|
-| `npm run dev` | Start Vite development server at http://localhost:5173 (connects to real backend) |
-| `npm run dev:mock` | Start Vite dev server at http://localhost:5173, proxying /api to mock server |
-| `npm run mock` | Start mock API server on port 5001 (run alongside `dev:mock`) |
-| `npm run build` | Build for production using TypeScript and Vite |
-| `npm run preview` | Preview production build locally |
+| Script             | Description                                                                       |
+| ------------------ | --------------------------------------------------------------------------------- |
+| `npm run dev`      | Start Vite development server at http://localhost:5173 (connects to real backend) |
+| `npm run dev:mock` | Start Vite dev server at http://localhost:5173, proxying /api to mock server      |
+| `npm run mock`     | Start mock API server on port 5001 (run alongside `dev:mock`)                     |
+| `npm run build`    | Build for production using TypeScript and Vite                                    |
+| `npm run preview`  | Preview production build locally                                                  |
 
 ## 🔌 API Integration
 
@@ -162,6 +165,7 @@ The application supports multiple languages through the i18n system.
 ### Adding a New Component
 
 1. Create component file in `src/components/`:
+
    ```bash
    src/components/NewComponent.tsx
    src/components/NewComponent.css
@@ -176,6 +180,7 @@ The application supports multiple languages through the i18n system.
 ### Adding a New Page
 
 1. Create page file in `src/pages/`:
+
    ```bash
    src/pages/NewPage.tsx
    src/pages/NewPage.css
@@ -221,11 +226,13 @@ The frontend is built with security best practices:
 ### Vulnerability Scanning
 
 Run security audit with:
+
 ```bash
 npm audit
 ```
 
 To fix vulnerabilities:
+
 ```bash
 npm audit fix
 ```

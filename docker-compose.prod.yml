@@ -7,9 +7,9 @@ services:
     container_name: personal_website_caddy
     restart: unless-stopped
     ports:
-      - "80:80"
-      - "443:443"
-      - "443:443/udp"     # HTTP/3 (QUIC)
+      - '80:80'
+      - '443:443'
+      - '443:443/udp' # HTTP/3 (QUIC)
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data
@@ -20,10 +20,10 @@ services:
       - frontend
 
   mysql:
-    ports: !reset []       # Do not expose MySQL to the host
+    ports: !reset [] # Do not expose MySQL to the host
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./database/prod-initdb.d:/docker-entrypoint-initdb.d  # Migrations + prod seed + readonly user
+      - ./database/prod-initdb.d:/docker-entrypoint-initdb.d # Migrations + prod seed + readonly user
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: personal_website
@@ -32,11 +32,11 @@ services:
 
   backend:
     build:
-      target: production   # Use the production multi-stage build target
+      target: production # Use the production multi-stage build target
     command: node dist/index.js
     restart: unless-stopped
-    ports: !reset []       # Not exposed directly; only reachable within Docker network
-    volumes: !reset []     # No source code mounting in production
+    ports: !reset [] # Not exposed directly; only reachable within Docker network
+    volumes: !reset [] # No source code mounting in production
     environment:
       NODE_ENV: production
       DB_USER: ${DB_READONLY_USER:-webapp}
@@ -45,11 +45,11 @@ services:
 
   frontend:
     build:
-      target: production   # nginx-based production image
+      target: production # nginx-based production image
     restart: unless-stopped
-    command: ["nginx", "-g", "daemon off;"]
-    ports: !reset []       # Not exposed directly; Caddy proxies to it
-    volumes: !reset []     # No source code mounting in production
+    command: ['nginx', '-g', 'daemon off;']
+    ports: !reset [] # Not exposed directly; Caddy proxies to it
+    volumes: !reset [] # No source code mounting in production
 
 volumes:
   caddy_data:

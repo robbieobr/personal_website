@@ -36,7 +36,9 @@ describe('Achievements', () => {
   });
 
   it('renders multiple achievements', () => {
-    renderWithProviders(<Achievements achievements={[mockAchievement, mockAchievementNoDescription]} />);
+    renderWithProviders(
+      <Achievements achievements={[mockAchievement, mockAchievementNoDescription]} />
+    );
     expect(screen.getByText(mockAchievement.title)).toBeInTheDocument();
     expect(screen.getByText(mockAchievementNoDescription.title)).toBeInTheDocument();
   });

@@ -1,5 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { mockUser, mockJob, mockEducation, mockContactInfo, mockProject, mockSkill, mockAchievement } from '../fixtures';
+import {
+  mockUser,
+  mockJob,
+  mockEducation,
+  mockContactInfo,
+  mockProject,
+  mockSkill,
+  mockAchievement,
+} from '../fixtures';
 
 const mockExecute = vi.fn();
 const mockRelease = vi.fn();
@@ -163,10 +171,7 @@ describe('ProjectModel', () => {
       const { ProjectModel } = await import('../../src/models/index');
       const result = await ProjectModel.findByUserId(1);
       expect(result).toEqual([mockProject]);
-      expect(mockExecute).toHaveBeenCalledWith(
-        'SELECT * FROM projects WHERE userId = ?',
-        [1]
-      );
+      expect(mockExecute).toHaveBeenCalledWith('SELECT * FROM projects WHERE userId = ?', [1]);
     });
 
     it('releases the connection even when an error is thrown', async () => {
@@ -191,10 +196,7 @@ describe('SkillModel', () => {
       const { SkillModel } = await import('../../src/models/index');
       const result = await SkillModel.findByUserId(1);
       expect(result).toEqual([mockSkill]);
-      expect(mockExecute).toHaveBeenCalledWith(
-        'SELECT * FROM skills WHERE userId = ?',
-        [1]
-      );
+      expect(mockExecute).toHaveBeenCalledWith('SELECT * FROM skills WHERE userId = ?', [1]);
     });
 
     it('releases the connection even when an error is thrown', async () => {

@@ -49,7 +49,9 @@ body,
 }
 
 @media print {
-  html, body, #root {
+  html,
+  body,
+  #root {
     height: auto;
   }
 }

@@ -4,15 +4,15 @@ This document describes all available ways to launch the personal website projec
 
 ## 🚀 Quick Reference
 
-| Configuration | Command | Use Case | Database Seed |
-|---|---|---|---|
-| **Default** | `docker compose up -d` | General development | Default (1 user) |
-| **Minimal** | `docker compose -f docker-compose.yml -f docker-compose.minimal.yml up -d` | UI testing with minimal data | Minimal (1 user) |
-| **Full** | `docker compose -f docker-compose.yml -f docker-compose.full.yml up -d` | Comprehensive testing | Full (3 users) |
-| **Production** | `docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build` | Production deployment | User-provided prod seed |
-| **Frontend Only** | `cd frontend && npm run dev` | Frontend development | N/A |
-| **Backend Only** | `cd backend && npm run dev` | Backend API development | Requires MySQL |
-| **Mock Frontend** | `cd frontend && npm run mock` + `npm run dev:mock` | Frontend with mock data | Mock data file |
+| Configuration     | Command                                                                         | Use Case                     | Database Seed           |
+| ----------------- | ------------------------------------------------------------------------------- | ---------------------------- | ----------------------- |
+| **Default**       | `docker compose up -d`                                                          | General development          | Default (1 user)        |
+| **Minimal**       | `docker compose -f docker-compose.yml -f docker-compose.minimal.yml up -d`      | UI testing with minimal data | Minimal (1 user)        |
+| **Full**          | `docker compose -f docker-compose.yml -f docker-compose.full.yml up -d`         | Comprehensive testing        | Full (3 users)          |
+| **Production**    | `docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build` | Production deployment        | User-provided prod seed |
+| **Frontend Only** | `cd frontend && npm run dev`                                                    | Frontend development         | N/A                     |
+| **Backend Only**  | `cd backend && npm run dev`                                                     | Backend API development      | Requires MySQL          |
+| **Mock Frontend** | `cd frontend && npm run mock` + `npm run dev:mock`                              | Frontend with mock data      | Mock data file          |
 
 ## 📋 Configuration Details
 
@@ -25,21 +25,25 @@ docker compose up -d
 ```
 
 **What starts:**
+
 - MySQL container with default seed (1 user: John Doe)
 - Backend API on port 5000
 - Frontend on port 3000
 
 **Database includes:**
+
 - 1 user (John Doe - Full Stack Developer)
 - 3 job history entries
 - 2 education records
 
 **Access:**
+
 - Frontend: http://localhost:3000
 - Backend API: http://localhost:5000/api
 - MySQL: localhost:3306
 
 **Stop:**
+
 ```bash
 docker compose down
 ```
@@ -55,22 +59,26 @@ docker compose -f docker-compose.yml -f docker-compose.minimal.yml up -d
 ```
 
 **What starts:**
+
 - MySQL container with minimal seed
 - Backend API on port 5000
 - Frontend on port 3000
 
 **Database includes:**
+
 - 1 user (Jane Smith - Software Engineer)
 - No job history
 - No education records
 
 **Use case examples:**
+
 - Test UI when user has no jobs
 - Test empty state handling
 - Test with minimal data
 - Performance testing with small dataset
 
 **Stop:**
+
 ```bash
 docker compose -f docker-compose.yml -f docker-compose.minimal.yml down
 ```
@@ -86,11 +94,13 @@ docker compose -f docker-compose.yml -f docker-compose.full.yml up -d
 ```
 
 **What starts:**
+
 - MySQL container with full seed
 - Backend API on port 5000
 - Frontend on port 3000
 
 **Database includes:**
+
 - 3 users:
   - John Doe (Full Stack Developer)
   - Jane Smith (DevOps Engineer)
@@ -99,6 +109,7 @@ docker compose -f docker-compose.yml -f docker-compose.full.yml up -d
 - 6 education records
 
 **Use case examples:**
+
 - Full feature demo
 - Comprehensive testing
 - Test scrolling with lots of data
@@ -106,6 +117,7 @@ docker compose -f docker-compose.yml -f docker-compose.full.yml up -d
 - Load testing with realistic data
 
 **Stop:**
+
 ```bash
 docker compose -f docker-compose.yml -f docker-compose.full.yml down
 ```
@@ -123,12 +135,14 @@ docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
 **Prerequisites:** See `TODO.md` for the full checklist (domain, `.env`, prod seed file).
 
 **What starts:**
+
 - Caddy (ports 80/443) — automatic HTTPS via Let's Encrypt, HTTP→HTTPS redirect
 - Frontend nginx (internal only)
 - Backend (internal only, read-only DB user)
 - MySQL (internal only, not exposed to host)
 
 **Stop:**
+
 ```bash
 docker compose -f docker-compose.yml -f docker-compose.prod.yml down
 ```
@@ -146,19 +160,23 @@ npm run dev
 ```
 
 **What starts:**
+
 - Vite development server on port 5173 (default)
 - Hot module reloading enabled
 - Proxies `/api` requests to backend on port 5000
 
 **Access:**
+
 - Frontend: http://localhost:5173
 
 **Advantages:**
+
 - Fast development with hot reload
 - Can develop without database setup
 - Smaller resource footprint
 
 **Stop:**
+
 ```bash
 Ctrl+C in terminal
 ```
@@ -176,18 +194,22 @@ npm run dev
 ```
 
 **Prerequisites:**
+
 - MySQL running (see instructions below)
 - Database initialized with seed data
 
 **What starts:**
+
 - Node.js Express server on port 5000
 - Auto-reload on file changes (nodemon)
 
 **Access:**
+
 - API: http://localhost:5000/api
 - Database: localhost:3306
 
 **Test API endpoints:**
+
 ```bash
 curl http://localhost:5000/api/users
 curl http://localhost:5000/api/users/1
@@ -197,6 +219,7 @@ curl http://localhost:5000/api/education/user/1
 ```
 
 **Setup MySQL for local backend development:**
+
 ```bash
 # Option 1: Docker
 docker run -d \
@@ -215,6 +238,7 @@ cd ../database/scripts
 ```
 
 **Stop:**
+
 ```bash
 Ctrl+C in terminal
 ```
@@ -236,25 +260,30 @@ npm run dev:mock
 ```
 
 **What starts:**
+
 - Mock API server on port 5001 (Terminal 1)
 - Vite dev server on port 5173, proxying `/api` to mock server (Terminal 2)
 - Mock data from `frontend/mock/mockUserProfile.json`
 
 **Access:**
+
 - Frontend: http://localhost:5173
 - Mock API: http://localhost:5001
 
 **Advantages:**
+
 - No backend or database needed
 - Fast isolated development
 - Test with known data
 
 **Includes mock data:**
+
 - Sample user profile
 - Job history
 - Education records
 
 **Stop:**
+
 ```bash
 Ctrl+C in terminal
 ```
@@ -273,11 +302,13 @@ cd database/scripts
 ```
 
 This will:
+
 1. Stop all Docker containers
 2. Remove MySQL volume
 3. Clear initialization files
 
 Then reinitialize with desired seed:
+
 ```bash
 ./init.sh [seed_type]  # seed_type: default, minimal, or full
 docker compose up -d
@@ -297,11 +328,13 @@ docker system prune -a --volumes
 ## 🔍 Viewing Logs
 
 ### All Services
+
 ```bash
 docker compose logs -f
 ```
 
 ### Specific Service
+
 ```bash
 # Frontend
 docker compose logs -f frontend
@@ -314,6 +347,7 @@ docker compose logs -f mysql
 ```
 
 ### Follow live logs
+
 ```bash
 docker compose logs -f --tail=50
 ```
@@ -322,34 +356,35 @@ docker compose logs -f --tail=50
 
 ## 📊 System Resource Requirements
 
-| Configuration | CPU | RAM | Disk |
-|---|---|---|---|
-| Backend Only | Low | 256MB | 100MB |
-| Frontend Only | Low | 256MB | 500MB |
-| Full Stack (Default) | Medium | 1GB | 1GB |
-| Full Stack (Full Seed) | Medium | 1GB | 1GB |
-| All running locally | High | 2GB+ | 2GB+ |
+| Configuration          | CPU    | RAM   | Disk  |
+| ---------------------- | ------ | ----- | ----- |
+| Backend Only           | Low    | 256MB | 100MB |
+| Frontend Only          | Low    | 256MB | 500MB |
+| Full Stack (Default)   | Medium | 1GB   | 1GB   |
+| Full Stack (Full Seed) | Medium | 1GB   | 1GB   |
+| All running locally    | High   | 2GB+  | 2GB+  |
 
 ---
 
 ## ☁️ Port Mapping
 
-| Service | Default Port | Can be changed | Config file |
-|---|---|---|---|
-| Frontend | 3000 | Yes | `docker-compose.yml` |
-| Backend API | 5000 | Yes | `docker-compose.yml` |
-| MySQL | 3306 | Yes | `docker-compose.yml` |
-| Vite Dev (local) | 5173 | Yes | `frontend/vite.config.ts` |
-| Mock Server | 5001 | Yes | `frontend/mock/mockServer.ts` |
+| Service          | Default Port | Can be changed | Config file                   |
+| ---------------- | ------------ | -------------- | ----------------------------- |
+| Frontend         | 3000         | Yes            | `docker-compose.yml`          |
+| Backend API      | 5000         | Yes            | `docker-compose.yml`          |
+| MySQL            | 3306         | Yes            | `docker-compose.yml`          |
+| Vite Dev (local) | 5173         | Yes            | `frontend/vite.config.ts`     |
+| Mock Server      | 5001         | Yes            | `frontend/mock/mockServer.ts` |
 
 ### Change Port Example
 
 Edit `docker-compose.yml`:
+
 ```yaml
 services:
   frontend:
     ports:
-      - "3001:3000"  # Changed from 3000 to 3001
+      - '3001:3000' # Changed from 3000 to 3001
 ```
 
 ---
@@ -359,6 +394,7 @@ services:
 ### Docker Compose Issues
 
 **Containers won't start:**
+
 ```bash
 docker compose logs
 docker compose down
@@ -366,6 +402,7 @@ docker compose up -d --build
 ```
 
 **Port already in use:**
+
 ```bash
 # Find process on port
 lsof -i :3000  # Frontend
@@ -377,6 +414,7 @@ kill -9 <PID>
 ```
 
 **Database not initialized:**
+
 ```bash
 cd database/scripts
 ./reset.sh
@@ -387,6 +425,7 @@ docker compose up -d
 ### Local Development Issues
 
 **Can't connect to API from frontend:**
+
 ```bash
 # Check API is running
 curl http://localhost:5000/api/users
@@ -397,6 +436,7 @@ curl http://localhost:5000/api/users
 ```
 
 **Module not found errors:**
+
 ```bash
 # Reinstall packages
 cd frontend  # or backend
@@ -405,6 +445,7 @@ npm install
 ```
 
 **TypeScript compilation errors:**
+
 ```bash
 # Rebuild
 npm run build
@@ -417,7 +458,9 @@ npm run build
 ## 🔐 Environment Variables
 
 ### Docker (auto-configured)
+
 All environment variables are set in `docker-compose.yml`:
+
 ```yaml
 environment:
   DB_HOST: mysql
@@ -430,7 +473,9 @@ environment:
 ```
 
 ### Local Development
+
 Create `.env` in `backend/` directory:
+
 ```env
 DB_HOST=localhost
 DB_PORT=3306
@@ -512,6 +557,7 @@ docker exec -it <container-name> bash
 ## 🎯 Common Workflows
 
 ### Workflow 1: Full Feature Development
+
 ```bash
 # Terminal 1: Start full stack
 docker compose up -d
@@ -524,6 +570,7 @@ npm run dev
 ```
 
 ### Workflow 2: Backend API Development
+
 ```bash
 # Terminal 1: Start MySQL and frontend mock
 docker compose up -d mysql
@@ -538,6 +585,7 @@ npm run dev
 ```
 
 ### Workflow 3: Database Schema Changes
+
 ```bash
 # Create new migration file
 vi database/migrations/005_new_table.sql
@@ -552,6 +600,7 @@ docker compose up -d
 ```
 
 ### Workflow 4: Testing UI Variations
+
 ```bash
 # Test with minimal data
 docker compose -f docker-compose.yml -f docker-compose.minimal.yml up -d

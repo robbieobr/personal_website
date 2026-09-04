@@ -18,7 +18,7 @@ const makeResMock = () => {
 };
 
 const makeReqMock = (overrides: Partial<Request> = {}): Request =>
-  ({ params: {}, body: {}, ...overrides } as unknown as Request);
+  ({ params: {}, body: {}, ...overrides }) as unknown as Request;
 
 describe('achievementController', () => {
   let AchievementModel: { findByUserId: ReturnType<typeof vi.fn> };

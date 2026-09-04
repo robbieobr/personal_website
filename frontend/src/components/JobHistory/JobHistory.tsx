@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import Skeleton from 'react-loading-skeleton';
@@ -23,11 +22,19 @@ const JobHistory: React.FC<JobHistoryProps> = ({ jobs, loading }) => {
           {[1, 2].map((i) => (
             <div className="job-card" key={i}>
               <div className="job-header">
-                <h3><Skeleton width={100} /></h3>
-                <span className="company"><Skeleton width={80} /></span>
+                <h3>
+                  <Skeleton width={100} />
+                </h3>
+                <span className="company">
+                  <Skeleton width={80} />
+                </span>
               </div>
-              <div className="job-dates"><Skeleton width={120} /></div>
-              <p className="job-description"><Skeleton count={2} /></p>
+              <div className="job-dates">
+                <Skeleton width={120} />
+              </div>
+              <p className="job-description">
+                <Skeleton count={2} />
+              </p>
             </div>
           ))}
         </div>
@@ -50,7 +57,8 @@ const JobHistory: React.FC<JobHistoryProps> = ({ jobs, loading }) => {
               <span className="company">{job.company}</span>
             </div>
             <div className="job-dates">
-              {formatDate(job.startDate, i18n.language)} - {job.endDate ? formatDate(job.endDate, i18n.language) : t('jobHistory.present')}
+              {formatDate(job.startDate, i18n.language)} -{' '}
+              {job.endDate ? formatDate(job.endDate, i18n.language) : t('jobHistory.present')}
             </div>
             {job.description && <p className="job-description">{job.description}</p>}
           </div>

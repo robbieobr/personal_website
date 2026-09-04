@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import Skeleton from 'react-loading-skeleton';
@@ -22,10 +21,16 @@ const Projects: React.FC<ProjectsProps> = ({ projects, loading }) => {
           {[1, 2].map((i) => (
             <div className="project-card" key={i}>
               <div className="project-header">
-                <h3><Skeleton width={120} /></h3>
-                <span className="project-role"><Skeleton width={80} /></span>
+                <h3>
+                  <Skeleton width={120} />
+                </h3>
+                <span className="project-role">
+                  <Skeleton width={80} />
+                </span>
               </div>
-              <p className="project-description"><Skeleton count={2} /></p>
+              <p className="project-description">
+                <Skeleton count={2} />
+              </p>
             </div>
           ))}
         </div>

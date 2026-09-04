@@ -6,12 +6,12 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
       MYSQL_DATABASE: personal_website
     ports:
-      - "3306:3306"
+      - '3306:3306'
     volumes:
       - mysql_data:/var/lib/mysql
       - ./database/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
       timeout: 20s
       retries: 10
     networks:
@@ -33,7 +33,7 @@ services:
       NODE_ENV: development
       ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:3000,http://localhost:5001,http://backend:5000}
     ports:
-      - "5000:5000"
+      - '5000:5000'
     depends_on:
       mysql:
         condition: service_healthy
@@ -50,7 +50,7 @@ services:
       target: builder
     container_name: personal_website_frontend
     ports:
-      - "3000:3000"
+      - '3000:3000'
     depends_on:
       - backend
     volumes:

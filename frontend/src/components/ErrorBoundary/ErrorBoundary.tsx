@@ -26,12 +26,14 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
   render(): ReactNode {
     if (this.state.hasError) {
       return (
-        <div style={{
-          padding: '20px',
-          textAlign: 'center',
-          color: '#d32f2f',
-          fontFamily: 'Arial, sans-serif',
-        }}>
+        <div
+          style={{
+            padding: '20px',
+            textAlign: 'center',
+            color: '#d32f2f',
+            fontFamily: 'Arial, sans-serif',
+          }}
+        >
           <h1>Something went wrong</h1>
           <p>Please refresh the page or contact support.</p>
         </div>

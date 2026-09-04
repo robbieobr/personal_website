@@ -99,7 +99,9 @@ const ProfilePage: React.FC = () => {
   if (errorKey) {
     return (
       <div className="profile-page">
-        <div className="error" role="alert">{t(errorKey)}</div>
+        <div className="error" role="alert">
+          {t(errorKey)}
+        </div>
       </div>
     );
   }
@@ -107,7 +109,9 @@ const ProfilePage: React.FC = () => {
   if (!profile) {
     return (
       <div className="profile-page">
-        <div className="error" role="alert">{t('profilePage.noData')}</div>
+        <div className="error" role="alert">
+          {t('profilePage.noData')}
+        </div>
       </div>
     );
   }
