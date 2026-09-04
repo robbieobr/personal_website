@@ -19,4 +19,11 @@ describe('parseId', () => {
   it('returns null for strings that lead with non-digits', () => {
     expect(parseId('abc123')).toBeNull();
   });
+
+  it('returns null for non-string params', () => {
+    // Express 5 types params as `string | string[]`; arrays only occur for
+    // wildcard routes, which this API does not use.
+    expect(parseId(undefined)).toBeNull();
+    expect(parseId(['1', '2'])).toBeNull();
+  });
 });
