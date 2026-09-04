@@ -38,21 +38,11 @@ test.describe('Profile Page', () => {
 
     test('displays all contact info links', async ({ page }) => {
       // Links are rendered with aria-labels containing the contact value
-      await expect(
-        page.getByRole('link', { name: /john\.doe@example\.com/i }),
-      ).toBeVisible();
-      await expect(
-        page.getByRole('link', { name: /\+44 7700 900001/i }),
-      ).toBeVisible();
-      await expect(
-        page.getByRole('link', { name: /view github profile/i }),
-      ).toBeVisible();
-      await expect(
-        page.getByRole('link', { name: /view linkedin profile/i }),
-      ).toBeVisible();
-      await expect(
-        page.getByRole('link', { name: /visit website/i }),
-      ).toBeVisible();
+      await expect(page.getByRole('link', { name: /john\.doe@example\.com/i })).toBeVisible();
+      await expect(page.getByRole('link', { name: /\+44 7700 900001/i })).toBeVisible();
+      await expect(page.getByRole('link', { name: /view github profile/i })).toBeVisible();
+      await expect(page.getByRole('link', { name: /view linkedin profile/i })).toBeVisible();
+      await expect(page.getByRole('link', { name: /visit website/i })).toBeVisible();
     });
 
     test('email link has correct href', async ({ page }) => {
@@ -89,8 +79,12 @@ test.describe('Profile Page', () => {
       // of getByText, which caused false matches against description text.
       const jobHistory = page.locator('.job-history');
       await expect(jobHistory.locator('.company').filter({ hasText: 'StartUp Inc' })).toBeVisible();
-      await expect(jobHistory.locator('h3').filter({ hasText: 'Full Stack Developer' })).toBeVisible();
-      await expect(jobHistory.locator('.company').filter({ hasText: 'Web Solutions Ltd' })).toBeVisible();
+      await expect(
+        jobHistory.locator('h3').filter({ hasText: 'Full Stack Developer' })
+      ).toBeVisible();
+      await expect(
+        jobHistory.locator('.company').filter({ hasText: 'Web Solutions Ltd' })
+      ).toBeVisible();
       await expect(jobHistory.locator('h3').filter({ hasText: 'Junior Developer' })).toBeVisible();
     });
   });

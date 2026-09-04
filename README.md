@@ -18,12 +18,14 @@ A full-stack web application showcasing a professional profile, job history, and
 ## 🎯 Project Overview
 
 This is a full-stack application built with:
+
 - **Frontend:** React with TypeScript
 - **Backend:** Node.js/Express with TypeScript
 - **Database:** MySQL 8.0
 - **Deployment:** Docker & Docker Compose
 
 The application displays:
+
 - User profile information
 - Job history with descriptions and dates
 - Educational background
@@ -32,6 +34,7 @@ The application displays:
 ## 🛠 Technology Stack
 
 ### Frontend
+
 - **React 18** - UI library
 - **TypeScript** - Type safety
 - **Vite** - Modern build tool and dev server
@@ -40,12 +43,14 @@ The application displays:
 - **CSS** - Styling
 
 ### Backend
+
 - **Node.js** - JavaScript runtime
 - **Express.js** - Web framework
 - **TypeScript** - Type safety
 - **MySQL** - Database driver
 
 ### DevOps
+
 - **Docker** - Containerization
 - **Docker Compose** - Multi-container orchestration
 
@@ -148,11 +153,13 @@ Before running this project, ensure you have:
 ### Using Docker Compose (Recommended)
 
 1. **Clone and navigate to the project:**
+
    ```bash
    cd personal_website
    ```
 
 2. **Start all services with default configuration:**
+
    ```bash
    docker compose up -d
    ```
@@ -163,6 +170,7 @@ Before running this project, ensure you have:
    - MySQL: localhost:3306
 
 4. **View logs:**
+
    ```bash
    docker compose logs -f
    ```
@@ -175,19 +183,23 @@ Before running this project, ensure you have:
 ### Local Development (Without Docker)
 
 1. **Frontend:**
+
    ```bash
    cd frontend
    npm install
    npm run dev
    ```
+
    Access at http://localhost:5173
 
 2. **Backend:**
+
    ```bash
    cd backend
    npm install
    npm run dev
    ```
+
    Server runs on http://localhost:5000
 
 3. **Database:**
@@ -212,6 +224,7 @@ docker compose up -d
 ```
 
 **Services:**
+
 - Frontend on port 3000
 - Backend API on port 5000
 - MySQL with default seed data
@@ -225,6 +238,7 @@ docker compose -f docker-compose.yml -f docker-compose.minimal.yml up -d
 ```
 
 **database/seeds/minimal/** contains:
+
 - 1 user: Jane Smith (Software Engineer)
 - No job history
 - No education records
@@ -238,6 +252,7 @@ docker compose -f docker-compose.yml -f docker-compose.full.yml up -d
 ```
 
 **database/seeds/full/** contains:
+
 - 3 users:
   - John Doe (Full Stack Developer)
   - Jane Smith (DevOps Engineer)
@@ -292,11 +307,13 @@ cd database/scripts
 ```
 
 This will:
+
 1. Stop all containers
 2. Remove the MySQL data volume
 3. Clear initialization files
 
 Then reinitialize with desired seed:
+
 ```bash
 ./init.sh [seed_type]
 docker compose up -d
@@ -307,11 +324,13 @@ docker compose up -d
 To create a new seed dataset:
 
 1. Create a directory under `database/seeds/`:
+
    ```bash
    mkdir -p database/seeds/custom
    ```
 
 2. Create SQL files for each table:
+
    ```bash
    database/seeds/custom/001_users.sql
    database/seeds/custom/002_job_history.sql
@@ -338,6 +357,7 @@ npm run dev
 The frontend will start on http://localhost:5173 with hot module reloading via Vite.
 
 #### Available Scripts:
+
 - `npm run dev` - Start development server on port 5173 (uses real backend at localhost:5000)
 - `npm run dev:mock` - Start dev server on port 5173, proxying /api to mock server at localhost:5001
 - `npm run mock` - Start mock API server on port 5001 (run alongside `dev:mock`)
@@ -355,6 +375,7 @@ npm run dev
 The backend API will start on http://localhost:5000.
 
 #### Available Scripts:
+
 - `npm run dev` - Start development server with auto-reload
 - `npm run build` - Build TypeScript to JavaScript
 - `npm run start` - Run compiled JavaScript
@@ -382,6 +403,7 @@ Database migrations and seeds are in `database/` directory.
 #### Create New Migration
 
 1. Create a migration file:
+
    ```bash
    database/migrations/005_add_new_table.sql
    ```
@@ -403,6 +425,7 @@ Database migrations and seeds are in `database/` directory.
 All services are defined in `docker-compose.yml`:
 
 #### MySQL Service
+
 - **Image:** mysql:8.0
 - **Container:** personal_website_db
 - **Port:** 3306
@@ -410,6 +433,7 @@ All services are defined in `docker-compose.yml`:
 - **Health Check:** mysqladmin ping
 
 #### Backend Service
+
 - **Build:** From /backend/Dockerfile (builder stage)
 - **Container:** personal_website_backend
 - **Port:** 5000
@@ -418,6 +442,7 @@ All services are defined in `docker-compose.yml`:
 - **Hot Reload:** Watches /backend/src for changes (tsx watch)
 
 #### Frontend Service
+
 - **Build:** From /frontend/Dockerfile (builder stage)
 - **Container:** personal_website_frontend
 - **Port:** 3000
@@ -454,11 +479,13 @@ docker compose down -v
 docker compose exec mysql mysql -u root -p personal_website < dump.sql
 docker compose exec backend npm run build
 ```
+
 ## 🔒 Security
 
 This project implements comprehensive security best practices:
 
 ### Frontend Security
+
 - **Content Security Policy (CSP)** - Prevents XSS attacks by restricting resource loading
 - **Security Headers** - Includes X-Frame-Options, X-Content-Type-Options, X-XSS-Protection
 - **Error Boundaries** - React error boundary catches exceptions without exposing stack traces
@@ -467,6 +494,7 @@ This project implements comprehensive security best practices:
 - **Axios Security** - Configured with request timeouts and proper validation
 
 ### Backend Security
+
 - **Environment Variables** - Sensitive data managed through .env files (not in version control)
 - **CORS Configuration** - Properly configured with allowed origins
 - **Input Validation** - Request validation on all endpoints
@@ -474,6 +502,7 @@ This project implements comprehensive security best practices:
 - **Error Handling** - Detailed errors logged but generic responses sent to clients
 
 ### Dependency Management
+
 - **Regular Audits** - Run `npm audit` to check for vulnerabilities
 - **Security Patches** - Dependencies kept up to date with security fixes
 - **Minimal Dependencies** - Vite provides a smaller attack surface with fewer transitive dependencies
@@ -481,6 +510,7 @@ This project implements comprehensive security best practices:
 ### Checking for Vulnerabilities
 
 Frontend:
+
 ```bash
 cd frontend
 npm audit
@@ -488,16 +518,19 @@ npm audit fix  # To fix issues
 ```
 
 Backend:
+
 ```bash
 cd backend
 npm audit
 npm audit fix  # To fix issues
 ```
+
 ## 🔧 Troubleshooting
 
 ### Docker Issues
 
 #### Containers won't start
+
 ```bash
 # Check logs
 docker compose logs
@@ -508,6 +541,7 @@ docker compose up -d --build
 ```
 
 #### MySQL connection errors
+
 ```bash
 # Check logs
 docker compose logs mysql
@@ -518,6 +552,7 @@ docker compose restart mysql
 ```
 
 #### Port already in use
+
 ```bash
 # Find process using port
 lsof -i :3000  # Frontend
@@ -533,6 +568,7 @@ kill -9 <PID>
 ### Database Issues
 
 #### Database not initialized
+
 ```bash
 cd database/scripts
 ./reset.sh
@@ -541,6 +577,7 @@ docker compose up -d
 ```
 
 #### Cannot connect to database
+
 ```bash
 # Check MySQL is running
 docker compose ps
@@ -552,6 +589,7 @@ docker compose logs mysql
 ```
 
 #### Tables not created
+
 ```bash
 # Check if migrations ran
 docker compose exec mysql mysql -u root -p -e "SHOW TABLES;"
@@ -567,6 +605,7 @@ docker compose up -d
 ### Frontend Issues
 
 #### Frontend won't load
+
 ```bash
 docker compose logs frontend
 docker compose down
@@ -574,6 +613,7 @@ docker compose up -d --build
 ```
 
 #### API calls failing
+
 ```bash
 # Check backend is running
 docker compose ps
@@ -587,6 +627,7 @@ docker compose logs backend
 ### Backend Issues
 
 #### Cannot connect to database
+
 ```bash
 # Check database credentials
 docker compose logs backend
@@ -596,6 +637,7 @@ docker compose config | grep DB_
 ```
 
 #### Port 5000 in use
+
 ```bash
 # Change port in docker-compose.yml
 # Change backend PORT variable in environment section

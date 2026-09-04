@@ -5,6 +5,7 @@ Node.js + Express + TypeScript API server for the personal website.
 ## 📋 Overview
 
 This is the backend API that provides:
+
 - RESTful endpoints for user profiles
 - Job history management
 - Education records
@@ -75,16 +76,19 @@ Access at http://localhost:5000
 ### Local Development (Without Docker)
 
 1. **Install dependencies:**
+
    ```bash
    npm install
    ```
 
 2. **Setup environment variables:**
+
    ```bash
    cp .env.example .env
    ```
 
    Edit `.env` with your configuration:
+
    ```env
    DB_HOST=localhost
    DB_PORT=3306
@@ -96,6 +100,7 @@ Access at http://localhost:5000
    ```
 
 3. **Ensure MySQL is running:**
+
    ```bash
    # Option 1: Docker
    docker run -d \
@@ -110,6 +115,7 @@ Access at http://localhost:5000
    ```
 
 4. **Initialize the database:**
+
    ```bash
    cd ../database/scripts
    ./init.sh default
@@ -117,6 +123,7 @@ Access at http://localhost:5000
    ```
 
 5. **Start development server:**
+
    ```bash
    npm run dev
    ```
@@ -125,63 +132,63 @@ Access at http://localhost:5000
 
 ## 📦 Available Scripts
 
-| Script | Description |
-|--------|-------------|
-| `npm run dev` | Start development server with auto-reload (tsx watch) |
-| `npm run build` | Compile TypeScript to JavaScript |
-| `npm run start` | Run compiled JavaScript server |
+| Script          | Description                                           |
+| --------------- | ----------------------------------------------------- |
+| `npm run dev`   | Start development server with auto-reload (tsx watch) |
+| `npm run build` | Compile TypeScript to JavaScript                      |
+| `npm run start` | Run compiled JavaScript server                        |
 
 ## 🔌 API Endpoints
 
 ### Users
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/users` | Get all users |
-| GET | `/api/users/:id` | Get specific user by ID |
-| GET | `/api/users/:id/profile` | Get user with full profile (all sections) |
+| Method | Endpoint                 | Description                               |
+| ------ | ------------------------ | ----------------------------------------- |
+| GET    | `/api/users`             | Get all users                             |
+| GET    | `/api/users/:id`         | Get specific user by ID                   |
+| GET    | `/api/users/:id/profile` | Get user with full profile (all sections) |
 
 ### Contact Info
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/contact-info/:userId` | Get contact info for specific user |
+| Method | Endpoint                    | Description                        |
+| ------ | --------------------------- | ---------------------------------- |
+| GET    | `/api/contact-info/:userId` | Get contact info for specific user |
 
 ### Jobs
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/jobs/user/:userId` | Get jobs for specific user |
+| Method | Endpoint                 | Description                |
+| ------ | ------------------------ | -------------------------- |
+| GET    | `/api/jobs/user/:userId` | Get jobs for specific user |
 
 ### Education
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/education/user/:userId` | Get education records for specific user |
+| Method | Endpoint                      | Description                             |
+| ------ | ----------------------------- | --------------------------------------- |
+| GET    | `/api/education/user/:userId` | Get education records for specific user |
 
 ### Projects
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/projects/user/:userId` | Get projects for specific user |
+| Method | Endpoint                     | Description                    |
+| ------ | ---------------------------- | ------------------------------ |
+| GET    | `/api/projects/user/:userId` | Get projects for specific user |
 
 ### Skills
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/skills/user/:userId` | Get skills for specific user |
+| Method | Endpoint                   | Description                  |
+| ------ | -------------------------- | ---------------------------- |
+| GET    | `/api/skills/user/:userId` | Get skills for specific user |
 
 ### Achievements
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/achievements/user/:userId` | Get achievements for specific user |
+| Method | Endpoint                         | Description                        |
+| ------ | -------------------------------- | ---------------------------------- |
+| GET    | `/api/achievements/user/:userId` | Get achievements for specific user |
 
 ### Health
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/health` | Health check (verifies database connectivity) |
+| Method | Endpoint      | Description                                   |
+| ------ | ------------- | --------------------------------------------- |
+| GET    | `/api/health` | Health check (verifies database connectivity) |
 
 ## 🗄️ Database Connection
 
@@ -189,15 +196,15 @@ The backend automatically connects to MySQL using the configured environment var
 
 ### Environment Variables
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `DB_HOST` | MySQL host | localhost |
-| `DB_PORT` | MySQL port | 3306 |
-| `DB_USER` | MySQL user | root |
-| `DB_PASSWORD` | MySQL password | rootpassword |
-| `DB_NAME` | Database name | personal_website |
-| `PORT` | Server port | 5000 |
-| `NODE_ENV` | Environment | development |
+| Variable      | Description    | Default          |
+| ------------- | -------------- | ---------------- |
+| `DB_HOST`     | MySQL host     | localhost        |
+| `DB_PORT`     | MySQL port     | 3306             |
+| `DB_USER`     | MySQL user     | root             |
+| `DB_PASSWORD` | MySQL password | rootpassword     |
+| `DB_NAME`     | Database name  | personal_website |
+| `PORT`        | Server port    | 5000             |
+| `NODE_ENV`    | Environment    | development      |
 
 ### Connection Pool
 
@@ -208,6 +215,7 @@ The database module uses connection pools for better performance. Connection par
 ### Adding a New Endpoint
 
 1. **Create Controller:**
+
    ```typescript
    // src/controllers/newController.ts
    import { Request, Response } from 'express';
@@ -219,6 +227,7 @@ The database module uses connection pools for better performance. Connection par
    ```
 
 2. **Create Routes:**
+
    ```typescript
    // src/routes/newRoutes.ts
    import express from 'express';
@@ -230,6 +239,7 @@ The database module uses connection pools for better performance. Connection par
    ```
 
 3. **Register Routes in `index.ts`:**
+
    ```typescript
    import newRoutes from './routes/newRoutes';
    app.use('/api/new', newRoutes);
@@ -425,15 +435,18 @@ If you need to allow additional origins, update the CORS configuration:
 ```typescript
 const cors = require('cors');
 
-app.use(cors({
-  origin: 'http://localhost:3000',
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+  })
+);
 ```
 
 ## 🆘 Support
 
 For issues related to:
+
 - **Database:** See [database/README.md](../database/README.md)
 - **Project Setup:** See [README.md](../README.md)
 - **Frontend Integration:** See [frontend/README.md](../frontend/README.md)

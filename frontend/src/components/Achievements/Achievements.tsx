@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import Skeleton from 'react-loading-skeleton';
@@ -23,10 +22,16 @@ const Achievements: React.FC<AchievementsProps> = ({ achievements, loading }) =>
           {[1, 2].map((i) => (
             <div className="achievement-card" key={i}>
               <div className="achievement-header">
-                <h3><Skeleton width={120} /></h3>
-                <span className="achievement-date"><Skeleton width={80} /></span>
+                <h3>
+                  <Skeleton width={120} />
+                </h3>
+                <span className="achievement-date">
+                  <Skeleton width={80} />
+                </span>
               </div>
-              <p className="achievement-description"><Skeleton count={2} /></p>
+              <p className="achievement-description">
+                <Skeleton count={2} />
+              </p>
             </div>
           ))}
         </div>
@@ -46,7 +51,9 @@ const Achievements: React.FC<AchievementsProps> = ({ achievements, loading }) =>
           <div key={achievement.id} className="achievement-card">
             <div className="achievement-header">
               <h3>{achievement.title}</h3>
-              <span className="achievement-date">{formatDate(achievement.date, i18n.language)}</span>
+              <span className="achievement-date">
+                {formatDate(achievement.date, i18n.language)}
+              </span>
             </div>
             {achievement.description && (
               <p className="achievement-description">{achievement.description}</p>

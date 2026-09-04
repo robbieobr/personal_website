@@ -1,4 +1,12 @@
-import type { User, JobEntry, Education, Project, Skill, Achievement, ContactInfo } from '../src/types/index';
+import type {
+  User,
+  JobEntry,
+  Education,
+  Project,
+  Skill,
+  Achievement,
+  ContactInfo,
+} from '../src/types/index';
 
 export const mockUser: User = {
   id: 1,

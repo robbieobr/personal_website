@@ -1,4 +1,3 @@
-
 import axios from 'axios';
 import { UserProfile, User } from '../types/index.js';
 

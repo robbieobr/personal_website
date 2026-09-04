@@ -16,4 +16,3 @@ export const getEducationByUser = async (req: Request, res: Response): Promise<v
     res.status(500).json({ error: 'Failed to fetch education' });
   }
 };
-

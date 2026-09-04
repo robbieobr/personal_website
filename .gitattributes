@@ -1,0 +1,15 @@
+# Normalise line endings across platforms.
+#
+# Without this, a clone on Windows (where Git for Windows defaults
+# core.autocrlf=true) rewrites text files to CRLF in the working tree,
+# which conflicts with Prettier's endOfLine: "lf" default and makes
+# `npm run format:check` fail on files nobody edited.
+* text=auto eol=lf
+
+# Binary assets must never be line-ending converted.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary

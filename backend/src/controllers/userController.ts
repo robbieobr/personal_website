@@ -1,5 +1,13 @@
 import { Request, Response } from 'express';
-import { UserModel, JobModel, EducationModel, ProjectModel, SkillModel, AchievementModel, ContactInfoModel } from '../models/index';
+import {
+  UserModel,
+  JobModel,
+  EducationModel,
+  ProjectModel,
+  SkillModel,
+  AchievementModel,
+  ContactInfoModel,
+} from '../models/index';
 import { parseId } from '../utils/parseId';
 
 export const getUser = async (req: Request, res: Response): Promise<void> => {
@@ -70,4 +78,3 @@ export const getUserProfile = async (req: Request, res: Response): Promise<void>
     res.status(500).json({ error: 'Failed to fetch profile' });
   }
 };
-

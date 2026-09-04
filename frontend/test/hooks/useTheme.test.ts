@@ -11,7 +11,9 @@ describe('useTheme', () => {
   beforeEach(() => {
     getItemSpy = vi.spyOn(Storage.prototype, 'getItem').mockReturnValue(null);
     setItemSpy = vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {});
-    setPropertySpy = vi.spyOn(document.documentElement.style, 'setProperty').mockImplementation(() => {});
+    setPropertySpy = vi
+      .spyOn(document.documentElement.style, 'setProperty')
+      .mockImplementation(() => {});
   });
 
   afterEach(() => {
@@ -37,14 +39,14 @@ describe('useTheme', () => {
 
   it('applies CSS variables to document.documentElement on mount', () => {
     renderHook(() => useTheme());
-    const lightTheme = themes.find(t => t.id === DEFAULT_THEME_ID)!;
+    const lightTheme = themes.find((t) => t.id === DEFAULT_THEME_ID)!;
     const [firstKey, firstValue] = Object.entries(lightTheme.cssVars)[0];
     expect(setPropertySpy).toHaveBeenCalledWith(firstKey, firstValue);
   });
 
   it('applies CSS variables for all vars in the theme', () => {
     renderHook(() => useTheme());
-    const lightTheme = themes.find(t => t.id === DEFAULT_THEME_ID)!;
+    const lightTheme = themes.find((t) => t.id === DEFAULT_THEME_ID)!;
     const varCount = Object.keys(lightTheme.cssVars).length;
     expect(setPropertySpy).toHaveBeenCalledTimes(varCount);
   });
@@ -60,7 +62,7 @@ describe('useTheme', () => {
       result.current.setThemeId('dark');
     });
     expect(result.current.themeId).toBe('dark');
-    const darkTheme = themes.find(t => t.id === 'dark')!;
+    const darkTheme = themes.find((t) => t.id === 'dark')!;
     const [firstKey, firstValue] = Object.entries(darkTheme.cssVars)[0];
     expect(setPropertySpy).toHaveBeenCalledWith(firstKey, firstValue);
   });

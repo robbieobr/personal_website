@@ -1,5 +1,13 @@
 import pool from '../config/database';
-import { User, JobEntry, Education, Project, Skill, Achievement, ContactInfo } from '../types/index';
+import {
+  User,
+  JobEntry,
+  Education,
+  Project,
+  Skill,
+  Achievement,
+  ContactInfo,
+} from '../types/index';
 
 export class UserModel {
   static async findById(id: number): Promise<User | null> {
@@ -27,7 +35,6 @@ export class UserModel {
       connection.release();
     }
   }
-
 }
 
 export class ContactInfoModel {
@@ -43,7 +50,6 @@ export class ContactInfoModel {
       connection.release();
     }
   }
-
 }
 
 export class JobModel {
@@ -59,7 +65,6 @@ export class JobModel {
       connection.release();
     }
   }
-
 }
 
 export class EducationModel {
@@ -75,39 +80,30 @@ export class EducationModel {
       connection.release();
     }
   }
-
 }
 
 export class ProjectModel {
   static async findByUserId(userId: number): Promise<Project[]> {
     const connection = await pool.getConnection();
     try {
-      const [rows] = await connection.execute(
-        'SELECT * FROM projects WHERE userId = ?',
-        [userId]
-      );
+      const [rows] = await connection.execute('SELECT * FROM projects WHERE userId = ?', [userId]);
       return rows as Project[];
     } finally {
       connection.release();
     }
   }
-
 }
 
 export class SkillModel {
   static async findByUserId(userId: number): Promise<Skill[]> {
     const connection = await pool.getConnection();
     try {
-      const [rows] = await connection.execute(
-        'SELECT * FROM skills WHERE userId = ?',
-        [userId]
-      );
+      const [rows] = await connection.execute('SELECT * FROM skills WHERE userId = ?', [userId]);
       return rows as Skill[];
     } finally {
       connection.release();
     }
   }
-
 }
 
 export class AchievementModel {
@@ -123,5 +119,4 @@ export class AchievementModel {
       connection.release();
     }
   }
-
 }

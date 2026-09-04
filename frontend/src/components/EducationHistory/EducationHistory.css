@@ -170,7 +170,7 @@
   }
 
   .education-header h3::before {
-    content: " \2014\00a0";
+    content: ' \2014\00a0';
     font-style: normal;
   }
 

@@ -72,7 +72,9 @@ test.describe('Accessibility', () => {
       await expect(page.locator('h1')).toContainText('John Doe');
     });
 
-    test('app header contains no heading elements — title is a paragraph (A-008)', async ({ page }) => {
+    test('app header contains no heading elements — title is a paragraph (A-008)', async ({
+      page,
+    }) => {
       // The site title was demoted from <h1> to <p class="site-title">
       for (const level of ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']) {
         await expect(page.locator(`.App-header ${level}`)).toHaveCount(0);
@@ -107,26 +109,22 @@ test.describe('Accessibility', () => {
 
     test('skip link is visually off-screen before keyboard focus (A-001)', async ({ page }) => {
       // CSS: position: absolute; left: -9999px — element is in tab order but invisible
-      const left = await page.locator('.skip-link').evaluate(
-        (el) => getComputedStyle(el).left,
-      );
+      const left = await page.locator('.skip-link').evaluate((el) => getComputedStyle(el).left);
       expect(left).toBe('-9999px');
     });
 
     test('skip link is the first focusable element on the page (A-001)', async ({ page }) => {
       await page.keyboard.press('Tab');
-      const isFocused = await page.locator('.skip-link').evaluate(
-        (el) => el === document.activeElement,
-      );
+      const isFocused = await page
+        .locator('.skip-link')
+        .evaluate((el) => el === document.activeElement);
       expect(isFocused).toBe(true);
     });
 
     test('skip link moves on-screen when keyboard-focused (A-001)', async ({ page }) => {
       // CSS :focus rule changes position to fixed and left to 0
       await page.keyboard.press('Tab'); // focuses .skip-link
-      const left = await page.locator('.skip-link').evaluate(
-        (el) => getComputedStyle(el).left,
-      );
+      const left = await page.locator('.skip-link').evaluate((el) => getComputedStyle(el).left);
       expect(left).toBe('0px');
     });
   });
@@ -217,22 +215,26 @@ test.describe('Accessibility', () => {
   test.describe('Keyboard focus indicators', () => {
     test('skip link has a visible outline when keyboard-focused (A-001)', async ({ page }) => {
       await page.keyboard.press('Tab'); // focus .skip-link
-      const outlineWidth = await page.locator('.skip-link').evaluate(
-        (el) => getComputedStyle(el).outlineWidth,
-      );
+      const outlineWidth = await page
+        .locator('.skip-link')
+        .evaluate((el) => getComputedStyle(el).outlineWidth);
       expect(outlineWidth).toBe('2px');
     });
 
-    test('site title link has a visible outline when keyboard-focused (A-007)', async ({ page }) => {
+    test('site title link has a visible outline when keyboard-focused (A-007)', async ({
+      page,
+    }) => {
       await page.keyboard.press('Tab'); // .skip-link
       await page.keyboard.press('Tab'); // .App-header-link
-      const outlineWidth = await page.locator('.App-header-link').evaluate(
-        (el) => getComputedStyle(el).outlineWidth,
-      );
+      const outlineWidth = await page
+        .locator('.App-header-link')
+        .evaluate((el) => getComputedStyle(el).outlineWidth);
       expect(outlineWidth).toBe('2px');
     });
 
-    test('download button is keyboard-focusable and :focus-visible is active (A-002)', async ({ page }) => {
+    test('download button is keyboard-focusable and :focus-visible is active (A-002)', async ({
+      page,
+    }) => {
       await page.keyboard.press('Tab'); // .skip-link
       await page.keyboard.press('Tab'); // .App-header-link
       await page.keyboard.press('Tab'); // .download-btn
@@ -257,7 +259,9 @@ test.describe('Accessibility', () => {
       expect(hasFocusVisible).toBe(true);
     });
 
-    test('language select is keyboard-focusable and :focus-visible is active (A-010)', async ({ page }) => {
+    test('language select is keyboard-focusable and :focus-visible is active (A-010)', async ({
+      page,
+    }) => {
       await page.keyboard.press('Tab'); // .skip-link
       await page.keyboard.press('Tab'); // .App-header-link
       await page.keyboard.press('Tab'); // .download-btn
@@ -279,29 +283,27 @@ test.describe('Accessibility', () => {
   // ---------------------------------------------------------------------------
 
   test.describe('Colour design tokens', () => {
-    test('--color-teal-accessible is set to the contrast-compliant value (A-003/A-005)', async ({ page }) => {
+    test('--color-teal-accessible is set to the contrast-compliant value (A-003/A-005)', async ({
+      page,
+    }) => {
       const value = await page.evaluate(() =>
         getComputedStyle(document.documentElement)
           .getPropertyValue('--color-teal-accessible')
-          .trim(),
+          .trim()
       );
       expect(value).toBe('#065f65');
     });
 
     test('--color-text-muted is set to the contrast-compliant value (A-004)', async ({ page }) => {
       const value = await page.evaluate(() =>
-        getComputedStyle(document.documentElement)
-          .getPropertyValue('--color-text-muted')
-          .trim(),
+        getComputedStyle(document.documentElement).getPropertyValue('--color-text-muted').trim()
       );
       expect(value).toBe('#5a6470');
     });
 
     test('--color-focus-ring is set to the light-theme value', async ({ page }) => {
       const value = await page.evaluate(() =>
-        getComputedStyle(document.documentElement)
-          .getPropertyValue('--color-focus-ring')
-          .trim(),
+        getComputedStyle(document.documentElement).getPropertyValue('--color-focus-ring').trim()
       );
       expect(value).toBe('#12bdc8');
     });
@@ -310,16 +312,14 @@ test.describe('Accessibility', () => {
       const value = await page.evaluate(() =>
         getComputedStyle(document.documentElement)
           .getPropertyValue('--color-profile-bg-start')
-          .trim(),
+          .trim()
       );
       expect(value).toBe('#0d1f36');
     });
 
     test('--color-profile-bg-end is set to the light-theme value', async ({ page }) => {
       const value = await page.evaluate(() =>
-        getComputedStyle(document.documentElement)
-          .getPropertyValue('--color-profile-bg-end')
-          .trim(),
+        getComputedStyle(document.documentElement).getPropertyValue('--color-profile-bg-end').trim()
       );
       expect(value).toBe('#0a2740');
     });
@@ -355,9 +355,7 @@ test.describe('Accessibility', () => {
     test('switching to dark theme updates --color-background CSS variable', async ({ page }) => {
       await page.locator('.theme-select').selectOption('dark');
       const bg = await page.evaluate(() =>
-        getComputedStyle(document.documentElement)
-          .getPropertyValue('--color-background')
-          .trim(),
+        getComputedStyle(document.documentElement).getPropertyValue('--color-background').trim()
       );
       expect(bg).toBe('#0f172a');
     });
@@ -365,9 +363,7 @@ test.describe('Accessibility', () => {
     test('switching to dark theme updates --color-focus-ring CSS variable', async ({ page }) => {
       await page.locator('.theme-select').selectOption('dark');
       const ring = await page.evaluate(() =>
-        getComputedStyle(document.documentElement)
-          .getPropertyValue('--color-focus-ring')
-          .trim(),
+        getComputedStyle(document.documentElement).getPropertyValue('--color-focus-ring').trim()
       );
       expect(ring).toBe('#67e8f9');
     });
@@ -375,9 +371,7 @@ test.describe('Accessibility', () => {
     test('switching to high-contrast theme sets --color-background to white', async ({ page }) => {
       await page.locator('.theme-select').selectOption('high-contrast');
       const bg = await page.evaluate(() =>
-        getComputedStyle(document.documentElement)
-          .getPropertyValue('--color-background')
-          .trim(),
+        getComputedStyle(document.documentElement).getPropertyValue('--color-background').trim()
       );
       expect(bg).toBe('#ffffff');
     });
@@ -385,9 +379,7 @@ test.describe('Accessibility', () => {
     test('switching to high-contrast theme sets --color-focus-ring to yellow', async ({ page }) => {
       await page.locator('.theme-select').selectOption('high-contrast');
       const ring = await page.evaluate(() =>
-        getComputedStyle(document.documentElement)
-          .getPropertyValue('--color-focus-ring')
-          .trim(),
+        getComputedStyle(document.documentElement).getPropertyValue('--color-focus-ring').trim()
       );
       expect(ring).toBe('#ffff00');
     });
@@ -395,19 +387,17 @@ test.describe('Accessibility', () => {
     test('switching to colour-blind theme sets --color-focus-ring to orange', async ({ page }) => {
       await page.locator('.theme-select').selectOption('colour-blind');
       const ring = await page.evaluate(() =>
-        getComputedStyle(document.documentElement)
-          .getPropertyValue('--color-focus-ring')
-          .trim(),
+        getComputedStyle(document.documentElement).getPropertyValue('--color-focus-ring').trim()
       );
       expect(ring).toBe('#ff9900');
     });
 
-    test('switching to colour-blind-hc theme sets --color-focus-ring to orange', async ({ page }) => {
+    test('switching to colour-blind-hc theme sets --color-focus-ring to orange', async ({
+      page,
+    }) => {
       await page.locator('.theme-select').selectOption('colour-blind-hc');
       const ring = await page.evaluate(() =>
-        getComputedStyle(document.documentElement)
-          .getPropertyValue('--color-focus-ring')
-          .trim(),
+        getComputedStyle(document.documentElement).getPropertyValue('--color-focus-ring').trim()
       );
       expect(ring).toBe('#ff8c00');
     });
@@ -430,9 +420,7 @@ test.describe('Accessibility', () => {
       await page.locator('.theme-select').selectOption('dark');
       await page.locator('.theme-select').selectOption('light');
       const bg = await page.evaluate(() =>
-        getComputedStyle(document.documentElement)
-          .getPropertyValue('--color-background')
-          .trim(),
+        getComputedStyle(document.documentElement).getPropertyValue('--color-background').trim()
       );
       expect(bg).toBe('#f0ece7');
     });

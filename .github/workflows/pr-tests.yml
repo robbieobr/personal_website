@@ -9,20 +9,20 @@ jobs:
   backend-tests:
     name: Backend Tests
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-      
+
       - name: Install backend dependencies
         working-directory: ./backend
         run: npm install
-      
+
       - name: Run backend tests
         working-directory: ./backend
         run: npm test
@@ -30,20 +30,20 @@ jobs:
   frontend-tests:
     name: Frontend Tests
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-      
+
       - name: Install frontend dependencies
         working-directory: ./frontend
         run: npm install
-      
+
       - name: Run frontend tests
         working-directory: ./frontend
         run: npm test

@@ -104,9 +104,7 @@ test.describe('Print layout', () => {
 
     test('skills list uses disc bullets', async ({ page }) => {
       const skillsList = page.locator('.skills-list');
-      const listStyleType = await skillsList.evaluate(
-        (el) => getComputedStyle(el).listStyleType,
-      );
+      const listStyleType = await skillsList.evaluate((el) => getComputedStyle(el).listStyleType);
       expect(listStyleType).toBe('disc');
     });
 
@@ -126,7 +124,7 @@ test.describe('Print layout', () => {
     test('job cards have break-inside: avoid', async ({ page }) => {
       const firstCard = page.locator('.job-card').first();
       const breakInside = await firstCard.evaluate((el) =>
-        getComputedStyle(el).getPropertyValue('break-inside'),
+        getComputedStyle(el).getPropertyValue('break-inside')
       );
       expect(breakInside).toBe('avoid');
     });
@@ -134,7 +132,7 @@ test.describe('Print layout', () => {
     test('project cards have break-inside: avoid', async ({ page }) => {
       const firstCard = page.locator('.project-card').first();
       const breakInside = await firstCard.evaluate((el) =>
-        getComputedStyle(el).getPropertyValue('break-inside'),
+        getComputedStyle(el).getPropertyValue('break-inside')
       );
       expect(breakInside).toBe('avoid');
     });
@@ -142,7 +140,7 @@ test.describe('Print layout', () => {
     test('achievement cards have break-inside: avoid', async ({ page }) => {
       const firstCard = page.locator('.achievement-card').first();
       const breakInside = await firstCard.evaluate((el) =>
-        getComputedStyle(el).getPropertyValue('break-inside'),
+        getComputedStyle(el).getPropertyValue('break-inside')
       );
       expect(breakInside).toBe('avoid');
     });
@@ -150,7 +148,7 @@ test.describe('Print layout', () => {
     test('education cards have break-inside: avoid', async ({ page }) => {
       const firstCard = page.locator('.education-card').first();
       const breakInside = await firstCard.evaluate((el) =>
-        getComputedStyle(el).getPropertyValue('break-inside'),
+        getComputedStyle(el).getPropertyValue('break-inside')
       );
       expect(breakInside).toBe('avoid');
     });

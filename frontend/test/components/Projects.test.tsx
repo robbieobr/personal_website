@@ -28,7 +28,9 @@ describe('Projects', () => {
 
   it('does not render description when null', () => {
     renderWithProviders(<Projects projects={[mockProjectNoDescription]} />);
-    expect(screen.queryByText('Built a personal portfolio with React and Node.js.')).not.toBeInTheDocument();
+    expect(
+      screen.queryByText('Built a personal portfolio with React and Node.js.')
+    ).not.toBeInTheDocument();
   });
 
   it('renders multiple projects', () => {

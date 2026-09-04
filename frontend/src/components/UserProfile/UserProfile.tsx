@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import Skeleton from 'react-loading-skeleton';
@@ -32,8 +31,12 @@ const UserProfileComponent: React.FC<UserProfileProps> = ({ user, contactInfo, l
           <p className="title">{loading ? <Skeleton width={80} /> : user?.title}</p>
           {loading ? (
             <div className="contact-info">
-              <p><Skeleton width={140} /></p>
-              <p><Skeleton width={100} /></p>
+              <p>
+                <Skeleton width={140} />
+              </p>
+              <p>
+                <Skeleton width={100} />
+              </p>
             </div>
           ) : (
             <ContactInfoComponent contactInfo={contactInfo} />

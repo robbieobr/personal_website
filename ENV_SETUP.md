@@ -5,6 +5,7 @@ This document explains the environment variables used throughout the Personal We
 ## Overview
 
 The project uses environment variables to manage configuration across different environments:
+
 - **Development** - Local development setup
 - **Mock** - Development with mock server (no backend required)
 - **Docker** - Full-stack Docker deployment
@@ -81,15 +82,15 @@ cp frontend/mock/.env.example frontend/mock/.env
 
 ### Backend Environment Variables
 
-| Variable | Description | Default | Type |
-|----------|-------------|---------|------|
-| `DB_HOST` | MySQL database host | `localhost` | string |
-| `DB_PORT` | MySQL database port | `3306` | number |
-| `DB_USER` | MySQL username | `root` | string |
-| `DB_PASSWORD` | MySQL password | `rootpassword` | string |
-| `DB_NAME` | Database name | `personal_website` | string |
-| `PORT` | Backend server port | `5000` | number |
-| `NODE_ENV` | Environment mode | `development` | string |
+| Variable          | Description                            | Default                                                             | Type   |
+| ----------------- | -------------------------------------- | ------------------------------------------------------------------- | ------ |
+| `DB_HOST`         | MySQL database host                    | `localhost`                                                         | string |
+| `DB_PORT`         | MySQL database port                    | `3306`                                                              | number |
+| `DB_USER`         | MySQL username                         | `root`                                                              | string |
+| `DB_PASSWORD`     | MySQL password                         | `rootpassword`                                                      | string |
+| `DB_NAME`         | Database name                          | `personal_website`                                                  | string |
+| `PORT`            | Backend server port                    | `5000`                                                              | number |
+| `NODE_ENV`        | Environment mode                       | `development`                                                       | string |
 | `ALLOWED_ORIGINS` | CORS allowed origins (comma-separated) | `http://localhost:3000,http://localhost:5001,http://localhost:5000` | string |
 
 **Example Backend .env:**
@@ -107,11 +108,11 @@ ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5001,http://localhost:500
 
 ### Frontend Environment Variables
 
-| Variable | Description | Default | Type |
-|----------|-------------|---------|------|
-| `VITE_API_BACKEND` | Backend API server URL | `http://localhost:5000` | URL |
-| `VITE_API_URL` | Full API endpoint URL | `http://localhost:5000/api` | URL |
-| `VITE_APP_URL` | Public site URL — shown as header link text in production builds | *(unset in dev)* | URL |
+| Variable           | Description                                                      | Default                     | Type |
+| ------------------ | ---------------------------------------------------------------- | --------------------------- | ---- |
+| `VITE_API_BACKEND` | Backend API server URL                                           | `http://localhost:5000`     | URL  |
+| `VITE_API_URL`     | Full API endpoint URL                                            | `http://localhost:5000/api` | URL  |
+| `VITE_APP_URL`     | Public site URL — shown as header link text in production builds | _(unset in dev)_            | URL  |
 
 **Development (.env.development):**
 
@@ -131,21 +132,21 @@ VITE_API_URL=http://localhost:5001/api
 
 Used by `docker-compose.yml`:
 
-| Variable | Description | Default | Type |
-|----------|-------------|---------|------|
-| `MYSQL_ROOT_PASSWORD` | MySQL root password | `rootpassword` | string |
-| `MYSQL_DATABASE` | Database name | `personal_website` | string |
-| `DB_PASSWORD` | Backend database password | `rootpassword` | string |
-| `ALLOWED_ORIGINS` | Backend CORS origins | `http://localhost:3000,http://localhost:5001,http://backend:5000` | string |
-| `VITE_API_BACKEND` | Frontend API backend URL | `http://backend:5000` | URL |
-| `VITE_API_URL` | Frontend direct API URL | `http://localhost:5000/api` | URL |
+| Variable              | Description               | Default                                                           | Type   |
+| --------------------- | ------------------------- | ----------------------------------------------------------------- | ------ |
+| `MYSQL_ROOT_PASSWORD` | MySQL root password       | `rootpassword`                                                    | string |
+| `MYSQL_DATABASE`      | Database name             | `personal_website`                                                | string |
+| `DB_PASSWORD`         | Backend database password | `rootpassword`                                                    | string |
+| `ALLOWED_ORIGINS`     | Backend CORS origins      | `http://localhost:3000,http://localhost:5001,http://backend:5000` | string |
+| `VITE_API_BACKEND`    | Frontend API backend URL  | `http://backend:5000`                                             | URL    |
+| `VITE_API_URL`        | Frontend direct API URL   | `http://localhost:5000/api`                                       | URL    |
 
 Additional variables required by the production overlay (`docker-compose.prod.yml`):
 
-| Variable | Description | Type |
-|----------|-------------|------|
-| `DB_READONLY_USER` | MySQL username for the backend in production | string |
-| `DB_READONLY_PASSWORD` | Password for the read-only MySQL user | string |
+| Variable               | Description                                  | Type   |
+| ---------------------- | -------------------------------------------- | ------ |
+| `DB_READONLY_USER`     | MySQL username for the backend in production | string |
+| `DB_READONLY_PASSWORD` | Password for the read-only MySQL user        | string |
 
 **Example for Docker:**
 
@@ -157,10 +158,10 @@ docker compose up \
 
 ### Mock Server Environment Variables
 
-| Variable | Description | Default | Type |
-|----------|-------------|---------|------|
-| `MOCK_PORT` | Mock server port | `5001` | number |
-| `MOCK_NETWORK_DELAY` | Simulated network delay in ms | `1000` | number |
+| Variable               | Description                            | Default                                                             | Type   |
+| ---------------------- | -------------------------------------- | ------------------------------------------------------------------- | ------ |
+| `MOCK_PORT`            | Mock server port                       | `5001`                                                              | number |
+| `MOCK_NETWORK_DELAY`   | Simulated network delay in ms          | `1000`                                                              | number |
 | `MOCK_ALLOWED_ORIGINS` | CORS allowed origins (comma-separated) | `http://localhost:3000,http://localhost:5001,http://localhost:5000` | string |
 
 **Example Mock Server .env:**
@@ -184,6 +185,7 @@ docker compose up
 **Environment:** Uses variables from root `.env` file
 
 **Access:**
+
 - Frontend: http://localhost:3000
 - Backend: http://localhost:5000/api
 - MySQL: localhost:3306
@@ -205,10 +207,12 @@ npm run dev
 ```
 
 **Environment Variables:**
+
 - Backend: `backend/.env` (DB_HOST=localhost)
 - Frontend: `frontend/.env.development`
 
 **Access:**
+
 - Frontend: http://localhost:5173 (hot reload)
 - Backend: http://localhost:5000/api
 - MySQL: localhost:3306
@@ -228,10 +232,12 @@ npm run dev:mock
 ```
 
 **Environment Variables:**
+
 - Frontend: `frontend/.env.mock`
 - Mock Server: `frontend/mock/.env` (optional)
 
 **Access:**
+
 - Frontend: http://localhost:5173 (hot reload)
 - Mock API: http://localhost:5001/api
 - No database required
@@ -341,15 +347,18 @@ curl http://localhost:5000/api/health
 All hardcoded URLs and credentials have been extracted:
 
 ### Database Credentials
+
 - ✅ Moved from inline config to `.env` files
 - ✅ Docker-compose uses `${DB_PASSWORD:-default}` syntax
 
 ### API Endpoints
+
 - ✅ Frontend: Uses `VITE_API_BACKEND` from environment
 - ✅ Vite config: Uses `process.env.VITE_API_BACKEND`
 - ✅ Mock server: Configurable via `MOCK_PORT`
 
 ### CORS Origins
+
 - ✅ Backend: Now uses `ALLOWED_ORIGINS` environment variable
 - ✅ Mock server: Now uses `MOCK_ALLOWED_ORIGINS` environment variable
 

@@ -10,9 +10,10 @@ const stripProtocol = (url: string) => url.replace(/^https?:\/\//, '');
 const App: React.FC = () => {
   const { t, i18n } = useTranslation();
   const { themeId, setThemeId } = useTheme();
-  const displayUrl = import.meta.env.PROD && import.meta.env.VITE_APP_URL
-    ? stripProtocol(import.meta.env.VITE_APP_URL)
-    : null;
+  const displayUrl =
+    import.meta.env.PROD && import.meta.env.VITE_APP_URL
+      ? stripProtocol(import.meta.env.VITE_APP_URL)
+      : null;
 
   const handleLanguageChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     i18n.changeLanguage(event.target.value);
@@ -29,7 +30,9 @@ const App: React.FC = () => {
       </a>
       <header className="App-header">
         <p className="site-title">
-          <a href="/" className="App-header-link">{displayUrl || t('app.title')}</a>
+          <a href="/" className="App-header-link">
+            {displayUrl || t('app.title')}
+          </a>
         </p>
         <div className="header-actions">
           <button className="download-btn" onClick={() => window.print()}>
@@ -42,7 +45,7 @@ const App: React.FC = () => {
               aria-label={t('themes.label')}
               className="theme-select"
             >
-              {themes.map(theme => (
+              {themes.map((theme) => (
                 <option key={theme.id} value={theme.id}>
                   {t(`themes.${theme.i18nKey}`)}
                 </option>
@@ -66,7 +69,9 @@ const App: React.FC = () => {
         <ProfilePage />
       </div>
       <footer className="App-footer">
-        <p>{new Date().getFullYear()} — {displayUrl || t('app.title')}</p>
+        <p>
+          {new Date().getFullYear()} — {displayUrl || t('app.title')}
+        </p>
       </footer>
     </div>
   );

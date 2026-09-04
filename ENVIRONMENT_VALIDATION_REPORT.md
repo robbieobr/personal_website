@@ -26,6 +26,7 @@ File Status:
 ```
 
 **Test Command:**
+
 ```bash
 git ls-files | grep '\.env'
 ```
@@ -37,6 +38,7 @@ git ls-files | grep '\.env'
 ## 2. Environment Files Setup
 
 ### ✅ Root Level Configuration
+
 - **File:** `.env`
 - **Status:** ✅ Present locally — created from `.env.example` (not committed, used by docker-compose)
 - **Variables:** All properly configured for Docker/docker-compose
@@ -54,6 +56,7 @@ cp .env.example .env
 ```
 
 ### ✅ Backend Configuration
+
 - **File:** `backend/.env`
 - **Status:** ✅ Present locally — created from `.env.example` for local development (not committed)
 - **Variables:** All properly configured for local development
@@ -72,6 +75,7 @@ cp backend/.env.example backend/.env
 ```
 
 ### ✅ Frontend Development Configuration
+
 - **File:** `frontend/.env.development`
 - **Status:** ✅ Committed to repository — ready to use, no setup needed
 - **Variables:** Configured for real backend
@@ -80,6 +84,7 @@ cp backend/.env.example backend/.env
   - VITE_API_URL=http://localhost:5000/api
 
 ### ✅ Frontend Mock Configuration
+
 - **File:** `frontend/.env.mock`
 - **Status:** ✅ Committed to repository — used by `npm run dev:mock` via `cross-env`
 - **Variables:** Configured for mock server
@@ -88,6 +93,7 @@ cp backend/.env.example backend/.env
   - VITE_API_URL=http://localhost:5001/api
 
 ### ✅ Mock Server Configuration
+
 - **File:** `frontend/mock/.env`
 - **Status:** ✅ Present locally — created from `.env.example` (optional, overrides defaults)
 - **Variables:** All properly configured
@@ -101,9 +107,11 @@ cp frontend/mock/.env.example frontend/mock/.env
 ```
 
 **Dependencies:**
+
 ```bash
 cd frontend/mock && npm install
 ```
+
 ✅ dotenv@17.3.1 installed
 
 ---
@@ -113,6 +121,7 @@ cd frontend/mock && npm install
 ### Workflow 1: Frontend Only with Mock Server ✅ PASS
 
 **Command:**
+
 ```bash
 # Terminal 1
 cd frontend && npm run mock
@@ -122,6 +131,7 @@ cd frontend && npm run dev:mock
 ```
 
 **Test Results:**
+
 - ✅ Mock server starts successfully on port 5001
   ```
   [dotenv@17.3.1] injecting env (3) from mock\.env -- tip: ...
@@ -142,6 +152,7 @@ cd frontend && npm run dev:mock
 ### Workflow 2: Backend + Frontend Development ✅ PASS
 
 **Command:**
+
 ```bash
 # Terminal 1
 cd backend && npm run dev
@@ -151,6 +162,7 @@ cd frontend && npm run dev
 ```
 
 **Test Results:**
+
 - ✅ Backend starts successfully on port 5000
   ```
   Server running on port 5000
@@ -165,6 +177,7 @@ cd frontend && npm run dev
 ### Workflow 3: Full Stack with Docker ✅ PASS
 
 **Configuration:**
+
 ```bash
 docker compose config
 ```
@@ -172,6 +185,7 @@ docker compose config
 Note: Docker Compose V2 uses `docker compose` (space, not hyphen). The legacy `docker-compose` binary is no longer bundled separately.
 
 **Test Results:**
+
 - ✅ Docker compose file validates successfully
 - ✅ Environment variables properly substituted (defaults from `${VAR:-default}` syntax)
   - MYSQL_ROOT_PASSWORD: rootpassword
@@ -194,16 +208,16 @@ Note: Docker Compose V2 uses `docker compose` (space, not hyphen). The legacy `d
 
 ### Extracted from Hardcoded Values
 
-| Component | Variable | Before | After |
-|-----------|----------|--------|-------|
-| Backend | Database Host | Hardcoded `localhost`/`mysql` | `${DB_HOST}` |
-| Backend | Database Password | Hardcoded `rootpassword` | `${DB_PASSWORD}` |
-| Backend | CORS Origins | Hardcoded list | `${ALLOWED_ORIGINS}` |
-| Frontend | API Backend | Hardcoded URLs | `${VITE_API_BACKEND}` |
-| Docker | MySQL Password | Hardcoded `rootpassword` | `${MYSQL_ROOT_PASSWORD}` |
-| Mock Server | Port | Hardcoded `5001` | `${MOCK_PORT}` |
-| Mock Server | Network Delay | Hardcoded `1000` | `${MOCK_NETWORK_DELAY}` |
-| Mock Server | CORS Origins | Hardcoded list | `${MOCK_ALLOWED_ORIGINS}` |
+| Component   | Variable          | Before                        | After                     |
+| ----------- | ----------------- | ----------------------------- | ------------------------- |
+| Backend     | Database Host     | Hardcoded `localhost`/`mysql` | `${DB_HOST}`              |
+| Backend     | Database Password | Hardcoded `rootpassword`      | `${DB_PASSWORD}`          |
+| Backend     | CORS Origins      | Hardcoded list                | `${ALLOWED_ORIGINS}`      |
+| Frontend    | API Backend       | Hardcoded URLs                | `${VITE_API_BACKEND}`     |
+| Docker      | MySQL Password    | Hardcoded `rootpassword`      | `${MYSQL_ROOT_PASSWORD}`  |
+| Mock Server | Port              | Hardcoded `5001`              | `${MOCK_PORT}`            |
+| Mock Server | Network Delay     | Hardcoded `1000`              | `${MOCK_NETWORK_DELAY}`   |
+| Mock Server | CORS Origins      | Hardcoded list                | `${MOCK_ALLOWED_ORIGINS}` |
 
 **All Values Extracted:** ✅ YES
 
@@ -214,6 +228,7 @@ Note: Docker Compose V2 uses `docker compose` (space, not hyphen). The legacy `d
 ### ✅ No Sensitive Data in Version Control
 
 **Checked Files:**
+
 - `backend/src/config/database.ts` - Uses `process.env.DB_PASSWORD` (not hardcoded) ✅
 - `docker-compose.yml` - Uses `${VAR:-default}` syntax ✅
 - README and documentation files - Use `rootpassword` as illustrative placeholder only ✅
@@ -222,6 +237,7 @@ Note: Docker Compose V2 uses `docker compose` (space, not hyphen). The legacy `d
 **Note:** `backend/test/config/database.test.ts` contains `password: 'secret'` and `password: ''` as mock values for unit test assertions. These are not real credentials.
 
 **Sensitive Data Protected:**
+
 - ✅ Passwords stored in `.env` files only (not committed)
 - ✅ API keys/URLs configurable via environment
 - ✅ CORS origins configurable per environment
@@ -234,18 +250,22 @@ Note: Docker Compose V2 uses `docker compose` (space, not hyphen). The legacy `d
 ### ✅ All Required Packages Installed
 
 **Runtime:**
+
 - Node.js v24.11.1
 - npm 11.6.2
 
 **Backend:**
+
 - Express@4.22.1, TypeScript@5.9.3, MySQL2@3.17.4, CORS@2.8.6 - ✅ Ready
 - dotenv@16.6.1 - ✅ Configured in code
 
 **Frontend:**
+
 - React@18.3.1, Vite@7.3.1, Axios@1.13.5, i18next@23.16.8 - ✅ Ready
 - No additional env packages needed (Vite built-in support)
 
 **Mock Server:**
+
 - Express@4.22.1, CORS@2.8.6 - ✅ Ready
 - dotenv@17.3.1 - ✅ Installed and working (verbose output on startup is informational)
 
@@ -256,6 +276,7 @@ Note: Docker Compose V2 uses `docker compose` (space, not hyphen). The legacy `d
 ### ✅ Comprehensive Setup Guide Present
 
 **File:** `ENV_SETUP.md`
+
 - ✅ Quick setup instructions
 - ✅ Environment variable reference tables
 - ✅ Three workflow documentation
@@ -264,21 +285,22 @@ Note: Docker Compose V2 uses `docker compose` (space, not hyphen). The legacy `d
 - ✅ Production setup examples
 
 **File:** `LAUNCH_CONFIGURATIONS.md`
+
 - ✅ IDE launch configurations present
 
 ---
 
 ## Summary
 
-| Item | Status | Notes |
-|------|--------|-------|
-| Git Configuration | ✅ PASS | .env ignored, examples and committed dev configs tracked |
-| Environment Files | ✅ PASS | All local env files present; committed env files ready |
-| Mock Server Workflow | ✅ PASS | Fully functional without database |
+| Item                 | Status  | Notes                                                    |
+| -------------------- | ------- | -------------------------------------------------------- |
+| Git Configuration    | ✅ PASS | .env ignored, examples and committed dev configs tracked |
+| Environment Files    | ✅ PASS | All local env files present; committed env files ready   |
+| Mock Server Workflow | ✅ PASS | Fully functional without database                        |
 | Backend Dev Workflow | ✅ PASS | Backend starts on port 5000; MySQL required for DB calls |
-| Docker Workflow | ✅ PASS | Config validates; ready for containerized deployment |
-| Security | ✅ PASS | No sensitive data in version control |
-| Documentation | ✅ PASS | Comprehensive guides provided |
+| Docker Workflow      | ✅ PASS | Config validates; ready for containerized deployment     |
+| Security             | ✅ PASS | No sensitive data in version control                     |
+| Documentation        | ✅ PASS | Comprehensive guides provided                            |
 
 **Overall Status:** ✅ **ALL VALIDATIONS PASSED - PROJECT READY FOR USE**
 
@@ -287,15 +309,18 @@ Note: Docker Compose V2 uses `docker compose` (space, not hyphen). The legacy `d
 ## Next Steps for Users
 
 ### For Frontend-Only Development (No Backend)
+
 ```bash
 cd frontend
 npm install
 npm run mock    # Terminal 1
 npm run dev:mock # Terminal 2
 ```
+
 Access: http://localhost:3000
 
 ### For Full Development (Backend + Frontend)
+
 ```bash
 # Terminal 1
 cd backend
@@ -307,12 +332,15 @@ cd frontend
 npm install
 npm run dev
 ```
+
 Note: Requires MySQL running with proper initialization
 
 ### For Docker Deployment
+
 ```bash
 docker compose up
 ```
+
 Access: http://localhost:3000
 
 All services use properly configured environment variables!
