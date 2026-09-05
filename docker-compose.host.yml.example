@@ -1,0 +1,27 @@
+# Host-specific compose overlay — TEMPLATE
+#
+# Copy to `docker-compose.host.yml` and adjust for the machine you deploy on:
+#     cp docker-compose.host.yml.example docker-compose.host.yml
+#
+# The real file is gitignored. Use it for anything true of ONE host rather than
+# of the project — extra networks, host-specific ports, bind mounts.
+#
+# Only needed if Caddy must reach containers outside this compose project (for
+# example another app served from a subdomain in your Caddyfile). Create the
+# shared network once:
+#     docker network create proxy_network
+#
+# Then launch with all three files, in order:
+#     docker compose -f docker-compose.yml \
+#                    -f docker-compose.prod.yml \
+#                    -f docker-compose.host.yml up -d
+
+services:
+  caddy:
+    networks:
+      - personal_website_network
+      - proxy_network
+
+networks:
+  proxy_network:
+    external: true

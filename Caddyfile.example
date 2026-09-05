@@ -1,0 +1,29 @@
+# Caddy reverse-proxy configuration — TEMPLATE
+#
+# Copy to `Caddyfile` and replace the placeholder domains with your own:
+#     cp Caddyfile.example Caddyfile
+#
+# The real `Caddyfile` is gitignored: it is bind-mounted read-only into the
+# running Caddy container (see docker-compose.prod.yml), so it is deployment
+# state, not source. Keeping it untracked stops a `git pull` from silently
+# reverting live domains and breaking TLS on the next container restart.
+#
+# Caddy provisions and renews Let's Encrypt certificates automatically for every
+# domain named here, so DNS must already point at this host before you start it.
+
+example.com {
+    reverse_proxy frontend:3000
+}
+
+# Canonicalise the www host onto the apex so you do not split SEO ranking or
+# serve duplicate content from two origins.
+www.example.com {
+    redir https://example.com{uri} permanent
+}
+
+# Optional: additional apps proxied from the same Caddy instance. These must
+# share a Docker network with Caddy — see docker-compose.host.yml.example.
+#
+# app.example.com {
+#     reverse_proxy some_other_container:3000
+# }
