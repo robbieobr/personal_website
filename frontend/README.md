@@ -216,7 +216,7 @@ docker run -p 3000:3000 personal_website_frontend
 
 The frontend is built with security best practices:
 
-- **Content Security Policy (CSP)** - Configured in `public/index.html` to prevent XSS attacks
+- **Content Security Policy (CSP)** - Configured in `index.html` (Vite entry point) to prevent XSS attacks
 - **HTTPS Headers** - Includes X-Frame-Options, X-Content-Type-Options, X-XSS-Protection
 - **Secure Dependencies** - Uses Vite instead of react-scripts for minimal dependency footprint, eliminating the large webpack dependency tree
 - **HTML Escaping** - i18n configured with `escapeValue: false` because React already escapes rendered values, preventing double-escaping while maintaining XSS protection
