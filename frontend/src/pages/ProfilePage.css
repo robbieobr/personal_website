@@ -139,10 +139,12 @@
   }
 
   .main-column {
-    display: flex;
-    flex-direction: column;
+    /* Block, not flex. Chromium honours break-inside on flex children, so this
+       is pagination-neutral there; it matters for engines that historically did
+       not, and it is required if the sidebar is ever floated. This matches what
+       production has served since 2026-04. */
+    display: block;
     flex: 1;
-    gap: 0;
   }
 
   .sidebar-column {
