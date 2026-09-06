@@ -13,7 +13,7 @@ import { UserProfile as UserProfileType } from '../types/index';
 import './ProfilePage.css';
 
 const ProfilePage: React.FC = () => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [profile, setProfile] = useState<UserProfileType | null>(null);
   const [loading, setLoading] = useState(true);
   const [errorKey, setErrorKey] = useState<string | null>(null);
@@ -46,7 +46,7 @@ const ProfilePage: React.FC = () => {
         document.title = previousTitle;
       };
     }
-  }, [profile, i18n.language, t]);
+  }, [profile]);
 
   if (loading) {
     return (
