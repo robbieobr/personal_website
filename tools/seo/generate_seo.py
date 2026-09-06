@@ -142,6 +142,8 @@ class Site:
     email: str | None
     same_as: tuple[str, ...]
     skills: tuple[str, ...]
+    employer: str | None
+    institution: str | None
 
     @property
     def origin(self) -> str:
@@ -189,6 +191,21 @@ def read_site(seed_sql: str, host: str) -> Site | None:
         skills=tuple(
             skill for row in read_rows(seed_sql, "skills") if (skill := column(row, "skill"))
         ),
+        # The current role is the one the seed leaves open-ended.
+        employer=next(
+            (
+                employer
+                for row in read_rows(seed_sql, "job_history")
+                if not column(row, "endDate") and (employer := column(row, "company"))
+            ),
+            None,
+        ),
+        institution=max(
+            (row for row in read_rows(seed_sql, "education") if column(row, "institution")),
+            key=lambda row: column(row, "startDate"),
+            default={},
+        ).get("institution")
+        or None,
     )
 
 
@@ -209,6 +226,10 @@ def build_json_ld(site: Site, language: str) -> dict[str, object]:
         person["email"] = f"mailto:{site.email}"
     if site.same_as:
         person["sameAs"] = list(site.same_as)
+    if site.employer:
+        person["worksFor"] = {"@type": "Organization", "name": site.employer}
+    if site.institution:
+        person["alumniOf"] = {"@type": "CollegeOrUniversity", "name": site.institution}
 
     page = {
         "@type": "ProfilePage",

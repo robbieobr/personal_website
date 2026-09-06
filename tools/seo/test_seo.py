@@ -33,6 +33,12 @@ INSERT INTO contact_info (user_id, type, value, display_order) VALUES
 (1, 'website', 'https://www.{HOST}', 3),
 (1, 'github', 'https://github.com/sample-person', 4);
 
+INSERT INTO job_history (userId, company, position, startDate, endDate) VALUES
+(1, 'Former Co', 'Engineer', '2016-01-01', '2020-12-31'),
+(1, 'Petrichor Labs', 'Staff Platform Engineer', '2021-01-01', NULL);
+INSERT INTO education (userId, institution, degree, startDate, endDate) VALUES
+(1, 'Earlier College', 'Diploma', '2010-09-01', '2012-06-30'),
+(1, 'Sample University', 'BSc', '2012-09-01', '2016-06-30');
 INSERT INTO skills (userId, skill) VALUES
 (1, 'Kubernetes'),
 (1, 'Go'),
@@ -153,6 +159,12 @@ class TestGeneratedArtefacts:
         assert person["image"] == f"https://{HOST}/{PHOTO}"
         # The site's own address is the canonical URL, not a profile elsewhere.
         assert person["sameAs"] == ["https://github.com/sample-person"]
+        # The open-ended role is the current one; the newest education row wins.
+        assert person["worksFor"] == {"@type": "Organization", "name": "Petrichor Labs"}
+        assert person["alumniOf"] == {
+            "@type": "CollegeOrUniversity",
+            "name": "Sample University",
+        }
 
     @pytest.mark.parametrize("literal", ["'Sam O''Toole'", "'Sam O\\'Toole'"])
     def test_keeps_an_apostrophe_in_the_owner_name(self, build_dir, seed, literal):
