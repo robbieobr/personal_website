@@ -1,11 +1,21 @@
 # Production overlay — use with:
 # docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
 
+# Container logs are unbounded by default; on a long-lived host they grow until
+# the disk does. Capped here rather than in the daemon config so the limit
+# travels with the repo and applies to anyone who deploys it.
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: '10m'
+    max-file: '3'
+
 services:
   caddy:
     image: caddy:2-alpine
     container_name: personal_website_caddy
     restart: unless-stopped
+    logging: *default-logging
     ports:
       - '80:80'
       - '443:443'
@@ -20,6 +30,10 @@ services:
       - frontend
 
   mysql:
+    # Without this, MySQL is the one service that does not come back after a
+    # host reboot: the site returns and every /api/* call fails.
+    restart: unless-stopped
+    logging: *default-logging
     ports: !reset [] # Do not expose MySQL to the host
     volumes:
       - mysql_data:/var/lib/mysql
@@ -35,6 +49,7 @@ services:
       target: production # Use the production multi-stage build target
     command: node dist/index.js
     restart: unless-stopped
+    logging: *default-logging
     ports: !reset [] # Not exposed directly; only reachable within Docker network
     volumes: !reset [] # No source code mounting in production
     environment:
@@ -48,6 +63,7 @@ services:
       target: production # nginx-based production image
     restart: unless-stopped
     command: ['nginx', '-g', 'daemon off;']
+    logging: *default-logging
     ports: !reset [] # Not exposed directly; Caddy proxies to it
     volumes: !reset [] # No source code mounting in production
 
