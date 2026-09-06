@@ -4,10 +4,10 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "i18next": "^23.7.6",
+    "i18next": "^26.4.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-i18next": "^14.0.1",
+    "react-i18next": "^17.0.13",
     "react-loading-skeleton": "^3.3.1"
   },
   "scripts": {
