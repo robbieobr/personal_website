@@ -14,7 +14,7 @@ interface UserProfileProps {
 
 const UserProfileComponent: React.FC<UserProfileProps> = ({ user, contactInfo, loading }) => {
   const { t } = useTranslation();
-  const profileImage = user?.profileImage || '/images/placeholder-profile.png';
+  const profileImage = user?.profileImage || '/images/placeholder-profile.jpeg';
 
   return (
     <div className="user-profile">
