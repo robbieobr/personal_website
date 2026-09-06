@@ -43,7 +43,7 @@ const ProfilePage: React.FC = () => {
       // name + role + locality, so the tab and any client-side-rendered crawl
       // keep the keywords the static markup already advertises.
       const previousTitle = document.title;
-      document.title = `${profile.user.name} — ${profile.user.title} | Dublin, Ireland`;
+      document.title = `${profile.user.name} | ${profile.user.title}`;
       return () => {
         // Restore whatever was there before (the static title) rather than the
         // generic i18n app title, which is weaker than the markup default.

@@ -38,7 +38,7 @@ The application displays:
 - **React 18** - UI library
 - **TypeScript** - Type safety
 - **Vite** - Modern build tool and dev server
-- **Axios** - HTTP client for API communication
+- **Fetch API** - Native HTTP client with `AbortSignal.timeout` (no HTTP dependency)
 - **i18n** - Internationalization support
 - **CSS** - Styling
 
@@ -491,7 +491,7 @@ This project implements comprehensive security best practices:
 - **Error Boundaries** - React error boundary catches exceptions without exposing stack traces
 - **HTML Escaping** - i18n configured with HTML entity escaping to prevent XSS
 - **Secure Dependencies** - Uses Vite instead of react-scripts for minimal dependency footprint (~95% fewer dependencies)
-- **Axios Security** - Configured with request timeouts and proper validation
+- **API Call Security** - Native `fetch` with an explicit 10s `AbortSignal.timeout` and status validation
 
 ### Backend Security
 

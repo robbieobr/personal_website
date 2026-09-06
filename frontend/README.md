@@ -16,7 +16,7 @@ This is the frontend React application that displays:
 - **React 18** - UI library
 - **TypeScript** - Type safety
 - **Vite** - Build tool and dev server
-- **Axios** - HTTP client for API communication
+- **Fetch API** - Native HTTP client with `AbortSignal.timeout` (no HTTP dependency)
 - **i18n** - Internationalization support
 - **CSS** - Styling
 
@@ -221,7 +221,7 @@ The frontend is built with security best practices:
 - **Secure Dependencies** - Uses Vite instead of react-scripts for minimal dependency footprint, eliminating the large webpack dependency tree
 - **HTML Escaping** - i18n configured with `escapeValue: false` because React already escapes rendered values, preventing double-escaping while maintaining XSS protection
 - **Error Boundaries** - React error boundary component catches and handles errors securely without exposing stack traces
-- **Secure API Calls** - Axios configured with proper timeout and validation
+- **Secure API Calls** - Native `fetch` with an explicit 10s `AbortSignal.timeout` and status validation
 
 ### Vulnerability Scanning
 

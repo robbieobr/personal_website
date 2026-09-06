@@ -41,9 +41,7 @@ describe('ProfilePage', () => {
     getUserProfile.mockResolvedValue(mockUserProfile);
     const { unmount } = renderWithProviders(<ProfilePage />);
     await waitFor(() => {
-      expect(document.title).toBe(
-        `${mockUserProfile.user.name} \u2014 ${mockUserProfile.user.title} | Dublin, Ireland`
-      );
+      expect(document.title).toBe(`${mockUserProfile.user.name} | ${mockUserProfile.user.title}`);
     });
     unmount();
     // Cleanup restores the pre-existing (static) title, never a weaker one.

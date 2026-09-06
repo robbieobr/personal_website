@@ -54,7 +54,7 @@ personal_website/
 
 - **Pages:** `src/pages/` — top-level page components (e.g., `ProfilePage.tsx`)
 - **Components:** `src/components/` — reusable UI (UserProfile, ContactInfo, JobHistory, EducationHistory, Projects, Skills, Achievements, ErrorBoundary)
-- **Services:** `src/services/api.ts` — Axios client (10s timeout), proxied via Vite to `/api` → `http://localhost:5000`
+- **Services:** `src/services/api.ts` — native `fetch` client (10s `AbortSignal.timeout`), proxied via Vite to `/api` → `http://localhost:5000`
 - **Types:** `src/types/index.ts` — shared TypeScript interfaces (User, ContactInfo, JobEntry, Education, Project, Skill, Achievement, UserProfile)
 - **i18n:** `src/i18n/` — react-i18next config, English (`en`) and Irish Gaeilge (`ga`) locales
 - **Header URL:** In production builds (`npm run build`), the header link text shows `VITE_APP_URL` from `frontend/.env.production`. In development it shows the i18n app title. See `frontend/.env.production.example`.
