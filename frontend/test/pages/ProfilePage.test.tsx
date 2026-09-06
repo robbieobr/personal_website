@@ -59,7 +59,7 @@ describe('ProfilePage', () => {
   });
 
   it('shows no data message when profile is null', async () => {
-    getUserProfile.mockResolvedValue(null as unknown as ReturnType<typeof getUserProfile>);
+    getUserProfile.mockResolvedValue(null);
     renderWithProviders(<ProfilePage />);
     await waitFor(() => {
       expect(screen.getByText('No profile data available')).toBeInTheDocument();
