@@ -4,28 +4,89 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta
-      http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' http://backend:5000 http://localhost:5000 http://localhost:5001; frame-ancestors 'none';"
-    />
-    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
-    <meta http-equiv="X-Frame-Options" content="DENY" />
-    <meta http-equiv="X-XSS-Protection" content="1; mode=block" />
     <meta name="theme-color" content="#003d5b" />
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" type="image/png" href="/icon-192.png" sizes="192x192" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap"
-      rel="stylesheet"
-    />
+    <link rel="canonical" href="https://robbieobrien.ie/" />
+    <link rel="stylesheet" href="/fonts/fonts.css" />
+
+    <title>Robbie O'Brien | Senior Software Engineer</title>
     <meta
       name="description"
-      content="Professional portfolio website showcasing profile, job history, and resume"
+      content="Robbie O'Brien is a Senior Software Engineer specialising in React, Java microservices, and full-stack UI development. View his experience, projects, and CV."
     />
-    <title>My Portfolio</title>
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="profile" />
+    <meta property="og:title" content="Robbie O'Brien | Senior Software Engineer" />
+    <meta
+      property="og:description"
+      content="Robbie O'Brien is a Senior Software Engineer specialising in React, Java microservices, and full-stack UI development. View his experience, projects, and CV."
+    />
+    <meta property="og:url" content="https://robbieobrien.ie/" />
+    <meta property="og:image" content="https://robbieobrien.ie/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Robbie O'Brien, Senior Software Engineer" />
+    <meta property="og:locale" content="en_IE" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Robbie O'Brien | Senior Software Engineer" />
+    <meta
+      name="twitter:description"
+      content="Robbie O'Brien is a Senior Software Engineer specialising in React, Java microservices, and full-stack UI development. View his experience, projects, and CV."
+    />
+    <meta name="twitter:image" content="https://robbieobrien.ie/og-image.png" />
+    <meta name="twitter:image:alt" content="Robbie O'Brien, Senior Software Engineer" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Person",
+            "@id": "https://robbieobrien.ie/#person",
+            "name": "Robbie O'Brien",
+            "url": "https://robbieobrien.ie/",
+            "image": "https://robbieobrien.ie/images/robbie-profile.jpg",
+            "jobTitle": "Senior Software Engineer",
+            "description": "Full Stack Software Engineer specialising in UI development, working across a React, Java microservices, and MySQL stack.",
+            "email": "mailto:robbie.obr@gmail.com",
+            "worksFor": {
+              "@type": "Organization",
+              "name": "Zendesk Realtime Services"
+            },
+            "alumniOf": {
+              "@type": "CollegeOrUniversity",
+              "name": "Trinity College Dublin"
+            },
+            "sameAs": [
+              "https://www.linkedin.com/in/robbie-o-brien-3a2b0482",
+              "https://github.com/robbieobr"
+            ]
+          },
+          {
+            "@type": "ProfilePage",
+            "@id": "https://robbieobrien.ie/#profilepage",
+            "url": "https://robbieobrien.ie/",
+            "name": "Robbie O'Brien | Senior Software Engineer",
+            "description": "Robbie O'Brien is a Senior Software Engineer specialising in React, Java microservices, and full-stack UI development. View his experience, projects, and CV.",
+            "inLanguage": "en-IE",
+            "isPartOf": { "@id": "https://robbieobrien.ie/#website" },
+            "mainEntity": { "@id": "https://robbieobrien.ie/#person" }
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://robbieobrien.ie/#website",
+            "url": "https://robbieobrien.ie/",
+            "name": "Robbie O'Brien",
+            "inLanguage": "en-IE"
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
     <noscript>
