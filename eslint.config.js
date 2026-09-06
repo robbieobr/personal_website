@@ -46,7 +46,7 @@ export default [
 
   // Frontend build tooling — Node.js environment
   {
-    files: ['frontend/seo/**/*.ts', 'frontend/vite.config.ts'],
+    files: ['frontend/vite.config.ts'],
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },

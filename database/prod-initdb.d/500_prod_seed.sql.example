@@ -1,11 +1,6 @@
 -- Production seed data template
 -- Copy this file to 500_prod_seed.sql and fill in your real details.
 -- 500_prod_seed.sql is gitignored and must never be committed.
---
--- The frontend build also reads this file: with real values in place it derives
--- the document head, robots.txt, sitemap.xml and the social card from the users,
--- contact_info, job_history, education and skills rows below. While the
--- placeholders are still here the build omits all of them.
 
 USE personal_website;
 
@@ -37,7 +32,7 @@ INSERT INTO job_history (userId, company, position, startDate, endDate, descript
 INSERT INTO education (userId, institution, degree, field, startDate, endDate, description) VALUES
 (1, 'Your University', 'Bachelor of Science', 'Your Field', '2015-09-01', '2019-05-31', 'Any notes about your degree.');
 
--- Skills — same userId convention; the first three appear on the social card
+-- Skills — same userId convention
 INSERT INTO skills (userId, skill) VALUES
 (1, 'Your First Skill'),
 (1, 'Your Second Skill'),
