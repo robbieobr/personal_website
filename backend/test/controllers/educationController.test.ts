@@ -26,7 +26,7 @@ describe('educationController', () => {
   beforeEach(async () => {
     vi.resetModules();
     const models = await import('../../src/models/index');
-    EducationModel = models.EducationModel as typeof EducationModel;
+    EducationModel = models.EducationModel as unknown as typeof EducationModel;
     vi.clearAllMocks();
   });
 

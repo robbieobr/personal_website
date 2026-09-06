@@ -56,13 +56,13 @@ describe('userRoutes', () => {
   beforeEach(async () => {
     vi.resetModules();
     const models = await import('../../src/models/index');
-    UserModel = models.UserModel as typeof UserModel;
-    ContactInfoModel = models.ContactInfoModel as typeof ContactInfoModel;
-    JobModel = models.JobModel as typeof JobModel;
-    EducationModel = models.EducationModel as typeof EducationModel;
-    ProjectModel = models.ProjectModel as typeof ProjectModel;
-    SkillModel = models.SkillModel as typeof SkillModel;
-    AchievementModel = models.AchievementModel as typeof AchievementModel;
+    UserModel = models.UserModel as unknown as typeof UserModel;
+    ContactInfoModel = models.ContactInfoModel as unknown as typeof ContactInfoModel;
+    JobModel = models.JobModel as unknown as typeof JobModel;
+    EducationModel = models.EducationModel as unknown as typeof EducationModel;
+    ProjectModel = models.ProjectModel as unknown as typeof ProjectModel;
+    SkillModel = models.SkillModel as unknown as typeof SkillModel;
+    AchievementModel = models.AchievementModel as unknown as typeof AchievementModel;
     vi.clearAllMocks();
   });
 
