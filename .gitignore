@@ -30,3 +30,8 @@ e2e/test-results/
 # Templates: Caddyfile.example, docker-compose.host.yml.example
 Caddyfile
 docker-compose.host.yml
+
+# Python bytecode and test caches from tools/
+__pycache__/
+*.py[cod]
+.pytest_cache/
