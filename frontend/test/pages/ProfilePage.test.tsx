@@ -44,7 +44,7 @@ describe('ProfilePage', () => {
       expect(document.title).toBe(`${mockUserProfile.user.name} | ${mockUserProfile.user.title}`);
     });
     unmount();
-    // Cleanup restores the pre-existing (static) title, never a weaker one.
+    // Cleanup restores the title that was set before the profile loaded.
     expect(document.title).not.toBe(mockUserProfile.user.name);
   });
 

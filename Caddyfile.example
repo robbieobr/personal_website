@@ -11,43 +11,28 @@
 # Caddy provisions and renews Let's Encrypt certificates automatically for every
 # domain named here, so DNS must already point at this host before you start it.
 
-# Shared hardening snippet, imported into every site block below so all
-# domains proxied by this Caddy instance (including any extra apps you add)
-# get the same headers and compression for free.
+# Shared hardening snippet imported into every site block below.
 #
-# Headers live HERE, in Caddy, and not in nginx, on purpose: nginx's
-# `add_header` inside a `location` block silently discards ALL `add_header`
-# directives inherited from the `server` block. This config's nginx `/api/`
-# and static-asset `location` blocks would therefore drop any server-level
-# security headers on exactly the JS/CSS/API responses that matter most.
-# Setting them once here, in front of everything, avoids that trap entirely.
+# Headers are set here, not in nginx, because an `add_header` inside an
+# nginx `location` block discards any `add_header` inherited from the
+# `server` block.
 (hardening) {
     encode zstd gzip
-    # ^ zstd first (best ratio/speed trade-off, ~77KB vs 83KB gzip on this
-    # app's JS bundle), gzip as the fallback for clients that don't advertise
-    # zstd support. This is also the only layer that can compress the proxied
-    # /api JSON — nginx never sees the uncompressed bytes leave the backend
-    # process, but it also isn't asked to compress its own static files here
-    # (see frontend/nginx.conf: nginx gzip is deliberately left OFF, because
-    # if nginx compressed first, Caddy would see an already-encoded body and
-    # skip re-encoding — pre-empting zstd for gzip on every static asset).
+    # gzip is the fallback for clients that don't support zstd. This is also
+    # the only layer that compresses the proxied /api JSON. nginx's own gzip
+    # must stay off (see frontend/nginx.conf) since compressing here first
+    # would stop Caddy from re-encoding with zstd.
 
     header {
-        # HSTS. `preload` is included in the directive per spec, but adding it
-        # to a header is NOT the same as being on the preload list: that only
-        # happens if you submit the domain at hstspreload.org, which is a
-        # one-way door (multi-month, extremely hard to reverse — it ships in
-        # browsers themselves, not just this server). Do not submit until you
-        # are certain every subdomain you will ever run is permanently HTTPS.
+        # HSTS. The `preload` directive alone does not add the domain to
+        # browsers' HSTS preload list — that requires submitting at
+        # hstspreload.org, which is very difficult to reverse afterward.
+        # Do not submit until every subdomain will permanently run HTTPS.
         Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
 
-        # No third-party origins anywhere: fonts are self-hosted, there is no
-        # external API/CDN/analytics call from the browser. `style-src 'self'`
-        # has NO 'unsafe-inline': verified safe because React applies inline
-        # `style={{...}}` by writing directly to the DOM node's `.style`
-        # CSSOM property, not by emitting a `style="..."` HTML attribute —
-        # CSP's style-src only governs the latter. The build's CSS is a single
-        # extracted stylesheet file, so no <style> blocks are needed either.
+        # style-src has no 'unsafe-inline': React sets inline styles via the
+        # DOM node's `.style` property rather than a `style="..."`
+        # attribute, so CSP's style-src does not apply to them.
         Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests"
 
         X-Content-Type-Options "nosniff"
@@ -77,10 +62,8 @@ www.example.com {
 
 # Optional: additional apps proxied from the same Caddy instance. These must
 # share a Docker network with Caddy — see docker-compose.host.yml.example.
-# Every site block sharing this Caddy instance should `import hardening` too,
-# otherwise it serves with no security headers and an unmasked stack (this is
-# exactly the state a bare "app.example.com { reverse_proxy ... }" block
-# would be in — no headers, `x-powered-by` leaking through, etc).
+# Every site block sharing this Caddy instance should also `import hardening`
+# to get the same headers.
 #
 # app.example.com {
 #     import hardening
