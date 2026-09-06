@@ -166,6 +166,22 @@ class TestGeneratedArtefacts:
             "name": "Sample University",
         }
 
+    def test_keeps_a_profile_whose_path_contains_the_site_host(self, build_dir, seed):
+        """Only the site's own host is dropped from sameAs, not any URL mentioning it."""
+        seed.write_text(
+            SEED_SQL.replace(
+                "'https://github.com/sample-person'",
+                f"'https://github.com/sample-person/{HOST}-site'",
+            ),
+            encoding="utf-8",
+        )
+        run(build_dir, seed)
+
+        document = (build_dir / "index.html").read_text(encoding="utf-8")
+        payload = document.split('<script type="application/ld+json">')[1].split("</script>")[0]
+        person = json.loads(payload.replace("\\u003c", "<"))["@graph"][0]
+        assert person["sameAs"] == [f"https://github.com/sample-person/{HOST}-site"]
+
     @pytest.mark.parametrize("literal", ["'Sam O''Toole'", "'Sam O\\'Toole'"])
     def test_keeps_an_apostrophe_in_the_owner_name(self, build_dir, seed, literal):
         seed.write_text(SEED_SQL.replace("'Sam O''Toole'", literal), encoding="utf-8")

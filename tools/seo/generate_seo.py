@@ -19,6 +19,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
+from urllib.parse import urlsplit
 
 from og_image import render_card
 
@@ -119,6 +120,12 @@ def summarise(bio: str, fallback: str) -> str:
     return f"{kept.rstrip(',;:.')}…"
 
 
+def is_own_host(url: str, host: str) -> bool:
+    """Whether a contact URL points at the site itself rather than a profile elsewhere."""
+    parsed = urlsplit(url if "//" in url else f"//{url}")
+    return (parsed.hostname or "").lower().removeprefix("www.") == host.lower().removeprefix("www.")
+
+
 def read_host(site_url: str | None) -> str | None:
     """The bare hostname `site_url` names, or None when it names no deployed domain."""
     host = re.sub(r"^https?://", "", (site_url or "").strip().lower())
@@ -186,7 +193,9 @@ def read_site(seed_sql: str, host: str) -> Site | None:
         email=email,
         # A profile on the site's own host is the canonical URL, not a profile elsewhere.
         same_as=tuple(
-            value for kind, value in contacts if kind in PROFILE_CONTACTS and host not in value
+            value
+            for kind, value in contacts
+            if kind in PROFILE_CONTACTS and not is_own_host(value, host)
         ),
         skills=tuple(
             skill for row in read_rows(seed_sql, "skills") if (skill := column(row, "skill"))
