@@ -56,6 +56,22 @@ app.get('/api/health', async (req, res) => {
   }
 });
 
+// Generic client-facing text for the sub-500 statuses Express, its body
+// parser and the router raise. The client never sees err.message, which can
+// carry request input, file paths or database credentials.
+const CLIENT_ERROR_MESSAGES: Record<number, string> = {
+  400: 'Bad request',
+  401: 'Unauthorized',
+  403: 'Forbidden',
+  404: 'Not found',
+  413: 'Payload too large',
+  415: 'Unsupported media type',
+  429: 'Too many requests',
+};
+
+const GENERIC_CLIENT_ERROR = 'Request could not be processed';
+const GENERIC_SERVER_ERROR = 'Internal server error';
+
 // Error handling middleware
 export const errorHandler = (
   err: Error & { status?: number; statusCode?: number },
@@ -80,7 +96,8 @@ export const errorHandler = (
   // body) carry a meaningful status, such as 400. Preserve it instead of
   // always answering 500.
   const status = err.status || err.statusCode || 500;
-  const message = status >= 500 ? 'Internal server error' : err.message;
+  const message =
+    status >= 500 ? GENERIC_SERVER_ERROR : (CLIENT_ERROR_MESSAGES[status] ?? GENERIC_CLIENT_ERROR);
   res.status(status).json({ error: message });
 };
 
