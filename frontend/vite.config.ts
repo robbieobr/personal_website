@@ -1,6 +1,7 @@
 /// <reference types="vitest" />
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
+import { deploymentSeo } from './seo/plugin';
 
 const apiProxy = {
   '/api': {
@@ -16,7 +17,7 @@ export default defineConfig({
     setupFiles: './test/setup.ts',
     coverage: {
       provider: 'v8',
-      include: ['src/**/*.{ts,tsx}'],
+      include: ['src/**/*.{ts,tsx}', 'seo/**/*.ts'],
       exclude: [
         'src/index.tsx',
         'src/test/**',
@@ -32,7 +33,7 @@ export default defineConfig({
       },
     },
   },
-  plugins: [react()],
+  plugins: [react(), deploymentSeo()],
   server: {
     port: parseInt(process.env.PORT || '5173'),
     host: '0.0.0.0',
