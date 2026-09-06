@@ -2,22 +2,22 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "Edit|Write",
+        "matcher": "Edit|Write|MultiEdit|NotebookEdit",
         "hooks": [
           {
             "type": "command",
-            "command": "node .claude/hooks/block-env-edits.js"
+            "command": "node .claude/hooks/block-env-edits.cjs"
           }
         ]
       }
     ],
     "PostToolUse": [
       {
-        "matcher": "Edit",
+        "matcher": "Edit|Write|MultiEdit|NotebookEdit",
         "hooks": [
           {
             "type": "command",
-            "command": "node .claude/hooks/run-tests.js"
+            "command": "node .claude/hooks/run-tests.cjs"
           }
         ]
       }
