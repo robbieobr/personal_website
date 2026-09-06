@@ -39,9 +39,15 @@ const ProfilePage: React.FC = () => {
 
   useEffect(() => {
     if (profile?.user?.name) {
-      document.title = profile.user.name;
+      // Keep the runtime title aligned with the static <title> in index.html:
+      // name + role + locality, so the tab and any client-side-rendered crawl
+      // keep the keywords the static markup already advertises.
+      const previousTitle = document.title;
+      document.title = `${profile.user.name} — ${profile.user.title} | Dublin, Ireland`;
       return () => {
-        document.title = t('app.title');
+        // Restore whatever was there before (the static title) rather than the
+        // generic i18n app title, which is weaker than the markup default.
+        document.title = previousTitle;
       };
     }
   }, [profile, i18n.language, t]);
