@@ -37,6 +37,19 @@ describe('ProfilePage', () => {
     expect(screen.getByText(mockUserProfile.achievements[0].title)).toBeInTheDocument();
   });
 
+  it('sets a descriptive document title once the profile loads', async () => {
+    getUserProfile.mockResolvedValue(mockUserProfile);
+    const { unmount } = renderWithProviders(<ProfilePage />);
+    await waitFor(() => {
+      expect(document.title).toBe(
+        `${mockUserProfile.user.name} \u2014 ${mockUserProfile.user.title} | Dublin, Ireland`
+      );
+    });
+    unmount();
+    // Cleanup restores the pre-existing (static) title, never a weaker one.
+    expect(document.title).not.toBe(mockUserProfile.user.name);
+  });
+
   it('shows error message when fetch fails', async () => {
     getUserProfile.mockRejectedValue(new Error('Network error'));
     renderWithProviders(<ProfilePage />);
