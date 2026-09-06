@@ -1,7 +1,7 @@
 -- Minimal seed: Insert minimal user data
 INSERT INTO users (name, title, profileImage, bio) VALUES
 ('Jane Smith', 'Software Engineer',
- '/images/placeholder-profile.png',
+ '/images/placeholder-profile.jpeg',
  'Software engineer with experience in web development.');
 
 -- Insert contact info for Jane Smith (user id 1)

@@ -1,6 +1,6 @@
 # Production Deployment TODOs
 
-- [ ] Copy `.env.prod.example` → `.env` and fill in strong passwords + your domain
+- [ ] Copy `.env.prod.example` → `.env` and fill in strong passwords + your domain (`SITE_URL` there is the domain the SEO artefacts are generated for)
 - [ ] Edit `Caddyfile` — replace `yourdomain.com` with your actual domain
 - [ ] Copy `database/prod-initdb.d/500_prod_seed.sql.example` → `database/prod-initdb.d/500_prod_seed.sql` and fill in your real data (this file is gitignored — never commit it)
 - [ ] Verify Docker Compose v2.24+ on the server (`docker compose version`) for `!reset` support

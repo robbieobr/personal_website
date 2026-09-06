@@ -14,13 +14,11 @@ const DEFAULT_HEADERS: Readonly<Record<string, string>> = {
 /**
  * Minimal GET helper backed by the platform `fetch`.
  *
- * Replaces the previous axios instance. Two behavioural gaps have to be closed
- * explicitly, because `fetch` is more permissive than axios was:
- *  - `fetch` resolves for 4xx/5xx, so a non-2xx response is turned into a throw
- *    here to reproduce the old `validateStatus: 200 <= s < 300` contract.
- *  - `fetch` has no timeout, so `AbortSignal.timeout` aborts the request after
- *    the same 10s budget. It rejects with a `TimeoutError` DOMException, which
- *    the callers below wrap in the same user-facing Error as any other failure.
+ * `fetch` resolves for 4xx/5xx responses, so a non-2xx response is turned
+ * into a throw here. `fetch` also has no built-in timeout, so
+ * `AbortSignal.timeout` aborts the request after `REQUEST_TIMEOUT_MS`; it
+ * rejects with a `TimeoutError` DOMException, which callers wrap in the
+ * same user-facing Error as any other failure.
  */
 const getJson = async <T>(path: string): Promise<T> => {
   const response = await fetch(`${API_BASE_URL}${path}`, {

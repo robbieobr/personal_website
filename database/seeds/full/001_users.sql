@@ -1,17 +1,17 @@
 -- Full seed: Insert complete user data with extended job history
 INSERT INTO users (name, title, profileImage, bio) VALUES
 ('John Doe', 'Full Stack Developer',
- '/images/placeholder-profile.png',
+ '/images/placeholder-profile.jpeg',
  'Passionate full-stack developer with a focus on creating scalable and user-friendly web applications. Experienced with TypeScript, React, Node.js, and MySQL.');
 
 INSERT INTO users (name, title, profileImage, bio) VALUES
 ('Jane Smith', 'DevOps Engineer',
- '/images/placeholder-profile.png',
+ '/images/placeholder-profile.jpeg',
  'Experienced DevOps engineer specializing in cloud infrastructure and containerization.');
 
 INSERT INTO users (name, title, profileImage, bio) VALUES
 ('Alice Johnson', 'Product Manager',
- '/images/placeholder-profile.png',
+ '/images/placeholder-profile.jpeg',
  'Product manager with passion for building innovative solutions and leading cross-functional teams.');
 
 -- Insert contact info for John Doe (user id 1)

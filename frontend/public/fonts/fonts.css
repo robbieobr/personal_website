@@ -1,12 +1,9 @@
 /*
- * Self-hosted webfonts (latin subset only).
- * Source: Google Fonts (fonts.gstatic.com), fetched with a modern browser
- * User-Agent to obtain the woff2 URLs, then downloaded and committed here.
+ * Self-hosted webfonts (latin subset only), sourced from Google Fonts.
  *
- * Both families ship as variable fonts on a single `wght` axis, and Google
- * serves one file across the requested static weights, so a single woff2
- * per family covers the full weight range used on this site via a
- * `font-weight` range rather than one file per weight.
+ * Both families are variable fonts on a single `wght` axis, so one woff2
+ * file per family covers the full weight range via the `font-weight` range
+ * below, rather than a separate file per weight.
  */
 
 @font-face {

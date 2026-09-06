@@ -40,6 +40,16 @@ npm run test:watch   # Tests in watch mode
 npm run test:coverage # Coverage report
 ```
 
+### SEO scripts (`tools/seo`, Python)
+
+```bash
+python -m pip install -r tools/seo/requirements.txt              # Pillow, fontTools, Brotli
+python tools/seo/generate_seo.py --build-dir frontend/build \
+  --site-url yourdomain.com                                      # Generate into an existing build
+                                                                 # (--seed defaults to the prod seed)
+python -m pytest tools/seo                                       # Run its tests
+```
+
 ## Architecture
 
 ```
@@ -47,6 +57,7 @@ personal_website/
 ├── frontend/        # React 18 + Vite + TypeScript
 ├── backend/         # Express + TypeScript + MySQL
 ├── database/        # SQL migrations, seeds (default/minimal/full), scripts
+├── tools/seo/       # Python SEO scripts, run in the production image build
 └── docker-compose.yml  # Orchestrates mysql, backend (5000), frontend (3000)
 ```
 
@@ -72,6 +83,28 @@ Follows MVC: **Routes → Controllers → Models → Database**
 
 Error responses use generic messages; details are logged server-side only.
 
+### SEO scripts
+
+Two standalone scripts, run from the `seo` stage of `frontend/Dockerfile` after
+the SPA is built: `generate_seo.py` writes the artefacts and `og_image.py` draws
+the social card.
+
+`generate_seo.py` takes the canonical domain as `--site-url` (the `SITE_URL`
+build arg, from the root `.env`) and reads the site owner from the `users`,
+`contact_info` and `skills` inserts of `database/prod-initdb.d/500_prod_seed.sql`.
+It rewrites the head of the built `index.html` (title, description, canonical,
+Open Graph, Twitter card type, schema.org JSON-LD) and writes `robots.txt`,
+`sitemap.xml` and a 1200x630 `og-image.png` beside it. Rerunning replaces the
+block an earlier run left.
+
+When the domain or the seed is missing, unreadable or still holds a template
+placeholder, nothing is written and the run exits 0, so a build without
+deployment data succeeds. `docker-compose.yml` targets the `builder` stage, so
+development never runs the scripts at all.
+
+The card is drawn in the site's own self-hosted faces: fontTools decompresses
+the woff2 files to TrueType in memory, since FreeType cannot read woff2.
+
 ### Database
 
 - MySQL 8.0 with foreign key constraints and CASCADE deletes
@@ -89,5 +122,5 @@ Error responses use generic messages; details are logged server-side only.
 - **Types:** Frontend types omit DB timestamps; backend types include `createdAt`/`updatedAt`
 - **Coverage:** 90% threshold on all metrics (branches, functions, lines, statements)
 - **Mock server:** `frontend/mock/mockServer.ts` runs on port 5001 for frontend-only dev
-- **Env vars:** Copy `.env.example` → `.env` in both root and `backend/` before running locally
+- **Env vars:** Copy `.env.example` → `.env` in both root and `backend/` before running locally; `SITE_URL` in the root `.env` is the domain the production SEO artefacts are generated for
 - **Node.js:** ≥20.0.0 required; npm ≥10.0.0

@@ -30,3 +30,15 @@ e2e/test-results/
 # Templates: Caddyfile.example, docker-compose.host.yml.example
 Caddyfile
 docker-compose.host.yml
+
+# Deployment-owner images. The profile picture named by the production seed is
+# personal data belonging to whoever runs the site, so only the placeholder
+# shipped with the repo is tracked. Anything else here reaches the container
+# through the Docker build context without being committed.
+frontend/public/images/*
+!frontend/public/images/placeholder-profile.jpeg
+
+# Python bytecode and test caches from tools/
+__pycache__/
+*.py[cod]
+.pytest_cache/

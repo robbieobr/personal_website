@@ -1,14 +1,31 @@
 -- Production seed data template
 -- Copy this file to 500_prod_seed.sql and fill in your real details.
 -- 500_prod_seed.sql is gitignored and must never be committed.
+--
+-- tools/seo also reads this file when the production frontend image is built:
+-- with real values in place it derives the document head, robots.txt,
+-- sitemap.xml and the social card from the users, contact_info and skills rows
+-- below. While the placeholders are still here it writes none of them.
 
 USE personal_website;
 
--- One row per person on the site
-INSERT INTO users (name, title, email, phone, profileImage, bio) VALUES
-('Your Name', 'Your Title', 'you@example.com', '+1 (555) 000-0000',
+-- One row per person on the site.
+-- Escape an apostrophe by doubling it, as in 'Your O''Name'.
+-- profileImage is a path under frontend/public, so '/images/your-profile.png'
+-- resolves to frontend/public/images/your-profile.png.
+INSERT INTO users (name, title, profileImage, bio) VALUES
+('Your Name', 'Your Title',
  '/images/your-profile.png',
  'A short bio about yourself.');
+
+-- Contact details — user_id references the id assigned above (usually 1 for the first insert).
+-- type is one of email, phone, website, github, linkedin; display_order sets the order they render in.
+INSERT INTO contact_info (user_id, type, value, display_order) VALUES
+(1, 'phone', '+1 (555) 000-0000', 1),
+(1, 'email', 'you@example.com', 2),
+(1, 'website', 'https://www.example.com', 3),
+(1, 'github', 'https://github.com/your-handle', 4),
+(1, 'linkedin', 'https://www.linkedin.com/in/your-handle', 5);
 
 -- Job history — userId references the id assigned above (usually 1 for the first insert)
 -- endDate is NULL for a current role
@@ -19,3 +36,9 @@ INSERT INTO job_history (userId, company, position, startDate, endDate, descript
 -- Education — same userId convention
 INSERT INTO education (userId, institution, degree, field, startDate, endDate, description) VALUES
 (1, 'Your University', 'Bachelor of Science', 'Your Field', '2015-09-01', '2019-05-31', 'Any notes about your degree.');
+
+-- Skills — same userId convention; the first three appear on the social card
+INSERT INTO skills (userId, skill) VALUES
+(1, 'Your First Skill'),
+(1, 'Your Second Skill'),
+(1, 'Your Third Skill');

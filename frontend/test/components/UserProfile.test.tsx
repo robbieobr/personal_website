@@ -39,7 +39,7 @@ describe('UserProfile', () => {
   it('renders placeholder image when profileImage is null', () => {
     renderWithProviders(<UserProfileComponent user={mockUser} />);
     const img = screen.getByRole('img');
-    expect(img).toHaveAttribute('src', '/images/placeholder-profile.png');
+    expect(img).toHaveAttribute('src', '/images/placeholder-profile.jpeg');
   });
 
   it('renders provided profile image', () => {
