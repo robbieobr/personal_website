@@ -37,3 +37,8 @@ docker-compose.host.yml
 # through the Docker build context without being committed.
 frontend/public/images/*
 !frontend/public/images/placeholder-profile.jpeg
+
+# Python bytecode and test caches from tools/
+__pycache__/
+*.py[cod]
+.pytest_cache/

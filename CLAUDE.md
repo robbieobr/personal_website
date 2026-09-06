@@ -40,6 +40,14 @@ npm run test:watch   # Tests in watch mode
 npm run test:coverage # Coverage report
 ```
 
+### SEO tool (`tools/seo`, Python)
+
+```bash
+python -m pip install -r tools/seo/requirements.txt   # Pillow, fontTools, Brotli
+python -m tools.seo --build-dir frontend/build        # Generate into an existing build
+python -m pytest tools/seo/tests                      # Run its tests (from the repo root)
+```
+
 ## Architecture
 
 ```
@@ -47,6 +55,7 @@ personal_website/
 ├── frontend/        # React 18 + Vite + TypeScript
 ├── backend/         # Express + TypeScript + MySQL
 ├── database/        # SQL migrations, seeds (default/minimal/full), scripts
+├── tools/seo/       # Python SEO generator, run in the production image build
 └── docker-compose.yml  # Orchestrates mysql, backend (5000), frontend (3000)
 ```
 
@@ -71,6 +80,23 @@ Follows MVC: **Routes → Controllers → Models → Database**
 - `src/config/database.ts` — MySQL connection pool (limit: 10)
 
 Error responses use generic messages; details are logged server-side only.
+
+### SEO tool
+
+A standalone Python package, run from the `seo` stage of `frontend/Dockerfile`
+after the SPA is built. It reads the canonical domain from the deployment's
+`Caddyfile` and the site owner from `database/prod-initdb.d/500_prod_seed.sql`,
+then rewrites the head of the built `index.html` (title, description, canonical,
+Open Graph, Twitter Card, schema.org JSON-LD) and writes `robots.txt`,
+`sitemap.xml` and a 1200x630 `og-image.png` beside it.
+
+Both sources are gitignored deployment state. When either is absent, unreadable
+or still holds its template placeholders the tool writes nothing and exits 0, so
+a build without deployment data succeeds. `docker-compose.yml` targets the
+`builder` stage, so development never runs the tool at all.
+
+The card is drawn in the site's own self-hosted faces: fontTools decompresses
+the woff2 files to TrueType in memory, since FreeType cannot read woff2.
 
 ### Database
 

@@ -1,13 +1,15 @@
 # Build context excludes for the frontend and backend images.
 #
 # Everything those Dockerfiles copy stays: the package manifests, backend/,
-# frontend/, the Caddyfile and database/prod-initdb.d.
+# frontend/, tools/, the Caddyfile and database/prod-initdb.d.
 
 .git
 .github
 .claude
 
 **/node_modules
+**/__pycache__
+.pytest_cache
 **/build
 **/dist
 **/coverage
