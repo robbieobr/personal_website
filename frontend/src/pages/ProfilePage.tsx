@@ -144,15 +144,24 @@ const ProfilePage: React.FC = () => {
       <div className="container">
         <UserProfileComponent user={profile.user} contactInfo={profile.contactInfo} />
         <div className="content-grid">
-          <div className="main-column">
-            <JobHistory jobs={profile.jobHistory} />
-            <EducationHistory education={profile.education} />
-            <Projects projects={profile.projects} />
-          </div>
+          {/* The aside comes first in source order so the print stylesheet can
+              float it and let the long main flow reclaim the width beneath it;
+              grid placement keeps it visually on the right at every breakpoint.
+              It contains no focusable elements, so tab order is unchanged. */}
           <aside className="sidebar-column">
             <Skills skills={profile.skills} />
             <Achievements achievements={profile.achievements} />
           </aside>
+          <div className="main-column">
+            <JobHistory jobs={profile.jobHistory} />
+            <EducationHistory education={profile.education} />
+          </div>
+        </div>
+        {/* Projects moves out of the sidebar-width column into a full-width band:
+            as the tail of a 760px column it left a 300px void running most of
+            the page height. */}
+        <div className="projects-band">
+          <Projects projects={profile.projects} />
         </div>
       </div>
     );

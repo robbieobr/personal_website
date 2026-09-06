@@ -17,7 +17,7 @@ const JobHistory: React.FC<JobHistoryProps> = ({ jobs, loading }) => {
   if (loading) {
     return (
       <div className="job-history">
-        <h2>{t('jobHistory.title')}</h2>
+        <h2 className="section-heading">{t('jobHistory.title')}</h2>
         <div className="jobs-container">
           {[1, 2].map((i) => (
             <div className="job-card" key={i}>
@@ -48,7 +48,7 @@ const JobHistory: React.FC<JobHistoryProps> = ({ jobs, loading }) => {
 
   return (
     <div className="job-history">
-      <h2>{t('jobHistory.title')}</h2>
+      <h2 className="section-heading">{t('jobHistory.title')}</h2>
       <div className="jobs-container">
         {jobs.map((job) => (
           <div key={job.id} className="job-card">

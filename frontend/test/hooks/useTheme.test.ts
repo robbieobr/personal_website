@@ -75,3 +75,17 @@ describe('useTheme', () => {
     expect(setItemSpy).toHaveBeenCalledWith(THEME_STORAGE_KEY, 'high-contrast');
   });
 });
+
+describe('useTheme colour scheme', () => {
+  it('tells the browser to render native controls in the palette appearance', () => {
+    localStorage.setItem(THEME_STORAGE_KEY, 'dark');
+    renderHook(() => useTheme());
+    expect(document.documentElement.style.colorScheme).toBe('dark');
+  });
+
+  it('returns to the light appearance for the light palettes', () => {
+    localStorage.setItem(THEME_STORAGE_KEY, 'colour-blind-hc');
+    renderHook(() => useTheme());
+    expect(document.documentElement.style.colorScheme).toBe('light');
+  });
+});

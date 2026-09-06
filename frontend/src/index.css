@@ -82,3 +82,53 @@ body,
     height: auto;
   }
 }
+
+/*
+ * Section heading — "EXPERIENCE ————————".
+ *
+ * This block was copy-pasted verbatim across five component stylesheets; it now
+ * lives here once. The size went from 0.68rem (10.9px rendered) to 0.8rem: at
+ * 700 weight, uppercase and wide-tracked, the old size read as a caption rather
+ * than a heading and the whole page below the fold looked flat. The colour also
+ * steps up — headings were the same teal as the company names beside them, so
+ * heading and content sat at one visual level.
+ */
+.section-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0 0 1.25rem 0;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+  background: none;
+  border: none;
+  padding: 0;
+  border-radius: 0;
+}
+
+.section-heading::after {
+  content: '';
+  flex: 1;
+  display: block;
+  height: 1px;
+  background: var(--color-border);
+}
+
+@media print {
+  .section-heading {
+    color: var(--color-navy);
+    margin-bottom: 0.75rem;
+    font-size: 0.82rem;
+    /* Never leave a section heading stranded at the foot of a page. */
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  .section-heading::after {
+    background: var(--color-teal);
+  }
+}

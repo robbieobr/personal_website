@@ -109,73 +109,142 @@
   border-color: rgba(255, 255, 255, 0.45);
 }
 
-.language-switcher {
+/*
+ * Language: a two-item segmented toggle.
+ *
+ * The native <select> it replaces painted the platform's grey-gradient chevron
+ * onto the navy bar, and needed two clicks to flip between exactly two options.
+ * The treatment reuses the download button's vocabulary — uppercase micro-type,
+ * hairline border, 4px radius — so the header reads as one control cluster.
+ */
+.lang-toggle {
   display: flex;
-  align-items: center;
-}
-
-/* A-010: Remove outline: none, replace with proper focus-visible */
-.language-select {
-  background-color: rgba(255, 255, 255, 0.15);
-  color: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  padding: 0.375rem 0.75rem;
+  align-items: stretch;
+  border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 4px;
+  overflow: hidden;
+}
+
+.lang-toggle-option {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.62);
+  border: none;
+  padding: 0.35rem 0.6rem;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
   cursor: pointer;
-  font-size: 0.8rem;
-  font-family: var(--font-body);
-  transition: all 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
-.language-select:hover {
-  background-color: var(--color-focus-ring);
-  color: var(--color-navy);
-  border-color: var(--color-focus-ring);
+.lang-toggle-option + .lang-toggle-option {
+  border-left: 1px solid rgba(255, 255, 255, 0.22);
 }
 
-.language-select:focus-visible {
+.lang-toggle-option:hover {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.lang-toggle-option[aria-pressed='true'] {
+  background-color: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+}
+
+.lang-toggle-option:focus-visible {
   outline: 2px solid var(--color-focus-ring);
-  outline-offset: 2px;
+  outline-offset: -2px;
+  color: #ffffff;
 }
 
-.language-select option {
-  background-color: var(--color-navy);
-  color: white;
-  font-family: var(--font-body);
-}
-
+/* Theme: one icon button; the five palettes live in the panel it opens. */
 .theme-switcher {
   display: flex;
   align-items: center;
+  position: relative;
 }
 
-.theme-select {
-  background-color: rgba(255, 255, 255, 0.15);
-  color: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  padding: 0.375rem 0.75rem;
+.theme-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 4px;
   cursor: pointer;
-  font-size: 0.8rem;
-  font-family: var(--font-body);
   transition: all 0.2s ease;
 }
 
-.theme-select:hover {
-  background-color: var(--color-focus-ring);
-  color: var(--color-navy);
-  border-color: var(--color-focus-ring);
+.theme-trigger:hover,
+.theme-trigger[aria-expanded='true'] {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.45);
 }
 
-.theme-select:focus-visible {
+.theme-trigger:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+  color: #ffffff;
+}
+
+.theme-icon {
+  width: 15px;
+  height: 15px;
+}
+
+.theme-menu {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  z-index: 200;
+  min-width: 17rem;
+  padding: 0.35rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+}
+
+.theme-menu-option {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem 0.55rem;
+  border-radius: 4px;
+  color: var(--color-text-primary);
+  font-size: 0.8rem;
+  line-height: 1.35;
+  cursor: pointer;
+}
+
+.theme-menu-option:hover {
+  background-color: var(--color-teal-light);
+}
+
+.theme-menu-option input {
+  accent-color: var(--color-teal-accessible);
+  margin: 0;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.theme-menu-option input:focus-visible {
   outline: 2px solid var(--color-focus-ring);
   outline-offset: 2px;
 }
 
-.theme-select option {
-  background-color: var(--color-navy);
-  color: white;
-  font-family: var(--font-body);
+/* Progressive enhancement: light up the whole row, not just the control. */
+.theme-menu-option:has(input:focus-visible) {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: -2px;
 }
 
 /* A-016: Footer / contentinfo landmark */
@@ -197,10 +266,15 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5rem;
-    padding: 0.75rem 1.5rem;
+    padding: 0.75rem 1rem;
   }
 
   .header-actions {
     align-self: flex-end;
+    /* The old cluster measured 477px against a 272px content box and overflowed
+       off the left edge of a 320px viewport. */
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.5rem;
   }
 }

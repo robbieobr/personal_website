@@ -17,7 +17,7 @@ const Achievements: React.FC<AchievementsProps> = ({ achievements, loading }) =>
   if (loading) {
     return (
       <div className="achievements">
-        <h2>{t('achievements.title')}</h2>
+        <h2 className="section-heading">{t('achievements.title')}</h2>
         <div className="achievements-container">
           {[1, 2].map((i) => (
             <div className="achievement-card" key={i}>
@@ -45,7 +45,7 @@ const Achievements: React.FC<AchievementsProps> = ({ achievements, loading }) =>
 
   return (
     <div className="achievements">
-      <h2>{t('achievements.title')}</h2>
+      <h2 className="section-heading">{t('achievements.title')}</h2>
       <div className="achievements-container">
         {achievements.map((achievement) => (
           <div key={achievement.id} className="achievement-card">
