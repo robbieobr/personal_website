@@ -53,14 +53,20 @@ const JobHistory: React.FC<JobHistoryProps> = ({ jobs, loading }) => {
         {jobs.map((job) => (
           <div key={job.id} className="job-card">
             <div className="job-header">
-              <h3>{job.position}</h3>
-              <span className="company">{job.company}</span>
+              <h3 lang="en">{job.position}</h3>
+              <span className="company" lang="en">
+                {job.company}
+              </span>
             </div>
             <div className="job-dates">
               {formatDate(job.startDate, i18n.language)} -{' '}
               {job.endDate ? formatDate(job.endDate, i18n.language) : t('jobHistory.present')}
             </div>
-            {job.description && <p className="job-description">{job.description}</p>}
+            {job.description && (
+              <p className="job-description" lang="en">
+                {job.description}
+              </p>
+            )}
           </div>
         ))}
       </div>

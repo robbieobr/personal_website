@@ -1,10 +1,13 @@
 {
   "app": {
-    "title": "My Portfolio"
+    "title": "My Portfolio",
+    "skipToContent": "Skip to main content"
   },
   "profilePage": {
-    "loading": "Loading profile...",
-    "error": "Failed to load profile. Please make sure the backend is running.",
+    "loading": "Loading profile…",
+    "loaded": "Profile loaded.",
+    "error": "This profile didn't load. Check your connection and try again.",
+    "retry": "Try again",
     "noData": "No profile data available",
     "downloadCV": "Download CV"
   },
@@ -46,11 +49,18 @@
     "noAchievements": "No achievements available"
   },
   "themes": {
-    "label": "Select theme",
+    "label": "Theme",
     "light": "Light",
     "dark": "Dark",
-    "highContrast": "High Contrast",
-    "colourBlind": "Colour Blind",
-    "colourBlindHC": "Colour Blind HC"
+    "highContrast": "High contrast",
+    "colourBlind": "Colour-blind friendly",
+    "colourBlindHC": "Colour-blind friendly, high contrast"
+  },
+  "language": {
+    "label": "Language",
+    "en": "English",
+    "ga": "Gaeilge",
+    "enShort": "EN",
+    "gaShort": "GA"
   }
 }

@@ -1,10 +1,13 @@
 {
   "app": {
-    "title": "Mo Phunann"
+    "title": "Mo Phunann",
+    "skipToContent": "Téigh go dtí an príomhábhar"
   },
   "profilePage": {
-    "loading": "Ag luchtú próifíle...",
-    "error": "Theip ar an bpróifíl a luchtú. Cinntigh go bhfuil an cúl-deireadh ag rith.",
+    "loading": "Próifíl á luchtú…",
+    "loaded": "Próifíl luchtaithe.",
+    "error": "Níor luchtaigh an phróifíl seo. Seiceáil do nasc agus bain triail eile as.",
+    "retry": "Bain triail eile as",
     "noData": "Níl sonraí próifíle ar fáil",
     "downloadCV": "CV a Íoslódáil"
   },
@@ -46,11 +49,18 @@
     "noAchievements": "Níl éachtaí ar fáil"
   },
   "themes": {
-    "label": "Roghnaigh téama",
+    "label": "Téama",
     "light": "Éadrom",
     "dark": "Dorcha",
     "highContrast": "Ard-chodarsnacht",
-    "colourBlind": "Dallachas Dath",
-    "colourBlindHC": "Dallachas Dath Ard"
+    "colourBlind": "Oiriúnach do dhathdhaille",
+    "colourBlindHC": "Dathdhaille, ard-chodarsnacht"
+  },
+  "language": {
+    "label": "Teanga",
+    "en": "English",
+    "ga": "Gaeilge",
+    "enShort": "EN",
+    "gaShort": "GA"
   }
 }

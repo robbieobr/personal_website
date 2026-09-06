@@ -56,15 +56,23 @@ const EducationHistory: React.FC<EducationHistoryProps> = ({ education, loading 
         {education.map((edu) => (
           <div key={edu.id} className="education-card">
             <div className="education-header">
-              <h3>{edu.degree}</h3>
-              <span className="institution">{edu.institution}</span>
+              <h3 lang="en">{edu.degree}</h3>
+              <span className="institution" lang="en">
+                {edu.institution}
+              </span>
             </div>
-            <div className="education-field">{edu.field}</div>
+            <div className="education-field" lang="en">
+              {edu.field}
+            </div>
             <div className="education-dates">
               {formatDate(edu.startDate, i18n.language)} -{' '}
               {edu.endDate ? formatDate(edu.endDate, i18n.language) : t('educationHistory.present')}
             </div>
-            {edu.description && <p className="education-description">{edu.description}</p>}
+            {edu.description && (
+              <p className="education-description" lang="en">
+                {edu.description}
+              </p>
+            )}
           </div>
         ))}
       </div>

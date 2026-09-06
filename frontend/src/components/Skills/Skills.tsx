@@ -37,7 +37,7 @@ const Skills: React.FC<SkillsProps> = ({ skills, loading }) => {
       <h2>{t('skills.title')}</h2>
       <ul className="skills-list">
         {skills.map((s) => (
-          <li key={s.id} className="skill-item">
+          <li key={s.id} className="skill-item" lang="en">
             {s.skill}
           </li>
         ))}

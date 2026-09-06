@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { useTranslation } from 'react-i18next';
@@ -17,11 +17,11 @@ const ProfilePage: React.FC = () => {
   const [profile, setProfile] = useState<UserProfileType | null>(null);
   const [loading, setLoading] = useState(true);
   const [errorKey, setErrorKey] = useState<string | null>(null);
+  const [reloadToken, setReloadToken] = useState(0);
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        setLoading(true);
         // Fetch profile for user ID 1 (demo user)
         const data = await getUserProfile(1);
         setProfile(data);
@@ -35,6 +35,14 @@ const ProfilePage: React.FC = () => {
     };
 
     fetchProfile();
+  }, [reloadToken]);
+
+  // Retry re-runs the effect by bumping a token rather than calling the fetch
+  // directly, which keeps the async work declared inside the effect.
+  const handleRetry = useCallback(() => {
+    setLoading(true);
+    setErrorKey(null);
+    setReloadToken((token) => token + 1);
   }, []);
 
   useEffect(() => {
@@ -52,9 +60,21 @@ const ProfilePage: React.FC = () => {
     }
   }, [profile, i18n.language, t]);
 
-  if (loading) {
-    return (
-      <div className="profile-page" aria-busy="true" aria-label="Loading portfolio content">
+  // One live region that stays mounted across every state, so the transition
+  // from "loading" to "loaded" is actually announced. A region inserted at the
+  // same moment as its text is unreliable in most screen readers, which is why
+  // the previous aria-busy / aria-label pair on a role-less <div> announced
+  // nothing at all: aria-label is not exposed on a generic element, and
+  // aria-busy suppressed the live regions react-loading-skeleton injects.
+  const status = loading
+    ? t('profilePage.loading')
+    : profile && !errorKey
+      ? t('profilePage.loaded')
+      : '';
+
+  const renderBody = () => {
+    if (loading) {
+      return (
         <div className="container">
           <div className="profile-skeleton-container">
             <div className="profile-skeleton-image">
@@ -98,46 +118,52 @@ const ProfilePage: React.FC = () => {
             </div>
           </div>
         </div>
-      </div>
-    );
-  }
+      );
+    }
 
-  if (errorKey) {
-    return (
-      <div className="profile-page">
+    if (errorKey) {
+      return (
         <div className="error" role="alert">
-          {t(errorKey)}
+          <p className="error-message">{t(errorKey)}</p>
+          <button type="button" className="error-retry" onClick={handleRetry}>
+            {t('profilePage.retry')}
+          </button>
         </div>
-      </div>
-    );
-  }
+      );
+    }
 
-  if (!profile) {
-    return (
-      <div className="profile-page">
+    if (!profile) {
+      return (
         <div className="error" role="alert">
-          {t('profilePage.noData')}
+          <p className="error-message">{t('profilePage.noData')}</p>
         </div>
-      </div>
-    );
-  }
+      );
+    }
 
-  return (
-    <div className="profile-page">
+    return (
       <div className="container">
         <UserProfileComponent user={profile.user} contactInfo={profile.contactInfo} />
         <div className="content-grid">
-          <main className="main-column">
+          <div className="main-column">
             <JobHistory jobs={profile.jobHistory} />
             <EducationHistory education={profile.education} />
             <Projects projects={profile.projects} />
-          </main>
+          </div>
           <aside className="sidebar-column">
             <Skills skills={profile.skills} />
             <Achievements achievements={profile.achievements} />
           </aside>
         </div>
       </div>
+    );
+  };
+
+  return (
+    <div className="profile-page">
+      <p className="visually-hidden" role="status" aria-live="polite">
+        {status}
+      </p>
+      {renderBody()}
     </div>
   );
 };

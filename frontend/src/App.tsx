@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import ProfilePage from './pages/ProfilePage';
 import { useTheme } from './hooks/useTheme';
@@ -14,6 +14,13 @@ const App: React.FC = () => {
     import.meta.env.PROD && import.meta.env.VITE_APP_URL
       ? stripProtocol(import.meta.env.VITE_APP_URL)
       : null;
+
+  // Keep <html lang> in step with the UI language. Without this the whole
+  // document stays lang="en" and a screen reader pronounces Irish through an
+  // English synthesiser.
+  useEffect(() => {
+    document.documentElement.lang = i18n.language;
+  }, [i18n.language]);
 
   const handleLanguageChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     i18n.changeLanguage(event.target.value);
@@ -65,9 +72,11 @@ const App: React.FC = () => {
           </div>
         </div>
       </header>
-      <div id="main-content">
+      {/* tabIndex={-1} makes the skip link actually move focus here. Without it
+          Safari and Firefox leave document.activeElement on <body>. */}
+      <main id="main-content" tabIndex={-1}>
         <ProfilePage />
-      </div>
+      </main>
       <footer className="App-footer">
         <p>
           {new Date().getFullYear()} — {displayUrl || t('app.title')}

@@ -30,8 +30,34 @@
 body {
   margin: 0;
   font-family: var(--font-body);
+  /* The themed ground lives on <body>, not on .profile-page. Painting it here
+     covers the footer (which sits outside .profile-page and used to render on
+     white — 2.56:1 in dark mode) and propagates to the canvas, so dark-mode
+     overscroll no longer flashes white on iOS. */
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Text for assistive technology only: kept in the accessibility tree, clipped
+   out of the visual layout. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Programmatic skip-link target: it takes focus so the next Tab continues from
+   the content, but it should not paint a ring around the whole page. */
+#main-content:focus {
+  outline: none;
 }
 
 h1 {

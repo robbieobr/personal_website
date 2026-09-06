@@ -49,10 +49,16 @@ const Projects: React.FC<ProjectsProps> = ({ projects, loading }) => {
         {projects.map((project) => (
           <div key={project.id} className="project-card">
             <div className="project-header">
-              <h3>{project.title}</h3>
-              <span className="project-role">{project.role}</span>
+              <h3 lang="en">{project.title}</h3>
+              <span className="project-role" lang="en">
+                {project.role}
+              </span>
             </div>
-            {project.description && <p className="project-description">{project.description}</p>}
+            {project.description && (
+              <p className="project-description" lang="en">
+                {project.description}
+              </p>
+            )}
           </div>
         ))}
       </div>
