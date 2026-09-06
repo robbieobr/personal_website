@@ -120,6 +120,9 @@
     color: var(--color-navy);
     margin-bottom: 0.75rem;
     font-size: 0.82rem;
+    /* Never leave the section heading stranded at the foot of a page. */
+    break-after: avoid;
+    page-break-after: avoid;
   }
 
   .job-history h2::after {
@@ -127,6 +130,8 @@
   }
 
   .jobs-container {
+    /* Block, not flex: see .main-column in ProfilePage.css. */
+    display: block;
     padding-left: 0;
     border-left: none;
   }
