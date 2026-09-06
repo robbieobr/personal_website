@@ -72,8 +72,17 @@ describe('src/index (app)', () => {
         .send('{ not valid json');
 
       expect(res.status).toBe(400);
-      expect(res.body).toHaveProperty('error');
-      expect(res.body.error).not.toBe('Internal server error');
+      expect(res.body).toEqual({ error: 'Bad request' });
+    });
+
+    it('does not echo the parser message describing the client body', async () => {
+      const res = await request(app)
+        .post('/api/health')
+        .set('Content-Type', 'application/json')
+        .send('{ not valid json');
+
+      expect(res.text).not.toMatch(/JSON/i);
+      expect(res.text).not.toMatch(/position/i);
     });
   });
 
@@ -97,15 +106,41 @@ describe('src/index (app)', () => {
       expect(res.json).not.toHaveBeenCalled();
     });
 
-    it('uses err.status when present instead of hard-coding 500', () => {
+    it('uses err.status when present instead of hard-coding 500, without echoing the message', () => {
       const res = makeRes(false);
       const next = vi.fn() as unknown as NextFunction;
-      const err = Object.assign(new Error('Bad request'), { status: 400 });
+      const err = Object.assign(
+        new Error("user 'cv_app' lacks role admin on db 'personal_website'@10.0.0.5"),
+        { status: 400 }
+      );
 
       errorHandler(err, {} as Request, res, next);
 
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.json).toHaveBeenCalledWith({ error: 'Bad request' });
+      expect(JSON.stringify(vi.mocked(res.json).mock.calls)).not.toContain('cv_app');
+    });
+
+    it('maps err.statusCode to its generic text, discarding the raw message', () => {
+      const res = makeRes(false);
+      const next = vi.fn() as unknown as NextFunction;
+      const err = Object.assign(new Error('request entity too large'), { statusCode: 413 });
+
+      errorHandler(err, {} as Request, res, next);
+
+      expect(res.status).toHaveBeenCalledWith(413);
+      expect(res.json).toHaveBeenCalledWith({ error: 'Payload too large' });
+    });
+
+    it('falls back to a generic client message for an unmapped sub-500 status', () => {
+      const res = makeRes(false);
+      const next = vi.fn() as unknown as NextFunction;
+      const err = Object.assign(new Error('/srv/app/secrets.env is unreadable'), { status: 418 });
+
+      errorHandler(err, {} as Request, res, next);
+
+      expect(res.status).toHaveBeenCalledWith(418);
+      expect(res.json).toHaveBeenCalledWith({ error: 'Request could not be processed' });
     });
 
     it('falls back to a generic message for a genuine 500', () => {
