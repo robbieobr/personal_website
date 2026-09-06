@@ -110,7 +110,7 @@ def build_metadata(owner: SiteOwner, host: str) -> SiteMetadata:
     email = next((contact.value for contact in owner.contacts if contact.type == "email"), None)
     apex = re.sub(r"^www\.", "", host)
 
-    # The site's own address is the canonical URL, not a profile elsewhere.
+    # A profile on the site's own host is the canonical URL, not a profile elsewhere.
     same_as = tuple(
         contact.value
         for contact in owner.contacts
@@ -198,8 +198,8 @@ def _tag(name: str, attributes: dict[str, str]) -> str:
 def build_head_tags(metadata: SiteMetadata, language: str) -> list[str]:
     """Builds the head elements for the document.
 
-    The JSON-LD body is inserted verbatim, so `<` is written as an escape to keep
-    the payload from closing the script element early.
+    The JSON-LD body is inserted verbatim, with `<` written as an escape so the
+    payload cannot close the script element early.
     """
     json_ld = json.dumps(build_json_ld(metadata, language), indent=2, ensure_ascii=False)
 

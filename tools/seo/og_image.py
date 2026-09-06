@@ -62,7 +62,7 @@ ELLIPSIS = "…"
 FaceLoader = Callable[[int], Font]
 
 #: Factor the ring and the photo mask are drawn at before being scaled down, which
-#: gives their edges the same smoothing the text is rendered with.
+#: smooths their edges.
 SUPERSAMPLE = 4
 
 

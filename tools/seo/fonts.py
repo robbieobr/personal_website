@@ -1,10 +1,10 @@
 """Loads the site's own webfonts for the social card.
 
-The site self-hosts its faces as woff2. FreeType does not read woff2, so
+The site self-hosts its faces as woff2, which FreeType does not read, so
 fontTools decompresses each file to a TrueType font in memory and Pillow renders
-from that. Both faces are variable on a single `wght` axis, so a face is
-instanced at the weight it is drawn at. A face that cannot be read falls back to
-a system sans, then to the font Pillow bundles.
+from that. Both faces are variable on a single `wght` axis and are instanced at
+the weight they are drawn at. A face that cannot be read falls back to a system
+sans, then to the font Pillow bundles.
 """
 
 from __future__ import annotations

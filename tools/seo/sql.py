@@ -2,7 +2,7 @@
 
 The scanner is quote-aware: string literals may span lines and may contain
 comment markers, statement separators and parentheses. Malformed input raises
-`SqlParseError` so callers can fall back rather than act on a half-parsed row.
+`SqlParseError`.
 """
 
 from __future__ import annotations
