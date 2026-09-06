@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { setLanguage } from './support/ui';
 
 /**
  * Language switching tests.
@@ -13,8 +14,10 @@ test.describe('Language switching', () => {
   });
 
   test('defaults to English', async ({ page }) => {
-    const langSelect = page.getByLabel('Select language');
-    await expect(langSelect).toHaveValue('en');
+    await expect(page.getByRole('button', { name: 'English', exact: true })).toHaveAttribute(
+      'aria-pressed',
+      'true'
+    );
 
     await expect(page.getByRole('button', { name: 'Download CV' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Job History' })).toBeVisible();
@@ -25,7 +28,7 @@ test.describe('Language switching', () => {
   });
 
   test('switches to Irish (Gaeilge) and updates all headings', async ({ page }) => {
-    await page.getByLabel('Select language').selectOption('ga');
+    await setLanguage(page, 'ga');
 
     // Section headings should change to Irish translations
     await expect(page.getByRole('heading', { name: 'Stair Poist' })).toBeVisible();
@@ -42,12 +45,10 @@ test.describe('Language switching', () => {
   });
 
   test('switches back to English after Irish', async ({ page }) => {
-    const langSelect = page.getByLabel('Select language');
-
-    await langSelect.selectOption('ga');
+    await setLanguage(page, 'ga');
     await expect(page.getByRole('heading', { name: 'Stair Poist' })).toBeVisible();
 
-    await langSelect.selectOption('en');
+    await setLanguage(page, 'en');
     await expect(page.getByRole('heading', { name: 'Job History' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Download CV' })).toBeVisible();
 
@@ -61,8 +62,34 @@ test.describe('Language switching', () => {
     // divs, so getByText('Faoi') would hit multiple elements and fail strict mode.
     await expect(page.getByRole('heading', { name: 'About', exact: true })).toBeVisible();
 
-    await page.getByLabel('Select language').selectOption('ga');
+    await setLanguage(page, 'ga');
     await expect(page.getByRole('heading', { name: 'Faoi', exact: true })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'About', exact: true })).toHaveCount(0);
+  });
+
+  test('sets <html lang> to match the chosen language (A11Y-2)', async ({ page }) => {
+    await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+    await setLanguage(page, 'ga');
+    await expect(page.locator('html')).toHaveAttribute('lang', 'ga');
+  });
+
+  test('marks the English CV content inside the Irish document (A11Y-2)', async ({ page }) => {
+    await setLanguage(page, 'ga');
+    // The database content stays English in both locales, so it must not be
+    // handed to an Irish speech synthesiser.
+    await expect(page.locator('.user-profile h1')).toHaveAttribute('lang', 'en');
+    await expect(page.locator('.job-history .company').first()).toHaveAttribute('lang', 'en');
+  });
+
+  test('renders Irish month names, not English ones', async ({ page }) => {
+    // Browsers ship no `ga` ICU data, so toLocaleDateString('ga') silently
+    // returns English months; the dates used to read "August 2021 - Faoi
+    // láthair".
+    await setLanguage(page, 'ga');
+    const dates = await page.locator('.job-dates').allInnerTexts();
+    expect(dates.length).toBeGreaterThan(0);
+    expect(dates.join(' ')).not.toMatch(
+      /January|February|March|April|May|June|July|August|September|October|November|December/
+    );
   });
 });

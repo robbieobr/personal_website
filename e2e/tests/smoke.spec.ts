@@ -28,7 +28,8 @@ test.describe('Smoke', () => {
     await expect(page.locator('.App-header')).toBeVisible();
     await expect(page.locator('.App-header .site-title')).toBeVisible();
     await expect(page.getByRole('button', { name: 'Download CV' })).toBeVisible();
-    await expect(page.getByLabel('Select language')).toBeVisible();
+    await expect(page.getByRole('group', { name: 'Language' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Theme', exact: true })).toBeVisible();
   });
 
   test('footer is visible and contains a copyright year', async ({ page }) => {
@@ -63,7 +64,10 @@ test.describe('Smoke', () => {
     // Sourced from language.spec.ts — baseline state before any switching.
     // Section heading text comes from i18n, not from seed data, so this
     // assertion is seed-independent.
-    await expect(page.getByLabel('Select language')).toHaveValue('en');
+    await expect(page.getByRole('button', { name: 'English', exact: true })).toHaveAttribute(
+      'aria-pressed',
+      'true'
+    );
     await expect(page.getByRole('heading', { name: 'Job History' })).toBeVisible();
   });
 
@@ -82,5 +86,13 @@ test.describe('Smoke', () => {
     // Sourced from a11y.spec.ts (A-006) — duplicate or missing <main> elements
     // break screen-reader navigation and WCAG 1.3.6.
     await expect(page.locator('main')).toHaveCount(1);
+  });
+
+  test('the main landmark holds the whole page, not just one column', async ({ page }) => {
+    // Sourced from a11y.spec.ts (A11Y-1) — <main> used to wrap only the
+    // jobs/education column, leaving the h1, photo, contact links and bio in no
+    // landmark at all.
+    await expect(page.locator('main .user-profile h1')).toBeVisible();
+    await expect(page.locator('main .contact-info')).toBeVisible();
   });
 });
