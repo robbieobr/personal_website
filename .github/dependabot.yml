@@ -1,0 +1,53 @@
+version: 2
+
+updates:
+  # Root npm workspace — covers frontend, backend, and e2e (all three are
+  # declared under "workspaces" in the root package.json, which share the
+  # one root package-lock.json).
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+    groups:
+      dev-dependencies:
+        dependency-type: 'development'
+    open-pull-requests-limit: 10
+
+  # frontend/mock has its own package.json + package-lock.json, outside the
+  # npm workspaces — a single "/" entry above silently misses it.
+  - package-ecosystem: 'npm'
+    directory: '/frontend/mock'
+    schedule:
+      interval: 'weekly'
+    groups:
+      dev-dependencies:
+        dependency-type: 'development'
+    open-pull-requests-limit: 5
+
+  # frontend/Dockerfile's base image (node:*-alpine builder, nginx:alpine
+  # production stage).
+  - package-ecosystem: 'docker'
+    directory: '/frontend'
+    schedule:
+      interval: 'weekly'
+    open-pull-requests-limit: 5
+
+  # backend/Dockerfile's base image (node:*-alpine, both stages). This is
+  # exactly the update that would have caught the Node 20 EOL automatically.
+  - package-ecosystem: 'docker'
+    directory: '/backend'
+    schedule:
+      interval: 'weekly'
+    open-pull-requests-limit: 5
+
+  # Actions pinned in .github/workflows/*.yml (actions/checkout,
+  # actions/setup-node, actions/upload-artifact, ...).
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+    groups:
+      github-actions:
+        patterns:
+          - '*'
+    open-pull-requests-limit: 5

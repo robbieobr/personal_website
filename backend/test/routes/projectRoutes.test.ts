@@ -23,7 +23,7 @@ describe('projectRoutes', () => {
   beforeEach(async () => {
     vi.resetModules();
     const models = await import('../../src/models/index');
-    ProjectModel = models.ProjectModel as typeof ProjectModel;
+    ProjectModel = models.ProjectModel as unknown as typeof ProjectModel;
     vi.clearAllMocks();
   });
 

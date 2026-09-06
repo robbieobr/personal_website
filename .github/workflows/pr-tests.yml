@@ -6,6 +6,39 @@ on:
       - main
 
 jobs:
+  static-checks:
+    name: Lint, Format & Typecheck
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      # One root lockfile covers the frontend/backend/e2e workspaces, so
+      # `npm ci` runs once from the repo root rather than per-directory —
+      # this is also what makes the two Dockerfiles' own `npm ci` resolve
+      # the same tree CI just tested.
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Check formatting
+        run: npm run format:check
+
+      - name: Typecheck frontend
+        run: npm run typecheck --workspace=frontend
+
+      - name: Typecheck backend
+        run: npm run typecheck --workspace=backend
+
   backend-tests:
     name: Backend Tests
     runs-on: ubuntu-latest
@@ -17,15 +50,17 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
+          cache: 'npm'
 
-      - name: Install backend dependencies
-        working-directory: ./backend
-        run: npm install
+      - name: Install dependencies
+        run: npm ci
 
-      - name: Run backend tests
-        working-directory: ./backend
-        run: npm test
+      - name: Run backend tests with coverage
+        run: npm run test:coverage --workspace=backend
+
+      - name: Build backend
+        run: npm run build --workspace=backend
 
   frontend-tests:
     name: Frontend Tests
@@ -38,15 +73,17 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
+          cache: 'npm'
 
-      - name: Install frontend dependencies
-        working-directory: ./frontend
-        run: npm install
+      - name: Install dependencies
+        run: npm ci
 
-      - name: Run frontend tests
-        working-directory: ./frontend
-        run: npm test
+      - name: Run frontend tests with coverage
+        run: npm run test:coverage --workspace=frontend
+
+      - name: Build frontend
+        run: npm run build --workspace=frontend
 
   e2e-smoke:
     name: E2E Smoke Tests
@@ -59,14 +96,17 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
+          cache: 'npm'
 
       - name: Start Docker Compose stack
         run: docker compose up -d
 
-      - name: Install e2e dependencies
-        working-directory: ./e2e
-        run: npm install
+      # One root lockfile covers frontend/backend/e2e — installing from the
+      # repo root also satisfies the e2e workspace, no separate install step
+      # needed inside ./e2e.
+      - name: Install dependencies
+        run: npm ci
 
       - name: Install Playwright browsers
         working-directory: ./e2e

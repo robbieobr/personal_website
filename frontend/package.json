@@ -4,16 +4,17 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "i18next": "^23.7.6",
+    "i18next": "^26.4.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-i18next": "^14.0.1",
+    "react-i18next": "^17.0.13",
     "react-loading-skeleton": "^3.3.1"
   },
   "scripts": {
     "dev": "vite",
     "dev:mock": "cross-env VITE_API_BACKEND=http://localhost:5001 vite",
     "build": "vite build",
+    "typecheck": "tsc --noEmit",
     "preview": "vite preview --host",
     "start": "npm run preview",
     "test": "vitest run",
@@ -37,7 +38,7 @@
     "vitest": "^4.0.18"
   },
   "engines": {
-    "node": ">=20.0.0",
+    "node": ">=22.12.0",
     "npm": ">=10.0.0"
   }
 }

@@ -23,7 +23,7 @@ describe('achievementRoutes', () => {
   beforeEach(async () => {
     vi.resetModules();
     const models = await import('../../src/models/index');
-    AchievementModel = models.AchievementModel as typeof AchievementModel;
+    AchievementModel = models.AchievementModel as unknown as typeof AchievementModel;
     vi.clearAllMocks();
   });
 
