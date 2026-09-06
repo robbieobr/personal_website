@@ -4,6 +4,12 @@ on:
   pull_request:
     branches:
       - main
+      # Stacked PRs target the branch below them, not main, so a `main`-only
+      # filter leaves every PR in a stack unvalidated until the one under it
+      # merges — exactly when it is too late to learn the checks fail.
+      - 'feat/**'
+      - 'chore/**'
+      - 'fix/**'
 
 jobs:
   static-checks:
