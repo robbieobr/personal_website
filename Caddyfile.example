@@ -11,19 +11,78 @@
 # Caddy provisions and renews Let's Encrypt certificates automatically for every
 # domain named here, so DNS must already point at this host before you start it.
 
+# Shared hardening snippet, imported into every site block below so all
+# domains proxied by this Caddy instance (including any extra apps you add)
+# get the same headers and compression for free.
+#
+# Headers live HERE, in Caddy, and not in nginx, on purpose: nginx's
+# `add_header` inside a `location` block silently discards ALL `add_header`
+# directives inherited from the `server` block. This config's nginx `/api/`
+# and static-asset `location` blocks would therefore drop any server-level
+# security headers on exactly the JS/CSS/API responses that matter most.
+# Setting them once here, in front of everything, avoids that trap entirely.
+(hardening) {
+    encode zstd gzip
+    # ^ zstd first (best ratio/speed trade-off, ~77KB vs 83KB gzip on this
+    # app's JS bundle), gzip as the fallback for clients that don't advertise
+    # zstd support. This is also the only layer that can compress the proxied
+    # /api JSON — nginx never sees the uncompressed bytes leave the backend
+    # process, but it also isn't asked to compress its own static files here
+    # (see frontend/nginx.conf: nginx gzip is deliberately left OFF, because
+    # if nginx compressed first, Caddy would see an already-encoded body and
+    # skip re-encoding — pre-empting zstd for gzip on every static asset).
+
+    header {
+        # HSTS. `preload` is included in the directive per spec, but adding it
+        # to a header is NOT the same as being on the preload list: that only
+        # happens if you submit the domain at hstspreload.org, which is a
+        # one-way door (multi-month, extremely hard to reverse — it ships in
+        # browsers themselves, not just this server). Do not submit until you
+        # are certain every subdomain you will ever run is permanently HTTPS.
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+
+        # No third-party origins anywhere: fonts are self-hosted, there is no
+        # external API/CDN/analytics call from the browser. `style-src 'self'`
+        # has NO 'unsafe-inline': verified safe because React applies inline
+        # `style={{...}}` by writing directly to the DOM node's `.style`
+        # CSSOM property, not by emitting a `style="..."` HTML attribute —
+        # CSP's style-src only governs the latter. The build's CSS is a single
+        # extracted stylesheet file, so no <style> blocks are needed either.
+        Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests"
+
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "DENY"
+        Referrer-Policy "strict-origin-when-cross-origin"
+        Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+
+        # Remove version-fingerprinting / stack-disclosure headers. Caddy adds
+        # Server itself; nginx upstream adds Server + (if enabled) X-Powered-By.
+        -Server
+        -Via
+        -X-Powered-By
+    }
+}
+
 example.com {
+    import hardening
     reverse_proxy frontend:3000
 }
 
 # Canonicalise the www host onto the apex so you do not split SEO ranking or
 # serve duplicate content from two origins.
 www.example.com {
+    import hardening
     redir https://example.com{uri} permanent
 }
 
 # Optional: additional apps proxied from the same Caddy instance. These must
 # share a Docker network with Caddy — see docker-compose.host.yml.example.
+# Every site block sharing this Caddy instance should `import hardening` too,
+# otherwise it serves with no security headers and an unmasked stack (this is
+# exactly the state a bare "app.example.com { reverse_proxy ... }" block
+# would be in — no headers, `x-powered-by` leaking through, etc).
 #
 # app.example.com {
+#     import hardening
 #     reverse_proxy some_other_container:3000
 # }
