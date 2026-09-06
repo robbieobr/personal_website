@@ -69,6 +69,28 @@ jobs:
       - name: Run SEO tool tests
         run: python -m pytest tools/seo
 
+  production-image:
+    name: Production Image Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install e2e dependencies
+        working-directory: ./e2e
+        run: npm install
+
+      # The spec drives docker and never opens a page, so no browser is needed.
+      - name: Build the production image and check the web root
+        working-directory: ./e2e
+        run: npx playwright test tests/docker-production-build.spec.ts
+
   e2e-smoke:
     name: E2E Smoke Tests
     runs-on: ubuntu-latest
