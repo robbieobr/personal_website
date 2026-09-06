@@ -123,4 +123,4 @@ the woff2 files to TrueType in memory, since FreeType cannot read woff2.
 - **Coverage:** 90% threshold on all metrics (branches, functions, lines, statements)
 - **Mock server:** `frontend/mock/mockServer.ts` runs on port 5001 for frontend-only dev
 - **Env vars:** Copy `.env.example` → `.env` in both root and `backend/` before running locally; `SITE_URL` in the root `.env` is the domain the production SEO artefacts are generated for
-- **Node.js:** ≥20.0.0 required; npm ≥10.0.0
+- **Node.js:** ≥24.0.0 required; npm ≥10.0.0

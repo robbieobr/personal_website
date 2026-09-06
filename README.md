@@ -145,7 +145,7 @@ Before running this project, ensure you have:
 
 - **Docker** (v20.10+) - [Download](https://www.docker.com/products/docker-desktop)
 - **Docker Compose** (v2.0+) - Usually included with Docker Desktop
-- **Node.js** (v20+) - Required for local development without Docker
+- **Node.js** (v24+) - Required for local development without Docker
 - **npm** (v10.0.0+) - Package manager
 
 ## 🚀 Quick Start

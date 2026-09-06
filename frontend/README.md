@@ -206,7 +206,7 @@ docker run -p 3000:3000 personal_website_frontend
 
 ### Dockerfile Details
 
-- **Base Image:** node:20-alpine (builder stage), nginx:alpine (production stage)
+- **Base Image:** node:24-alpine (builder stage), nginx:alpine (production stage)
 - **Build Stage:** Installs only frontend workspace dependencies, builds React app with Vite
 - **Production Stage:** Serves the built app with nginx on port 3000; proxies `/api` to the backend
 - **Port:** 3000

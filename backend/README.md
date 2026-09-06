@@ -292,7 +292,7 @@ docker run \
 
 ### Dockerfile Details
 
-- **Base Image:** node:20-alpine (both stages)
+- **Base Image:** node:24-alpine (both stages)
 - **Builder Stage:** Installs all dependencies, compiles TypeScript to JavaScript
 - **Production Stage:** Installs only runtime dependencies (no devDependencies), runs compiled JS
 - **Port:** 5000
