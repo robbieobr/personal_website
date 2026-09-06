@@ -44,6 +44,23 @@ export default [
     },
   },
 
+  // Frontend build tooling — Node.js environment
+  {
+    files: ['frontend/seo/**/*.ts', 'frontend/vite.config.ts'],
+    languageOptions: {
+      parser: tseslint.parser,
+      parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
+      globals: { ...globals.node },
+    },
+    plugins: { '@typescript-eslint': tseslint.plugin },
+    rules: {
+      ...tseslint.configs.recommended.at(-1).rules,
+      'no-undef': 'off', // TypeScript compiler handles undefined variables
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-explicit-any': 'warn',
+    },
+  },
+
   // Frontend TypeScript/TSX source files — browser + Node environment
   {
     files: ['frontend/src/**/*.ts', 'frontend/src/**/*.tsx', 'frontend/mock/mockServer.ts'],
