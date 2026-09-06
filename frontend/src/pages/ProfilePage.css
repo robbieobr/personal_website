@@ -21,8 +21,8 @@
   align-items: start;
 }
 
-/* Explicit placement, because the aside precedes the main column in the DOM
-   (see ProfilePage.tsx). */
+/* The aside precedes the main column in the DOM (see ProfilePage.tsx), so grid
+   placement is set explicitly. */
 .main-column {
   grid-column: 1;
   grid-row: 1;

@@ -61,7 +61,6 @@ test.describe('Smoke', () => {
   // ---------------------------------------------------------------------------
 
   test('language defaults to English', async ({ page }) => {
-    // Sourced from language.spec.ts — baseline state before any switching.
     // Section heading text comes from i18n, not from seed data, so this
     // assertion is seed-independent.
     await expect(page.getByRole('button', { name: 'English', exact: true })).toHaveAttribute(
@@ -89,9 +88,8 @@ test.describe('Smoke', () => {
   });
 
   test('the main landmark holds the whole page, not just one column', async ({ page }) => {
-    // Sourced from a11y.spec.ts (A11Y-1) — <main> used to wrap only the
-    // jobs/education column, leaving the h1, photo, contact links and bio in no
-    // landmark at all.
+    // The main landmark spans the profile, contact links and bio, not only
+    // the jobs and education column.
     await expect(page.locator('main .user-profile h1')).toBeVisible();
     await expect(page.locator('main .contact-info')).toBeVisible();
   });

@@ -3,10 +3,9 @@
  *
  * Chromium ships no `ga` data: `Intl.DateTimeFormat.supportedLocalesOf(['ga'])`
  * returns `[]` and `toLocaleDateString('ga', { month: 'long' })` silently falls
- * back to English, so a Gaeilge job entry rendered as "August 2021 - Faoi
- * láthair" — half translated. (Node built with full ICU *does* resolve `ga`,
- * which is why the unit tests never caught it.) Formatting from this table
- * whenever the locale is unsupported keeps browser and test output identical.
+ * back to English. Node's full-ICU build does resolve `ga`, so the two runtimes
+ * disagree. Formatting from this table whenever the locale is unsupported keeps
+ * browser and test output identical.
  */
 const MONTH_NAMES: Readonly<Record<string, readonly string[]>> = {
   ga: [

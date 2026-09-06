@@ -19,7 +19,7 @@ import { LOCALES, THEMES, setLanguage, setTheme, summariseViolations } from './s
  *   Keyboard focus styles    (A-002, A-007, A-010)
  *   Colour design tokens     (A-003, A-004, A-005)
  *   Error state announcement (A-013)
- *   Automated axe-core scan     (A11Y-5)
+ *   Automated axe-core scan
  *
  * Tab order inside the header (used by focus-indicator tests):
  *   1. .skip-link            (off-screen, revealed on focus)
@@ -414,8 +414,8 @@ test.describe('Accessibility', () => {
 
     test('the dark palette keeps an elevation ladder above its ground (UX-3)', async ({ page }) => {
       await setTheme(page, 'dark');
-      // The hero used to be #0d1827 against a #0f172a page: an identical
-      // luminance, contrast ratio 1.00, so the card was invisible.
+      // Background, surface and hero each sit at a different luminance, so the
+      // card reads as raised above the page.
       const [bg, surface, hero] = await Promise.all([
         cssVar(page, '--color-background'),
         cssVar(page, '--color-surface'),
@@ -480,12 +480,9 @@ test.describe('Accessibility', () => {
   });
 
   // ---------------------------------------------------------------------------
-  // Automated axe-core scan  (A11Y-5)
+  // Automated axe-core scan
   //
-  // This suite previously asserted only hand-written structural expectations,
-  // which is why a `region` violation across 9 nodes and a 2.56:1 footer went
-  // unnoticed in every one of the ten theme/locale configurations. axe now runs
-  // over each of them.
+  // axe runs over all ten theme and locale combinations.
   // ---------------------------------------------------------------------------
 
   test.describe('axe-core', () => {

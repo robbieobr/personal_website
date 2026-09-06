@@ -22,10 +22,11 @@ describe('formatDate', () => {
     expect(formatDate('2009-09-15', 'ga-IE')).toBe('Meán Fómhair 2009');
   });
 
-  // Browsers ship no `ga` ICU data, so toLocaleDateString('ga') silently
-  // returns English. Node's full-ICU build does resolve `ga`, which is why the
-  // browser-only bug never surfaced in this suite. Stub the capability check to
-  // reproduce browser conditions and prove the table takes over.
+  // Browsers ship no `ga` ICU data and fall back to English; Node's full-ICU
+
+  // build resolves it. Stubbing the capability check reproduces browser
+
+  // conditions so the table path is exercised.
   it('uses the month table when the runtime has no data for the locale', () => {
     vi.spyOn(Intl.DateTimeFormat, 'supportedLocalesOf').mockReturnValue([]);
     expect(formatDate('2021-08-01', 'ga')).toBe('Lúnasa 2021');

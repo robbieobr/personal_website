@@ -57,11 +57,10 @@ const ProfilePage: React.FC = () => {
   }, [profile, i18n.language, t]);
 
   // One live region that stays mounted across every state, so the transition
-  // from "loading" to "loaded" is actually announced. A region inserted at the
-  // same moment as its text is unreliable in most screen readers, which is why
-  // the previous aria-busy / aria-label pair on a role-less <div> announced
-  // nothing at all: aria-label is not exposed on a generic element, and
-  // aria-busy suppressed the live regions react-loading-skeleton injects.
+
+  // from "loading" to "loaded" is announced. A region inserted at the same
+
+  // moment as its text is unreliable in most screen readers.
   const status = loading
     ? t('profilePage.loading')
     : profile && !errorKey

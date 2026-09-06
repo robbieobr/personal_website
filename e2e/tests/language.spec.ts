@@ -82,9 +82,8 @@ test.describe('Language switching', () => {
   });
 
   test('renders Irish month names, not English ones', async ({ page }) => {
-    // Browsers ship no `ga` ICU data, so toLocaleDateString('ga') silently
-    // returns English months; the dates used to read "August 2021 - Faoi
-    // láthair".
+    // Browsers ship no `ga` ICU data, so toLocaleDateString('ga') returns
+    // English month names. The app formats Irish dates from its own table.
     await setLanguage(page, 'ga');
     const dates = await page.locator('.job-dates').allInnerTexts();
     expect(dates.length).toBeGreaterThan(0);
