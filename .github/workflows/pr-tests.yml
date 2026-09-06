@@ -67,7 +67,7 @@ jobs:
           python -m pip install --requirement tools/seo/requirements.txt pytest
 
       - name: Run SEO tool tests
-        run: python -m pytest tools/seo/tests
+        run: python -m pytest tools/seo
 
   e2e-smoke:
     name: E2E Smoke Tests

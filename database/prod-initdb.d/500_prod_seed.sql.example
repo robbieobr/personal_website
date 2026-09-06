@@ -4,9 +4,8 @@
 --
 -- tools/seo also reads this file when the production frontend image is built:
 -- with real values in place it derives the document head, robots.txt,
--- sitemap.xml and the social card from the users, contact_info, job_history,
--- education and skills rows below. While the placeholders are still here it
--- writes none of them.
+-- sitemap.xml and the social card from the users, contact_info and skills rows
+-- below. While the placeholders are still here it writes none of them.
 
 USE personal_website;
 

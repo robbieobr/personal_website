@@ -273,7 +273,12 @@ DB_NAME=personal_website
 PORT=5000
 NODE_ENV=production
 ALLOWED_ORIGINS=https://yourdomain.com
+SITE_URL=yourdomain.com
 ```
+
+`SITE_URL` is passed to the production frontend build, which generates the SEO
+artefacts for that domain. Left empty or as the placeholder, the build writes
+none of them.
 
 **Frontend production environment (`frontend/.env.production`):**
 

@@ -1,27 +1,27 @@
 """Draws the 1200x630 social card: circular photo on the left, name, role, a
 skills line and the domain along the bottom.
 
-When no photo is available the text column takes the full width instead.
+The card is set in the site's own webfonts, read out of the built frontend.
+Without a usable photo the text column takes the full width instead.
 """
 
 from __future__ import annotations
 
 import io
-from collections.abc import Callable
-from dataclasses import dataclass
+from collections.abc import Callable, Sequence
+from functools import partial
+from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageOps
+from fontTools.ttLib import TTFont
+from PIL import Image, ImageDraw, ImageFont, ImageOps
 
-from .fonts import Font, FontBook
-from .metadata import SiteMetadata
-
-OG_WIDTH = 1200
-OG_HEIGHT = 630
+WIDTH = 1200
+HEIGHT = 630
 
 #: Distance every drawn element keeps from the edges.
 SAFE_MARGIN = 60
 
-OG_COLORS = {
+COLORS = {
     "background": "#0d1f36",
     "name": "#f5f7fa",
     "role": "#c8d3e0",
@@ -29,98 +29,98 @@ OG_COLORS = {
     "domain": "#8fa3bd",
 }
 
-PHOTO_DIAMETER = 300
-PHOTO_LEFT = 90
-PHOTO_TOP = 165
-PHOTO_RING_WIDTH = 6
+#: Site faces, relative to the directory the built frontend serves them from.
+DISPLAY_FONT_FILE = "fonts/cormorant-garamond-latin.woff2"
+BODY_FONT_FILE = "fonts/dm-sans-latin.woff2"
 
-TEXT_LEFT_WITH_PHOTO = 460
-TEXT_LEFT_ALONE = SAFE_MARGIN
-TEXT_RIGHT = OG_WIDTH - SAFE_MARGIN
+#: The photo, and the factor its mask and ring are drawn at before being scaled
+#: down, which smooths their edges.
+PHOTO_DIAMETER, PHOTO_LEFT, PHOTO_TOP, RING_WIDTH = 300, 90, 165, 6
+SUPERSAMPLE = 4
 
-NAME_MAX_SIZE = 84
-NAME_MIN_SIZE = 44
-ROLE_MAX_SIZE = 40
-ROLE_MIN_SIZE = 26
-SKILLS_SIZE = 28
-DOMAIN_SIZE = 24
-DOMAIN_LETTER_SPACING = 3
-DOMAIN_BASELINE = 552
+#: Where the text column starts, with a photo beside it and without one.
+TEXT_LEFT_WITH_PHOTO, TEXT_LEFT_ALONE = 460, SAFE_MARGIN
+TEXT_RIGHT = WIDTH - SAFE_MARGIN
 
-NAME_BASELINE_WITH_PHOTO = 258
-NAME_BASELINE_ALONE = 268
-ROLE_OFFSET = 60
-SKILLS_OFFSET = 48
+#: Largest and smallest size the name and the role are set at.
+NAME_SIZES, ROLE_SIZES = (84, 44), (40, 26)
+SKILLS_SIZE, DOMAIN_SIZE, DOMAIN_TRACKING = 28, 24, 3
+
+#: Baseline of the name, with a photo beside it and without one, and the
+#: baselines of the lines below it.
+NAME_BASELINE_WITH_PHOTO, NAME_BASELINE_ALONE = 258, 268
+ROLE_OFFSET, SKILLS_OFFSET, DOMAIN_BASELINE = 60, 108, 552
 
 #: Skills joined into the line under the role.
-SKILLS_SHOWN = 3
-SKILLS_SEPARATOR = " · "
+SKILLS_SHOWN, SKILLS_SEPARATOR = 3, " · "
 
 ELLIPSIS = "…"
 
-#: Returns the face a line is set in at a requested size.
-FaceLoader = Callable[[int], Font]
-
-#: Factor the ring and the photo mask are drawn at before being scaled down, which
-#: smooths their edges.
-SUPERSAMPLE = 4
+Font = ImageFont.FreeTypeFont
 
 
-def text_width(content: str, font: Font, letter_spacing: int = 0) -> float:
-    """The advance width of `content` in `font`, with `letter_spacing` between glyphs."""
+def truetype_bytes(path: Path) -> bytes | None:
+    """The TrueType bytes of a woff2 file, which FreeType cannot read directly."""
+    try:
+        font = TTFont(io.BytesIO(path.read_bytes()))
+        font.flavor = None
+        buffer = io.BytesIO()
+        font.save(buffer)
+        return buffer.getvalue()
+    except Exception:
+        return None
+
+
+def face(source: bytes | None, size: int, weight: int = 400) -> Font:
+    """A face at `size`, instanced at `weight`, falling back to the font Pillow bundles."""
+    if source is not None:
+        try:
+            font = ImageFont.truetype(io.BytesIO(source), size)
+            font.set_variation_by_axes([weight])
+            return font
+        except OSError:
+            pass
+
+    return ImageFont.load_default(size=size)
+
+
+def text_width(content: str, font: Font, tracking: int = 0) -> float:
+    """The advance width of `content` in `font`, with `tracking` between glyphs."""
     if not content:
         return 0.0
-
-    if letter_spacing:
-        glyphs = sum(font.getlength(char) for char in content)
-        return glyphs + letter_spacing * (len(content) - 1)
+    if tracking:
+        return sum(font.getlength(char) for char in content) + tracking * (len(content) - 1)
 
     return font.getlength(content)
 
 
-def fit_font_size(
-    content: str, max_width: float, max_size: int, min_size: int, face: FaceLoader
-) -> int:
-    """The largest size in the range at which `content` fits `max_width`."""
-    for size in range(max_size, min_size, -1):
-        if text_width(content, face(size)) <= max_width:
-            return size
-
-    return min_size
-
-
-def truncate_to_width(content: str, max_width: float, font: Font, letter_spacing: int = 0) -> str:
-    """Shortens `content` with a trailing ellipsis until it fits `max_width`."""
-    if text_width(content, font, letter_spacing) <= max_width:
+def shorten(content: str, max_width: float, font: Font, tracking: int = 0) -> str:
+    """`content` cut back to a trailing ellipsis when it does not fit `max_width`."""
+    if text_width(content, font, tracking) <= max_width:
         return content
 
     clipped = content
-    while len(clipped) > 1 and text_width(clipped + ELLIPSIS, font, letter_spacing) > max_width:
+    while len(clipped) > 1 and text_width(clipped + ELLIPSIS, font, tracking) > max_width:
         clipped = clipped[:-1]
 
     return clipped.rstrip() + ELLIPSIS
 
 
-@dataclass(frozen=True)
-class FittedText:
-    """A line as it is drawn: the text that fits and the face it is set in."""
+def fit(content: str, max_width: float, sizes: tuple[int, int], load: Callable[..., Font]):
+    """The text and the face to draw so a line fills `max_width` without passing it."""
+    largest, smallest = sizes
 
-    text: str
-    font: Font
-    font_size: int
+    for size in range(largest, smallest, -1):
+        font = load(size)
+        if text_width(content, font) <= max_width:
+            return content, font
 
-
-def fit_text(
-    content: str, max_width: float, max_size: int, min_size: int, face: FaceLoader
-) -> FittedText:
-    """The text and size to draw so a line fills the available width without passing it."""
-    size = fit_font_size(content, max_width, max_size, min_size, face)
-    font = face(size)
-    return FittedText(text=truncate_to_width(content, max_width, font), font=font, font_size=size)
+    font = load(smallest)
+    return shorten(content, max_width, font), font
 
 
-def fit_skills_line(skills: tuple[str, ...] | list[str], max_width: float, font: Font) -> str:
-    """Joins as many leading skills as fit the available width, or an empty string if none do."""
+def skills_line(skills: Sequence[str], max_width: float, font: Font) -> str:
+    """As many leading skills as fit the width, or an empty string when none do."""
     for count in range(min(SKILLS_SHOWN, len(skills)), 0, -1):
         line = SKILLS_SEPARATOR.join(skills[:count])
         if text_width(line, font) <= max_width:
@@ -129,113 +129,81 @@ def fit_skills_line(skills: tuple[str, ...] | list[str], max_width: float, font:
     return ""
 
 
-def draw_tracked_text(
-    draw: ImageDraw.ImageDraw,
-    position: tuple[int, int],
-    content: str,
-    font: Font,
-    fill: str,
-    letter_spacing: int,
+def draw_tracked(
+    draw: ImageDraw.ImageDraw, left: int, baseline: int, content: str, font: Font, fill: str
 ) -> None:
-    """Draws `content` one glyph at a time so `letter_spacing` sits between them."""
-    x, baseline = position
-
+    """Draws `content` one glyph at a time so `DOMAIN_TRACKING` sits between them."""
     for char in content:
-        draw.text((x, baseline), char, font=font, fill=fill, anchor="ls")
-        x += font.getlength(char) + letter_spacing
+        draw.text((left, baseline), char, font=font, fill=fill, anchor="ls")
+        left += font.getlength(char) + DOMAIN_TRACKING
 
 
-def circular_photo(photo: bytes) -> Image.Image:
-    """Crops the photo to a circle of the card's photo diameter."""
-    source = Image.open(io.BytesIO(photo))
-    source.load()
+def circular_photo(photo: bytes) -> Image.Image | None:
+    """The photo cropped to a circle of the card's diameter, inside the accent ring.
 
-    cropped = ImageOps.fit(
-        source.convert("RGB"), (PHOTO_DIAMETER, PHOTO_DIAMETER), Image.LANCZOS, centering=(0.5, 0.5)
+    Anything that is not a decodable image reads as no photo at all.
+    """
+    try:
+        source = Image.open(io.BytesIO(photo))
+        source.load()
+        circle = ImageOps.fit(
+            source.convert("RGB"), (PHOTO_DIAMETER, PHOTO_DIAMETER), Image.LANCZOS
+        ).convert("RGBA")
+    except Exception:
+        return None
+
+    size = PHOTO_DIAMETER * SUPERSAMPLE
+    inset = RING_WIDTH * SUPERSAMPLE // 2
+    mask = Image.new("L", (size, size), 0)
+    ImageDraw.Draw(mask).ellipse((0, 0, size - 1, size - 1), fill=255)
+    ring = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    ImageDraw.Draw(ring).ellipse(
+        (inset, inset, size - 1 - inset, size - 1 - inset),
+        outline=COLORS["accent"],
+        width=RING_WIDTH * SUPERSAMPLE,
     )
 
-    scale = PHOTO_DIAMETER * SUPERSAMPLE
-    mask = Image.new("L", (scale, scale), 0)
-    ImageDraw.Draw(mask).ellipse((0, 0, scale - 1, scale - 1), fill=255)
-
-    circle = cropped.convert("RGBA")
-    circle.putalpha(mask.resize((PHOTO_DIAMETER, PHOTO_DIAMETER), Image.LANCZOS))
+    scaled = (PHOTO_DIAMETER, PHOTO_DIAMETER)
+    circle.putalpha(mask.resize(scaled, Image.LANCZOS))
+    circle.alpha_composite(ring.resize(scaled, Image.LANCZOS))
     return circle
 
 
-def draw_photo_ring(card: Image.Image) -> None:
-    """Draws the accent ring that sits on the edge of the photo."""
-    scale = SUPERSAMPLE
-    ring = Image.new("RGBA", (OG_WIDTH * scale, OG_HEIGHT * scale), (0, 0, 0, 0))
-    inset = PHOTO_RING_WIDTH / 2
+def render_card(
+    name: str, role: str, skills: Sequence[str], host: str, photo: bytes | None, assets_dir: Path
+) -> bytes:
+    """Renders the card as a PNG, in the faces `assets_dir` serves."""
+    display = partial(face, truetype_bytes(assets_dir / DISPLAY_FONT_FILE), weight=700)
+    body = partial(face, truetype_bytes(assets_dir / BODY_FONT_FILE))
+    circle = circular_photo(photo) if photo else None
 
-    ImageDraw.Draw(ring).ellipse(
-        (
-            int((PHOTO_LEFT + inset) * scale),
-            int((PHOTO_TOP + inset) * scale),
-            int((PHOTO_LEFT + PHOTO_DIAMETER - inset) * scale),
-            int((PHOTO_TOP + PHOTO_DIAMETER - inset) * scale),
-        ),
-        outline=OG_COLORS["accent"],
-        width=PHOTO_RING_WIDTH * scale,
-    )
-
-    card.alpha_composite(ring.resize((OG_WIDTH, OG_HEIGHT), Image.LANCZOS))
-
-
-def render_og_image(metadata: SiteMetadata, photo: bytes | None, fonts: FontBook) -> bytes:
-    """Renders the card as a PNG.
-
-    A photo that cannot be decoded is dropped and the text-only layout is used.
-    """
-    circle: Image.Image | None = None
-    if photo:
-        try:
-            circle = circular_photo(photo)
-        # Any photo that is absent, not an image or truncated drops to the text-only card.
-        except Exception:
-            circle = None
-
-    card = Image.new("RGBA", (OG_WIDTH, OG_HEIGHT), OG_COLORS["background"])
-
+    card = Image.new("RGBA", (WIDTH, HEIGHT), COLORS["background"])
     if circle is not None:
         card.alpha_composite(circle, (PHOTO_LEFT, PHOTO_TOP))
-        draw_photo_ring(card)
 
     left = TEXT_LEFT_WITH_PHOTO if circle is not None else TEXT_LEFT_ALONE
     width = TEXT_RIGHT - left
+    top = NAME_BASELINE_WITH_PHOTO if circle is not None else NAME_BASELINE_ALONE
     draw = ImageDraw.Draw(card)
 
-    name = fit_text(metadata.name, width, NAME_MAX_SIZE, NAME_MIN_SIZE, fonts.display)
-    role = fit_text(metadata.job_title, width, ROLE_MAX_SIZE, ROLE_MIN_SIZE, fonts.body)
+    name_text, name_font = fit(name, width, NAME_SIZES, display)
+    draw.text((left, top), name_text, font=name_font, fill=COLORS["name"], anchor="ls")
 
-    name_baseline = NAME_BASELINE_WITH_PHOTO if circle is not None else NAME_BASELINE_ALONE
-    role_baseline = name_baseline + ROLE_OFFSET
-    skills_baseline = role_baseline + SKILLS_OFFSET
+    role_text, role_font = fit(role, width, ROLE_SIZES, body)
+    draw.text(
+        (left, top + ROLE_OFFSET), role_text, font=role_font, fill=COLORS["role"], anchor="ls"
+    )
 
-    draw.text((left, name_baseline), name.text, font=name.font, fill=OG_COLORS["name"], anchor="ls")
-    draw.text((left, role_baseline), role.text, font=role.font, fill=OG_COLORS["role"], anchor="ls")
-
-    skills_font = fonts.body(SKILLS_SIZE, weight=600)
-    skills_line = fit_skills_line(metadata.skills, width, skills_font)
-    if skills_line:
+    skills_font = body(SKILLS_SIZE, weight=600)
+    line = skills_line(skills, width, skills_font)
+    if line:
         draw.text(
-            (left, skills_baseline),
-            skills_line,
-            font=skills_font,
-            fill=OG_COLORS["accent"],
-            anchor="ls",
+            (left, top + SKILLS_OFFSET), line, font=skills_font, fill=COLORS["accent"], anchor="ls"
         )
 
-    domain_font = fonts.body(DOMAIN_SIZE, weight=500)
-    draw_tracked_text(
-        draw,
-        (left, DOMAIN_BASELINE),
-        truncate_to_width(metadata.host.upper(), width, domain_font, DOMAIN_LETTER_SPACING),
-        domain_font,
-        OG_COLORS["domain"],
-        DOMAIN_LETTER_SPACING,
-    )
+    domain_font = body(DOMAIN_SIZE, weight=500)
+    domain = shorten(host.upper(), width, domain_font, DOMAIN_TRACKING)
+    draw_tracked(draw, left, DOMAIN_BASELINE, domain, domain_font, COLORS["domain"])
 
     output = io.BytesIO()
     card.convert("RGB").save(output, format="PNG", optimize=True)

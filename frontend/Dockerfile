@@ -16,30 +16,33 @@ RUN npm run build -w frontend
 
 WORKDIR /app/frontend
 
-# The SEO artefacts, generated from the deployment's own files. Only the
-# production image below is built from this stage, so a development build never
-# runs it.
+# The SEO artefacts, generated from the deployment's own domain and seed. Only
+# the production image below is built from this stage, so a development build
+# never runs it.
 FROM python:3.13-slim AS seo
 
 WORKDIR /srv
 
-COPY tools/seo/requirements.txt ./tools/seo/requirements.txt
-RUN pip install --no-cache-dir --requirement tools/seo/requirements.txt
+COPY tools/seo/requirements.txt ./
+RUN pip install --no-cache-dir --requirement requirements.txt
 
-COPY tools/ ./tools/
+COPY tools/seo/generate_seo.py tools/seo/og_image.py ./
 COPY --from=builder /app/frontend/build ./web
 
-# The trailing wildcards also match the committed .example templates, so the
-# copy succeeds on a checkout with no real Caddyfile or production seed and the
-# generator writes nothing.
-COPY Caddyfile* ./deployment/
+# The trailing wildcard also matches the committed .example template, so the
+# copy succeeds on a checkout with no production seed of its own.
 COPY database/prod-initdb.d/500_prod_seed.sql* ./deployment/
 
-RUN python -m tools.seo \
+# Canonical domain of the deployment, passed by docker-compose.prod.yml from
+# SITE_URL in the root .env. Unset or still a placeholder, the generator writes
+# nothing and the build carries on.
+ARG SITE_URL=""
+
+RUN python generate_seo.py \
       --build-dir ./web \
-      --caddyfile ./deployment/Caddyfile \
+      --site-url "$SITE_URL" \
       --seed ./deployment/500_prod_seed.sql \
-  && rm -rf ./deployment ./tools
+  && rm -rf ./deployment ./*.py ./requirements.txt
 
 FROM nginx:alpine AS production
 
