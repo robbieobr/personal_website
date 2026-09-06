@@ -46,10 +46,17 @@ export function formatDate(dateString: string, locale: string): string {
     return dateString;
   }
 
+  // The API serialises MySQL DATE columns as midnight UTC, which is the day
+  // before in any negative offset. Reading and formatting in UTC keeps the
+  // month and year the same for every visitor.
   const fallback = MONTH_NAMES[baseLanguage(locale)];
   if (fallback && isUnsupportedLocale(locale)) {
-    return `${fallback[date.getMonth()]} ${date.getFullYear()}`;
+    return `${fallback[date.getUTCMonth()]} ${date.getUTCFullYear()}`;
   }
 
-  return date.toLocaleDateString(locale, { year: 'numeric', month: 'long' });
+  return date.toLocaleDateString(locale, {
+    year: 'numeric',
+    month: 'long',
+    timeZone: 'UTC',
+  });
 }

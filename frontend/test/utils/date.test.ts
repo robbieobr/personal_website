@@ -12,6 +12,35 @@ describe('formatDate', () => {
     expect(result).toMatch(/June|Jun/);
   });
 
+  // The API serialises MySQL DATE columns as midnight UTC, so any negative
+  // offset lands on the previous day.
+  describe.each([
+    'UTC',
+    'Europe/Dublin',
+    'America/New_York',
+    'America/Los_Angeles',
+    'Pacific/Kiritimati',
+  ])('in %s', (timeZone) => {
+    const original = process.env.TZ;
+
+    afterEach(() => {
+      process.env.TZ = original;
+    });
+
+    it('names the month the date actually falls in', () => {
+      process.env.TZ = timeZone;
+      expect(formatDate('2014-07-01T00:00:00.000Z', 'en')).toBe('July 2014');
+      expect(formatDate('2013-08-01T00:00:00.000Z', 'en')).toBe('August 2013');
+      expect(formatDate('2009-09-01T00:00:00.000Z', 'en')).toBe('September 2009');
+    });
+
+    it('names the month from the fallback table too', () => {
+      process.env.TZ = timeZone;
+      vi.spyOn(Intl.DateTimeFormat, 'supportedLocalesOf').mockReturnValue([]);
+      expect(formatDate('2013-08-01T00:00:00.000Z', 'ga')).toBe('Lúnasa 2013');
+    });
+  });
+
   it('returns the original string when the date is invalid', () => {
     expect(formatDate('not-a-date', 'en')).toBe('not-a-date');
     expect(formatDate('', 'en')).toBe('');
