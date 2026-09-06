@@ -18,7 +18,9 @@ e2e
 docs
 assets
 
-*.png
+# Anchored: only the screenshots at the repository root. The frontend's icons
+# live under frontend/public and are copied into the image.
+/*.png
 *.md
 LICENSE
 
