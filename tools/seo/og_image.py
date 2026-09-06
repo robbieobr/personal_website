@@ -133,9 +133,11 @@ def draw_tracked(
     draw: ImageDraw.ImageDraw, left: int, baseline: int, content: str, font: Font, fill: str
 ) -> None:
     """Draws `content` one glyph at a time so `DOMAIN_TRACKING` sits between them."""
-    for char in content:
+    for index, char in enumerate(content):
+        if index:
+            left += DOMAIN_TRACKING
         draw.text((left, baseline), char, font=font, fill=fill, anchor="ls")
-        left += font.getlength(char) + DOMAIN_TRACKING
+        left += font.getlength(char)
 
 
 def circular_photo(photo: bytes) -> Image.Image | None:
