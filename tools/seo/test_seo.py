@@ -96,7 +96,9 @@ def drawn_bounds(png: bytes) -> tuple[int, int, int, int]:
     card = Image.open(io.BytesIO(png)).convert("RGB")
     ground = Image.new("RGB", card.size, COLORS["background"])
     difference = ImageChops.difference(card, ground).convert("L")
-    return difference.point(lambda value: 255 if value > 12 else 0).getbbox()
+    bounds = difference.point(lambda value: 255 if value > 12 else 0).getbbox()
+    assert bounds is not None, "card is blank: no pixel differs from the background"
+    return bounds
 
 
 class TestOmission:
