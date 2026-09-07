@@ -16,7 +16,7 @@ const Projects: React.FC<ProjectsProps> = ({ projects, loading }) => {
   if (loading) {
     return (
       <div className="projects">
-        <h2>{t('projects.title')}</h2>
+        <h2 className="section-heading">{t('projects.title')}</h2>
         <div className="projects-container">
           {[1, 2].map((i) => (
             <div className="project-card" key={i}>
@@ -44,15 +44,21 @@ const Projects: React.FC<ProjectsProps> = ({ projects, loading }) => {
 
   return (
     <div className="projects">
-      <h2>{t('projects.title')}</h2>
+      <h2 className="section-heading">{t('projects.title')}</h2>
       <div className="projects-container">
         {projects.map((project) => (
           <div key={project.id} className="project-card">
             <div className="project-header">
-              <h3>{project.title}</h3>
-              <span className="project-role">{project.role}</span>
+              <h3 lang="en">{project.title}</h3>
+              <span className="project-role" lang="en">
+                {project.role}
+              </span>
             </div>
-            {project.description && <p className="project-description">{project.description}</p>}
+            {project.description && (
+              <p className="project-description" lang="en">
+                {project.description}
+              </p>
+            )}
           </div>
         ))}
       </div>

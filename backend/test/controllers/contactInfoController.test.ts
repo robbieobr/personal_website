@@ -26,7 +26,7 @@ describe('contactInfoController', () => {
   beforeEach(async () => {
     vi.resetModules();
     const models = await import('../../src/models/index');
-    ContactInfoModel = models.ContactInfoModel as typeof ContactInfoModel;
+    ContactInfoModel = models.ContactInfoModel as unknown as typeof ContactInfoModel;
     vi.clearAllMocks();
   });
 

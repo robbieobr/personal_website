@@ -23,7 +23,7 @@ describe('jobRoutes', () => {
   beforeEach(async () => {
     vi.resetModules();
     const models = await import('../../src/models/index');
-    JobModel = models.JobModel as typeof JobModel;
+    JobModel = models.JobModel as unknown as typeof JobModel;
     vi.clearAllMocks();
   });
 

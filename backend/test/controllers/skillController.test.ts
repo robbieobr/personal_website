@@ -26,7 +26,7 @@ describe('skillController', () => {
   beforeEach(async () => {
     vi.resetModules();
     const models = await import('../../src/models/index');
-    SkillModel = models.SkillModel as typeof SkillModel;
+    SkillModel = models.SkillModel as unknown as typeof SkillModel;
     vi.clearAllMocks();
   });
 

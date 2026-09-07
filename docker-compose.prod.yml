@@ -61,6 +61,10 @@ services:
   frontend:
     build:
       target: production # nginx-based production image
+      args:
+        # Canonical domain the SEO artefacts are generated for. Empty or still a
+        # placeholder, the build writes none of them.
+        SITE_URL: ${SITE_URL:-}
     restart: unless-stopped
     command: ['nginx', '-g', 'daemon off;']
     logging: *default-logging

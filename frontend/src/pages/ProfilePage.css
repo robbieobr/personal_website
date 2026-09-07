@@ -11,22 +11,44 @@
 
 .content-grid {
   display: grid;
-  grid-template-columns: 1fr 300px;
+  /* minmax(0, 1fr), not 1fr: a bare 1fr track carries min-width: auto, so any
+     item with a wide min-content (the nowrap project role chip) inflates the
+     track past the viewport. That was a real 1.4.10 reflow failure — 331px of
+     scroll width in a 320px viewport. */
+  grid-template-columns: minmax(0, 1fr) 300px;
   gap: 2.5rem;
   margin-top: 2.5rem;
   align-items: start;
+}
+
+/* The aside precedes the main column in the DOM (see ProfilePage.tsx), so grid
+   placement is set explicitly. */
+.main-column {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.sidebar-column {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.projects-band {
+  margin-top: 2.5rem;
 }
 
 .main-column {
   display: flex;
   flex-direction: column;
   gap: 2.5rem;
+  min-width: 0;
 }
 
 .sidebar-column {
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  min-width: 0;
 }
 
 /* Loading skeletons */
@@ -75,13 +97,72 @@
 }
 
 .error {
-  color: var(--color-error);
+  max-width: 32rem;
+  margin: 0 auto;
+  color: var(--color-text-primary);
   border-left: 4px solid var(--color-error);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.error-message {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.error-retry {
+  background: transparent;
+  color: var(--color-teal-accessible);
+  border: 1px solid var(--color-teal-accessible);
+  padding: 0.45rem 1.25rem;
+  border-radius: 4px;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.error-retry:hover {
+  background-color: var(--color-teal-accessible);
+  color: var(--color-surface);
+}
+
+.error-retry:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
 }
 
 @media (max-width: 900px) {
   .content-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2.5rem;
+  }
+
+  /* Single column: restore the reading order the wide layout shows. */
+  .main-column,
+  .sidebar-column {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .main-column {
+    order: 1;
+  }
+
+  .sidebar-column {
+    order: 2;
+  }
+
+  .projects-band {
+    order: 3;
   }
 }
 
@@ -131,28 +212,33 @@
   }
 
   .content-grid {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    gap: 1.25rem;
+    /* Block + float, not a flex row. As a fixed 200px flex column the sidebar
+       ran out of content partway down page one and left a blank strip beside
+       the whole of page two, while the main column stayed squeezed to a
+       ~55-character measure for its entire length. Floating it lets the main
+       flow close over the gap the moment the sidebar ends. */
+    display: block;
     margin-top: 0.75rem;
   }
 
-  .main-column {
-    /* Block, not flex. Chromium honours break-inside on flex children, so this
-       is pagination-neutral there; it matters for engines that historically did
-       not, and it is required if the sidebar is ever floated. This matches what
-       production has served since 2026-04. */
+  .sidebar-column {
     display: block;
-    flex: 1;
+    float: right;
+    width: 200px;
+    margin-left: 1.25rem;
+    gap: 0;
   }
 
-  .sidebar-column {
-    display: flex;
-    flex-direction: column;
-    width: 200px;
-    flex-shrink: 0;
-    gap: 0;
+  .main-column {
+    /* Block, not flex, so the text can wrap around the float. */
+    display: block;
+  }
+
+  .projects-band {
+    /* Start below the float rather than beside it: project cards read badly at
+       sidebar-adjacent width. */
+    clear: both;
+    margin-top: 0;
   }
 
   button,

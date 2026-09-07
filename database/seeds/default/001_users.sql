@@ -1,7 +1,7 @@
 -- Insert sample user
 INSERT INTO users (name, title, profileImage, bio) VALUES
 ('John Doe', 'Full Stack Developer',
- '/images/placeholder-profile.png',
+ '/images/placeholder-profile.jpeg',
  'Passionate full-stack developer with a focus on creating scalable and user-friendly web applications. Experienced with TypeScript, React, Node.js, and MySQL.');
 
 -- Insert contact info for John Doe (user id 1)

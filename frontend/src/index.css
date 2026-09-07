@@ -17,7 +17,8 @@
   --color-focus-ring: #12bdc8;
   --font-display: 'Cormorant Garamond', Georgia, serif;
   --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-mono: 'JetBrains Mono', source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+  --font-mono:
+    ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
 }
 
 * {
@@ -29,8 +30,34 @@
 body {
   margin: 0;
   font-family: var(--font-body);
+  /* The themed ground lives on <body>, not on .profile-page. Painting it here
+     covers the footer (which sits outside .profile-page and used to render on
+     white — 2.56:1 in dark mode) and propagates to the canvas, so dark-mode
+     overscroll no longer flashes white on iOS. */
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Text for assistive technology only: kept in the accessibility tree, clipped
+   out of the visual layout. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Programmatic skip-link target: it takes focus so the next Tab continues from
+   the content, but it should not paint a ring around the whole page. */
+#main-content:focus {
+  outline: none;
 }
 
 h1 {
@@ -53,5 +80,55 @@ body,
   body,
   #root {
     height: auto;
+  }
+}
+
+/*
+ * Section heading — "EXPERIENCE ————————".
+ *
+ * This block was copy-pasted verbatim across five component stylesheets; it now
+ * lives here once. The size went from 0.68rem (10.9px rendered) to 0.8rem: at
+ * 700 weight, uppercase and wide-tracked, the old size read as a caption rather
+ * than a heading and the whole page below the fold looked flat. The colour also
+ * steps up — headings were the same teal as the company names beside them, so
+ * heading and content sat at one visual level.
+ */
+.section-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0 0 1.25rem 0;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+  background: none;
+  border: none;
+  padding: 0;
+  border-radius: 0;
+}
+
+.section-heading::after {
+  content: '';
+  flex: 1;
+  display: block;
+  height: 1px;
+  background: var(--color-border);
+}
+
+@media print {
+  .section-heading {
+    color: var(--color-navy);
+    margin-bottom: 0.75rem;
+    font-size: 0.82rem;
+    /* Never leave a section heading stranded at the foot of a page. */
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  .section-heading::after {
+    background: var(--color-teal);
   }
 }

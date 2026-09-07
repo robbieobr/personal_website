@@ -4,6 +4,7 @@ import { themes, DEFAULT_THEME_ID, THEME_STORAGE_KEY, type ThemeId } from '../th
 function applyTheme(themeId: ThemeId): void {
   const theme = themes.find((t) => t.id === themeId) ?? themes[0];
   const root = document.documentElement;
+  root.style.colorScheme = theme.colorScheme;
   Object.entries(theme.cssVars).forEach(([key, value]) => {
     root.style.setProperty(key, value);
   });

@@ -1,4 +1,6 @@
 import { test, expect } from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
+import { LOCALES, THEMES, setLanguage, setTheme, summariseViolations } from './support/ui';
 
 /**
  * Accessibility (a11y) regression tests.
@@ -17,13 +19,15 @@ import { test, expect } from '@playwright/test';
  *   Keyboard focus styles    (A-002, A-007, A-010)
  *   Colour design tokens     (A-003, A-004, A-005)
  *   Error state announcement (A-013)
+ *   Automated axe-core scan
  *
  * Tab order inside the header (used by focus-indicator tests):
  *   1. .skip-link            (off-screen, revealed on focus)
  *   2. a.App-header-link     (site title)
  *   3. button.download-btn
- *   4. select.theme-select
- *   5. select.language-select
+ *   4. .lang-toggle button[data-lang="en"]
+ *   5. .lang-toggle button[data-lang="ga"]
+ *   6. button.theme-trigger
  */
 test.describe('Accessibility', () => {
   test.beforeEach(async ({ page }) => {
@@ -155,8 +159,30 @@ test.describe('Accessibility', () => {
   // ---------------------------------------------------------------------------
 
   test.describe('ARIA attributes', () => {
-    test('language select has an accessible label (A-010)', async ({ page }) => {
-      await expect(page.getByLabel('Select language')).toBeVisible();
+    test('the language toggle is an accessibly named group (A-010)', async ({ page }) => {
+      const group = page.getByRole('group', { name: 'Language' });
+      await expect(group).toBeVisible();
+      await expect(group.getByRole('button')).toHaveCount(2);
+    });
+
+    test('the active language is exposed with aria-pressed', async ({ page }) => {
+      await expect(page.getByRole('button', { name: 'English', exact: true })).toHaveAttribute(
+        'aria-pressed',
+        'true'
+      );
+      await expect(page.getByRole('button', { name: 'Gaeilge', exact: true })).toHaveAttribute(
+        'aria-pressed',
+        'false'
+      );
+    });
+
+    test('the visible language label is contained in its accessible name (2.5.3)', async ({
+      page,
+    }) => {
+      const english = page.getByRole('button', { name: 'English', exact: true });
+      await expect(english).toHaveText('EN');
+      const name = (await english.getAttribute('aria-label'))!.toLowerCase();
+      expect(name).toContain('en');
     });
 
     test('GitHub link aria-label announces it opens in a new tab (A-014)', async ({ page }) => {
@@ -248,29 +274,36 @@ test.describe('Accessibility', () => {
       expect(hasFocusVisible).toBe(true);
     });
 
-    test('theme select is keyboard-focusable and :focus-visible is active', async ({ page }) => {
+    test('both halves of the language toggle are keyboard-focusable (A-010)', async ({ page }) => {
       await page.keyboard.press('Tab'); // .skip-link
       await page.keyboard.press('Tab'); // .App-header-link
       await page.keyboard.press('Tab'); // .download-btn
-      await page.keyboard.press('Tab'); // .theme-select
-      const select = page.locator('.theme-select');
-      await expect(select).toBeFocused();
-      const hasFocusVisible = await select.evaluate((el) => el.matches(':focus-visible'));
-      expect(hasFocusVisible).toBe(true);
+      for (const code of ['en', 'ga']) {
+        await page.keyboard.press('Tab');
+        const option = page.locator(`.lang-toggle button[data-lang="${code}"]`);
+        await expect(option).toBeFocused();
+        expect(await option.evaluate((el) => el.matches(':focus-visible'))).toBe(true);
+      }
     });
 
-    test('language select is keyboard-focusable and :focus-visible is active (A-010)', async ({
-      page,
-    }) => {
+    test('theme trigger is keyboard-focusable and :focus-visible is active', async ({ page }) => {
       await page.keyboard.press('Tab'); // .skip-link
       await page.keyboard.press('Tab'); // .App-header-link
       await page.keyboard.press('Tab'); // .download-btn
-      await page.keyboard.press('Tab'); // .theme-select
-      await page.keyboard.press('Tab'); // .language-select
-      const select = page.locator('.language-select');
-      await expect(select).toBeFocused();
-      const hasFocusVisible = await select.evaluate((el) => el.matches(':focus-visible'));
-      expect(hasFocusVisible).toBe(true);
+      await page.keyboard.press('Tab'); // language EN
+      await page.keyboard.press('Tab'); // language GA
+      await page.keyboard.press('Tab'); // .theme-trigger
+      const trigger = page.locator('.theme-trigger');
+      await expect(trigger).toBeFocused();
+      expect(await trigger.evaluate((el) => el.matches(':focus-visible'))).toBe(true);
+    });
+
+    test('the skip link moves focus, not just the scroll position (A11Y-1)', async ({ page }) => {
+      await page.keyboard.press('Tab');
+      await page.keyboard.press('Enter');
+      const focused = await page.evaluate(() => document.activeElement?.id);
+      // tabindex="-1" is what makes this work outside Chromium.
+      expect(focused).toBe('main-content');
     });
   });
 
@@ -328,101 +361,154 @@ test.describe('Accessibility', () => {
   // ---------------------------------------------------------------------------
   // Theme switcher
   //
-  // Verifies that the theme <select> is accessible, covers all 5 palettes, and
-  // that switching themes rewrites the CSS custom properties on <html> so every
+  // The five palettes live behind one appearance button in a radio panel.
+  // Verifies the control is accessible, covers all 5 palettes, and that
+  // choosing one rewrites the CSS custom properties on <html> so every
   // component immediately re-renders in the new palette.
   // ---------------------------------------------------------------------------
 
+  const cssVar = (page, name: string) =>
+    page.evaluate(
+      (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim(),
+      name
+    );
+
   test.describe('Theme switcher', () => {
-    test('theme select has an accessible aria-label', async ({ page }) => {
-      await expect(page.getByLabel('Select theme')).toBeVisible();
+    test('the appearance trigger is an accessibly named, collapsed disclosure', async ({
+      page,
+    }) => {
+      const trigger = page.getByRole('button', { name: 'Theme', exact: true });
+      await expect(trigger).toBeVisible();
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      await expect(page.getByRole('radiogroup')).toHaveCount(0);
     });
 
-    test('theme select renders all 5 palette options', async ({ page }) => {
-      const select = page.locator('.theme-select');
-      await expect(select.locator('option[value="light"]')).toHaveCount(1);
-      await expect(select.locator('option[value="dark"]')).toHaveCount(1);
-      await expect(select.locator('option[value="high-contrast"]')).toHaveCount(1);
-      await expect(select.locator('option[value="colour-blind"]')).toHaveCount(1);
-      await expect(select.locator('option[value="colour-blind-hc"]')).toHaveCount(1);
+    test('the panel exposes all 5 palettes as a radio group', async ({ page }) => {
+      await page.getByRole('button', { name: 'Theme', exact: true }).click();
+      const group = page.getByRole('radiogroup', { name: 'Theme' });
+      await expect(group.getByRole('radio')).toHaveCount(5);
     });
 
-    test('theme select defaults to the light theme', async ({ page }) => {
-      const value = await page.locator('.theme-select').inputValue();
-      expect(value).toBe('light');
+    test('the visible palette names carry no "HC" jargon', async ({ page }) => {
+      await page.getByRole('button', { name: 'Theme', exact: true }).click();
+      await expect(page.getByRole('radiogroup')).not.toContainText(/\bHC\b/);
+    });
+
+    test('the panel defaults to the light palette', async ({ page }) => {
+      await page.getByRole('button', { name: 'Theme', exact: true }).click();
+      await expect(page.getByRole('radio', { name: 'Light', exact: true })).toBeChecked();
+    });
+
+    test('Escape closes the panel and returns focus to the trigger', async ({ page }) => {
+      const trigger = page.getByRole('button', { name: 'Theme', exact: true });
+      await trigger.click();
+      await page.keyboard.press('Escape');
+      await expect(page.getByRole('radiogroup')).toHaveCount(0);
+      await expect(trigger).toBeFocused();
     });
 
     test('switching to dark theme updates --color-background CSS variable', async ({ page }) => {
-      await page.locator('.theme-select').selectOption('dark');
-      const bg = await page.evaluate(() =>
-        getComputedStyle(document.documentElement).getPropertyValue('--color-background').trim()
-      );
-      expect(bg).toBe('#0f172a');
+      await setTheme(page, 'dark');
+      expect(await cssVar(page, '--color-background')).toBe('#0a1120');
+    });
+
+    test('the dark palette keeps an elevation ladder above its ground (UX-3)', async ({ page }) => {
+      await setTheme(page, 'dark');
+      // Background, surface and hero each sit at a different luminance, so the
+      // card reads as raised above the page.
+      const [bg, surface, hero] = await Promise.all([
+        cssVar(page, '--color-background'),
+        cssVar(page, '--color-surface'),
+        cssVar(page, '--color-profile-bg-start'),
+      ]);
+      expect(new Set([bg, surface, hero]).size).toBe(3);
+      expect(hero).not.toBe(bg);
     });
 
     test('switching to dark theme updates --color-focus-ring CSS variable', async ({ page }) => {
-      await page.locator('.theme-select').selectOption('dark');
-      const ring = await page.evaluate(() =>
-        getComputedStyle(document.documentElement).getPropertyValue('--color-focus-ring').trim()
-      );
-      expect(ring).toBe('#67e8f9');
+      await setTheme(page, 'dark');
+      expect(await cssVar(page, '--color-focus-ring')).toBe('#67e8f9');
+    });
+
+    test('the palette drives color-scheme so native controls follow it', async ({ page }) => {
+      await setTheme(page, 'dark');
+      expect(await page.evaluate(() => document.documentElement.style.colorScheme)).toBe('dark');
+      await setTheme(page, 'light');
+      expect(await page.evaluate(() => document.documentElement.style.colorScheme)).toBe('light');
     });
 
     test('switching to high-contrast theme sets --color-background to white', async ({ page }) => {
-      await page.locator('.theme-select').selectOption('high-contrast');
-      const bg = await page.evaluate(() =>
-        getComputedStyle(document.documentElement).getPropertyValue('--color-background').trim()
-      );
-      expect(bg).toBe('#ffffff');
+      await setTheme(page, 'high-contrast');
+      expect(await cssVar(page, '--color-background')).toBe('#ffffff');
     });
 
     test('switching to high-contrast theme sets --color-focus-ring to yellow', async ({ page }) => {
-      await page.locator('.theme-select').selectOption('high-contrast');
-      const ring = await page.evaluate(() =>
-        getComputedStyle(document.documentElement).getPropertyValue('--color-focus-ring').trim()
-      );
-      expect(ring).toBe('#ffff00');
+      await setTheme(page, 'high-contrast');
+      expect(await cssVar(page, '--color-focus-ring')).toBe('#ffff00');
     });
 
     test('switching to colour-blind theme sets --color-focus-ring to orange', async ({ page }) => {
-      await page.locator('.theme-select').selectOption('colour-blind');
-      const ring = await page.evaluate(() =>
-        getComputedStyle(document.documentElement).getPropertyValue('--color-focus-ring').trim()
-      );
-      expect(ring).toBe('#ff9900');
+      await setTheme(page, 'colour-blind');
+      expect(await cssVar(page, '--color-focus-ring')).toBe('#ff9900');
     });
 
     test('switching to colour-blind-hc theme sets --color-focus-ring to orange', async ({
       page,
     }) => {
-      await page.locator('.theme-select').selectOption('colour-blind-hc');
-      const ring = await page.evaluate(() =>
-        getComputedStyle(document.documentElement).getPropertyValue('--color-focus-ring').trim()
-      );
-      expect(ring).toBe('#ff8c00');
+      await setTheme(page, 'colour-blind-hc');
+      expect(await cssVar(page, '--color-focus-ring')).toBe('#ff8c00');
     });
 
     test('selected theme is persisted to localStorage', async ({ page }) => {
-      await page.locator('.theme-select').selectOption('dark');
-      const stored = await page.evaluate(() => localStorage.getItem('portfolio-theme'));
-      expect(stored).toBe('dark');
+      await setTheme(page, 'dark');
+      expect(await page.evaluate(() => localStorage.getItem('portfolio-theme'))).toBe('dark');
     });
 
     test('theme is restored from localStorage on page reload', async ({ page }) => {
-      await page.locator('.theme-select').selectOption('high-contrast');
+      await setTheme(page, 'high-contrast');
       await page.reload();
       await expect(page.locator('.user-profile h1')).toBeVisible({ timeout: 15_000 });
-      const value = await page.locator('.theme-select').inputValue();
-      expect(value).toBe('high-contrast');
+      await page.getByRole('button', { name: 'Theme', exact: true }).click();
+      await expect(page.getByRole('radio', { name: 'High contrast', exact: true })).toBeChecked();
     });
 
     test('switching back to light theme restores light --color-background', async ({ page }) => {
-      await page.locator('.theme-select').selectOption('dark');
-      await page.locator('.theme-select').selectOption('light');
-      const bg = await page.evaluate(() =>
-        getComputedStyle(document.documentElement).getPropertyValue('--color-background').trim()
-      );
-      expect(bg).toBe('#f0ece7');
+      await setTheme(page, 'dark');
+      await setTheme(page, 'light');
+      expect(await cssVar(page, '--color-background')).toBe('#f0ece7');
+    });
+  });
+
+  // ---------------------------------------------------------------------------
+  // Automated axe-core scan
+  //
+  // axe runs over all ten theme and locale combinations.
+  // ---------------------------------------------------------------------------
+
+  test.describe('axe-core', () => {
+    for (const theme of THEMES) {
+      for (const locale of LOCALES) {
+        test(`no region or colour-contrast violations — ${theme} / ${locale}`, async ({ page }) => {
+          if (locale !== 'en') {
+            await setLanguage(page, locale);
+          }
+          await setTheme(page, theme, locale);
+
+          const results = await new AxeBuilder({ page })
+            .withRules(['region', 'color-contrast'])
+            .analyze();
+
+          expect(summariseViolations(results)).toEqual([]);
+        });
+      }
+    }
+
+    test('no WCAG 2.1 A/AA violations in the default configuration', async ({ page }) => {
+      const results = await new AxeBuilder({ page })
+        .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+        .analyze();
+
+      expect(summariseViolations(results)).toEqual([]);
     });
   });
 });

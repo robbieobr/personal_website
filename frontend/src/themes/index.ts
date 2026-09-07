@@ -4,6 +4,13 @@ export interface Theme {
   id: ThemeId;
   label: string;
   i18nKey: string;
+  /**
+   * Drives the CSS `color-scheme` property, which is what tells the browser to
+   * render native controls (the theme picker's radios, scrollbars, form
+   * widgets) in the matching appearance. Without it a dark palette still gets
+   * bright white radio buttons.
+   */
+  colorScheme: 'light' | 'dark';
   cssVars: Record<string, string>;
 }
 
@@ -12,6 +19,7 @@ export const themes: Theme[] = [
     id: 'light',
     label: 'Light',
     i18nKey: 'light',
+    colorScheme: 'light',
     cssVars: {
       '--color-navy': '#0d1f36',
       '--color-teal': '#0a9ba4',
@@ -35,22 +43,29 @@ export const themes: Theme[] = [
     id: 'dark',
     label: 'Dark',
     i18nKey: 'dark',
+    colorScheme: 'dark',
     cssVars: {
-      '--color-navy': '#1a2f4a',
+      // Elevation ladder, darkest ground first. The previous palette had none:
+      // the hero (#0d1827) and the page (#0f172a) were an identical 1.00:1 —
+      // the card was literally invisible — while the sticky header was lighter
+      // than both, inverting the light-mode relationship. Now
+      // background < surface < hero/header, and every text pair on these
+      // grounds clears AA (lowest is 7.1:1, the job title on the hero).
+      '--color-navy': '#213152', // chrome + hero, top of the ladder (L* 20.6)
       '--color-teal': '#22d3ee',
       '--color-teal-bright': '#22d3ee',
-      '--color-teal-light': '#073344',
-      '--color-background': '#0f172a',
-      '--color-surface': '#1e293b',
+      '--color-teal-light': '#0b3c50', // project role chip, 6.5:1 with the teal on it
+      '--color-background': '#0a1120', // page ground, darkest (L* 5.2)
+      '--color-surface': '#182335', // cards, one step up (L* 13.6)
       '--color-text-primary': '#f1f5f9',
       '--color-text-secondary': '#cbd5e1',
-      '--color-text-muted': '#94a3b8',
-      '--color-border': '#334155',
+      '--color-text-muted': '#9fb0c4', // 8.5:1 on the page ground (footer)
+      '--color-border': '#33445f',
       '--color-bio-text': '#94a3b8',
       '--color-error': '#f87171',
       '--color-teal-accessible': '#22d3ee',
-      '--color-profile-bg-start': '#0d1827',
-      '--color-profile-bg-end': '#091422',
+      '--color-profile-bg-start': '#213152',
+      '--color-profile-bg-end': '#18243d',
       '--color-focus-ring': '#67e8f9',
     },
   },
@@ -58,6 +73,7 @@ export const themes: Theme[] = [
     id: 'high-contrast',
     label: 'High Contrast',
     i18nKey: 'highContrast',
+    colorScheme: 'light',
     cssVars: {
       '--color-navy': '#000000',
       '--color-teal': '#000000',
@@ -81,6 +97,7 @@ export const themes: Theme[] = [
     id: 'colour-blind',
     label: 'Colour Blind',
     i18nKey: 'colourBlind',
+    colorScheme: 'light',
     cssVars: {
       '--color-navy': '#1b3a7a',
       '--color-teal': '#0060a8',
@@ -104,6 +121,7 @@ export const themes: Theme[] = [
     id: 'colour-blind-hc',
     label: 'Colour Blind HC',
     i18nKey: 'colourBlindHC',
+    colorScheme: 'light',
     cssVars: {
       '--color-navy': '#000033',
       '--color-teal': '#000033',

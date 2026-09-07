@@ -18,14 +18,17 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
+          cache: 'npm'
 
       - name: Start Docker Compose stack
         run: docker compose up -d
 
-      - name: Install e2e dependencies
-        working-directory: ./e2e
-        run: npm install
+      # One root lockfile covers frontend/backend/e2e — installing from the
+      # repo root also satisfies the e2e workspace, no separate install step
+      # needed inside ./e2e.
+      - name: Install dependencies
+        run: npm ci
 
       - name: Install Playwright browsers
         working-directory: ./e2e

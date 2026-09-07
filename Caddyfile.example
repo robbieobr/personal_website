@@ -11,19 +11,61 @@
 # Caddy provisions and renews Let's Encrypt certificates automatically for every
 # domain named here, so DNS must already point at this host before you start it.
 
+# Shared hardening snippet imported into every site block below.
+#
+# Headers are set here, not in nginx, because an `add_header` inside an
+# nginx `location` block discards any `add_header` inherited from the
+# `server` block.
+(hardening) {
+    encode zstd gzip
+    # gzip is the fallback for clients that don't support zstd. This is also
+    # the only layer that compresses the proxied /api JSON. nginx's own gzip
+    # must stay off (see frontend/nginx.conf) since compressing here first
+    # would stop Caddy from re-encoding with zstd.
+
+    header {
+        # HSTS. The `preload` directive alone does not add the domain to
+        # browsers' HSTS preload list — that requires submitting at
+        # hstspreload.org, which is very difficult to reverse afterward.
+        # Do not submit until every subdomain will permanently run HTTPS.
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+
+        # style-src has no 'unsafe-inline': React sets inline styles via the
+        # DOM node's `.style` property rather than a `style="..."`
+        # attribute, so CSP's style-src does not apply to them.
+        Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests"
+
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "DENY"
+        Referrer-Policy "strict-origin-when-cross-origin"
+        Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+
+        # Remove version-fingerprinting / stack-disclosure headers. Caddy adds
+        # Server itself; nginx upstream adds Server + (if enabled) X-Powered-By.
+        -Server
+        -Via
+        -X-Powered-By
+    }
+}
+
 example.com {
+    import hardening
     reverse_proxy frontend:3000
 }
 
 # Canonicalise the www host onto the apex so you do not split SEO ranking or
 # serve duplicate content from two origins.
 www.example.com {
+    import hardening
     redir https://example.com{uri} permanent
 }
 
 # Optional: additional apps proxied from the same Caddy instance. These must
 # share a Docker network with Caddy — see docker-compose.host.yml.example.
+# Every site block sharing this Caddy instance should also `import hardening`
+# to get the same headers.
 #
 # app.example.com {
+#     import hardening
 #     reverse_proxy some_other_container:3000
 # }

@@ -3,7 +3,7 @@
     "id": 1,
     "name": "John Doe",
     "title": "Full Stack Developer",
-    "profileImage": "/images/placeholder-profile.png",
+    "profileImage": "/images/placeholder-profile.jpeg",
     "bio": "Passionate full-stack developer with a focus on creating scalable and user-friendly web applications. Experienced with TypeScript, React, Node.js, and MySQL."
   },
   "contactInfo": [

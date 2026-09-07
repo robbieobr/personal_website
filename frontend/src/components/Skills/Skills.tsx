@@ -16,7 +16,7 @@ const Skills: React.FC<SkillsProps> = ({ skills, loading }) => {
   if (loading) {
     return (
       <div className="skills">
-        <h2>{t('skills.title')}</h2>
+        <h2 className="section-heading">{t('skills.title')}</h2>
         <ul className="skills-list">
           {[1, 2, 3, 4].map((i) => (
             <li key={i} className="skill-item">
@@ -34,10 +34,10 @@ const Skills: React.FC<SkillsProps> = ({ skills, loading }) => {
 
   return (
     <div className="skills">
-      <h2>{t('skills.title')}</h2>
+      <h2 className="section-heading">{t('skills.title')}</h2>
       <ul className="skills-list">
         {skills.map((s) => (
-          <li key={s.id} className="skill-item">
+          <li key={s.id} className="skill-item" lang="en">
             {s.skill}
           </li>
         ))}
