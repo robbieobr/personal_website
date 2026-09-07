@@ -19,7 +19,7 @@ WORKDIR /app/frontend
 # The SEO artefacts, generated from the deployment's own domain and seed. Only
 # the production image below is built from this stage, so a development build
 # never runs it.
-FROM python:3.13-slim AS seo
+FROM python:3.14-slim AS seo
 
 WORKDIR /srv
 
