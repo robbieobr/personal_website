@@ -8,7 +8,7 @@ request.
 Install once, from the repository root:
 
 ```bash
-nvm use          # reads .nvmrc — Node 24
+nvm use   # optional; reads .nvmrc, which pins Node 24
 npm ci
 ```
 

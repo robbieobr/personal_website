@@ -5,13 +5,12 @@ frontend or backend directly on your machine, see [Development](development.md).
 
 ## What you need
 
-| Tool           | Version | Needed for                                                       |
-| -------------- | ------- | ---------------------------------------------------------------- |
-| Docker Engine  | 20.10+  | Everything below                                                 |
-| Docker Compose | v2      | Everything below                                                 |
-| Docker Compose | v2.24+  | The production overlay only — it uses the `!reset` tag           |
-| Node.js        | 24      | Running the app or the tests outside Docker (`.nvmrc` pins `24`) |
-| npm            | 10+     | Same                                                             |
+| Tool           | Version | Needed for                                                               |
+| -------------- | ------- | ------------------------------------------------------------------------ |
+| Docker Compose | v2      | Everything below — the `docker compose` subcommand, not `docker-compose` |
+| Docker Compose | v2.24+  | The production overlay only — it uses the `!reset` tag                   |
+| Node.js        | 24      | Running the app or the tests outside Docker (`.nvmrc` pins `24`)         |
+| npm            | 10+     | Same                                                                     |
 
 Node 24 is not optional when you work outside Docker: all four `package.json` files declare
 `"engines": { "node": ">=24.0.0" }`, and both Dockerfiles build on `node:24-alpine`.
@@ -26,8 +25,9 @@ docker compose up -d
 ```
 
 The stack starts in dependency order: MySQL first, and the backend waits on its healthcheck
-(`mysqladmin ping`) before starting. A cold first start takes a minute or so, because MySQL runs
-every file in `database/docker-entrypoint-initdb.d/` before it accepts connections.
+(`mysqladmin ping`) before starting. A cold first start is not instant, because MySQL runs every
+file in `database/docker-entrypoint-initdb.d/` before it accepts connections — CI allows two
+minutes for the frontend to answer on port 3000, and that is a fair upper bound.
 
 | Service  | Address                                                    | Container                   |
 | -------- | ---------------------------------------------------------- | --------------------------- |
