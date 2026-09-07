@@ -32,4 +32,4 @@ Needs a reachable MySQL and a `.env` (copy `backend/.env.example`) to run standa
 - Tests, coverage gate, CI: `docs/testing.md`
 - Schema, migrations, seed profiles: `docs/database.md`
 - API contract and architecture: `docs/architecture.md`
-- Environment variables: `ENV_SETUP.md`
+- Environment variables: [Configuration](../docs/configuration.md)

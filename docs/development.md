@@ -4,7 +4,7 @@ The day-to-day loop for running this project locally: four ways to start it, whe
 
 ## Prerequisites
 
-Node.js 24 and npm ≥10 (`.nvmrc` pins the Node version). Docker and Docker Compose for any of the Docker-based options. See `ENV_SETUP.md` for the full environment variable reference.
+Node.js 24 and npm ≥10 (`.nvmrc` pins the Node version). Docker and Docker Compose for any of the Docker-based options. See [Configuration](configuration.md) for the full environment variable reference.
 
 ## Ways to run it
 
@@ -113,4 +113,4 @@ npm install
 | `Cannot find module` after pulling changes        | `node_modules` out of sync with `package-lock.json`                                                       | `npm install` from the repo root (one lockfile covers frontend, backend and e2e)                       |
 | CORS error in the browser console                 | Origin not in `ALLOWED_ORIGINS`                                                                           | Add it to `ALLOWED_ORIGINS` in the relevant `.env` (see `.env.example`)                                |
 
-For test failures, see `docs/testing.md`. For environment variables, see `ENV_SETUP.md`.
+For test failures, see [Testing](testing.md). For environment variables, see [Configuration](configuration.md).

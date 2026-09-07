@@ -60,7 +60,7 @@ For the two other seed profiles and what to do when the first run does not come 
 | [Contributing](docs/contributing.md)                 | What conventions and checks apply to a change?                             |
 
 Start at [docs/README.md](docs/README.md) for the full index. Reference material lives with the
-code it describes: [`database/SCHEMA.md`](database/SCHEMA.md) for table definitions,
+code it describes: [Database](docs/database.md) for the schema, migrations and seeds,
 [`backend/README.md`](backend/README.md) for the API endpoints, and
 [`frontend/README.md`](frontend/README.md) for the component layout.
 

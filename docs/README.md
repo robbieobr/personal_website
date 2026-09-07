@@ -33,12 +33,12 @@ exactly one page; the rest link to it.
 
 ## Reference, next to the code
 
-| Page                                          | Answers                                                         |
-| --------------------------------------------- | --------------------------------------------------------------- |
-| [`database/SCHEMA.md`](../database/SCHEMA.md) | What columns, types, keys and constraints does each table have? |
-| [`database/README.md`](../database/README.md) | What is in the `database/` directory and what is each file for? |
-| [`backend/README.md`](../backend/README.md)   | What API endpoints exist and what does each return?             |
-| [`frontend/README.md`](../frontend/README.md) | How is the React application laid out?                          |
+| Page                                          | Answers                                                                            |
+| --------------------------------------------- | ---------------------------------------------------------------------------------- |
+| [Database](database.md)                       | What tables exist, how do migrations run, and what does each seed profile contain? |
+| [`database/README.md`](../database/README.md) | What is in the `database/` directory and what is each file for?                    |
+| [`backend/README.md`](../backend/README.md)   | What API endpoints exist and what does each return?                                |
+| [`frontend/README.md`](../frontend/README.md) | How is the React application laid out?                                             |
 
 The repository [README](../README.md) is the landing page: what the project is, the stack, and a
 quickstart. It deliberately holds nothing that is written here.

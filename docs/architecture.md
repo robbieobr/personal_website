@@ -164,5 +164,5 @@ no migration runner and no migration state table. `createdAt` and `updatedAt` ar
 (`user_id`, `display_order`), and `ContactInfoModel` aliases them to `userId` and `displayOrder` in
 the `SELECT` so TypeScript sees one convention throughout.
 
-[Database](database.md) covers migrations and seeds; [`database/SCHEMA.md`](../database/SCHEMA.md)
-has the column-level definitions.
+[Database](database.md) covers the schema, migrations and seed profiles, including the
+column-level definitions for every table.
