@@ -1,6 +1,6 @@
 # The SPA build, which is all the `frontend` service in docker-compose.yml runs
 # (it targets this stage) and all the `seo` stage below takes as input.
-FROM node:24-alpine AS builder
+FROM node:26-alpine AS builder
 
 WORKDIR /app
 

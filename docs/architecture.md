@@ -112,8 +112,8 @@ Four things are worth knowing before you change any of it:
 
 | Stage        | Base               | Does                                                                                       |
 | ------------ | ------------------ | ------------------------------------------------------------------------------------------ |
-| `builder`    | `node:24-alpine`   | `npm ci --workspace=frontend`, then `npm run build -w frontend` → `/app/frontend/build`    |
-| `seo`        | `python:3.13-slim` | Installs `tools/seo/requirements.txt`, runs `generate_seo.py` over the build directory     |
+| `builder`    | `node:26-alpine`   | `npm ci --workspace=frontend`, then `npm run build -w frontend` → `/app/frontend/build`    |
+| `seo`        | `python:3.14-slim` | Installs `tools/seo/requirements.txt`, runs `generate_seo.py` over the build directory     |
 | `production` | `nginx:alpine`     | Copies the SEO stage's web root to `/usr/share/nginx/html` and `nginx.conf` into `conf.d/` |
 
 `docker-compose.yml` sets `target: builder` and overrides the command with `npm run dev`, so

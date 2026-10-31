@@ -17,9 +17,9 @@
     "typecheck": "tsc --noEmit",
     "preview": "vite preview --host",
     "start": "npm run preview",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage",
+    "test": "cross-env NODE_OPTIONS=--no-experimental-webstorage vitest run",
+    "test:watch": "cross-env NODE_OPTIONS=--no-experimental-webstorage vitest",
+    "test:coverage": "cross-env NODE_OPTIONS=--no-experimental-webstorage vitest run --coverage",
     "mock": "tsx ./mock/mockServer.ts",
     "mock:install": "cd mock && npm install || true",
     "postinstall": "npm run mock:install"
@@ -38,7 +38,7 @@
     "vitest": "^4.0.18"
   },
   "engines": {
-    "node": ">=24.0.0",
+    "node": ">=26.0.0",
     "npm": ">=10.0.0"
   }
 }

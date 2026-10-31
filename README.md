@@ -12,12 +12,12 @@ domain and data.
 
 | Layer         | Technology                                                      |
 | ------------- | --------------------------------------------------------------- |
-| Runtime       | Node 24, npm workspaces (`frontend`, `backend`, `e2e`)          |
+| Runtime       | Node 26, npm workspaces (`frontend`, `backend`, `e2e`)          |
 | Frontend      | React 18.3, TypeScript 5.9, Vite 7.3, i18next 26                |
 | Backend       | Express 5.2, TypeScript 5.9, mysql2 3.24, helmet 8              |
 | Database      | MySQL 8.0                                                       |
 | Edge          | nginx (static + API proxy), Caddy 2 (TLS, headers, compression) |
-| Build tooling | Docker Compose, Python 3.13 for the SEO stage                   |
+| Build tooling | Docker Compose, Python 3.14 for the SEO stage                   |
 | Tests         | Vitest 4 (unit), Playwright 1.62 (end-to-end), pytest           |
 
 ## Quickstart

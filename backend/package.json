@@ -29,7 +29,7 @@
     "mysql2": "^3.24.5"
   },
   "engines": {
-    "node": ">=24.0.0",
+    "node": ">=26.0.0",
     "npm": ">=10.0.0"
   },
   "devDependencies": {
