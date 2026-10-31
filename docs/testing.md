@@ -15,7 +15,7 @@ Counts above were verified by running each suite against this branch.
 
 ### Frontend
 
-`frontend/test/` mirrors `frontend/src/`: component tests, `services/api.test.ts` (the fetch client), `utils/date.test.ts` (UTC date formatting), and a full-page test for `pages/ProfilePage.tsx`. Uses jsdom, Testing Library and Vitest.
+`frontend/test/` mirrors `frontend/src/`: component tests, `services/api.test.ts` (the fetch client), `utils/date.test.ts` (UTC date formatting), and a full-page test for `pages/ProfilePage.tsx`. Uses jsdom, Testing Library and Vitest. The three `test*` scripts run Vitest through `cross-env NODE_OPTIONS=--no-experimental-webstorage`: Node installs a global `localStorage` that stays undefined unless the process is given `--localstorage-file`, and it shadows the storage jsdom provides, so a bare `localStorage` read in a component would resolve to undefined. Invoke the frontend suite through the scripts rather than calling `vitest` directly, so the flag is always applied.
 
 ```bash
 cd frontend
@@ -27,8 +27,8 @@ npm run test:coverage   # with coverage; fails if any metric drops below 90%
 Run a single file or test by path or name pattern:
 
 ```bash
-npx vitest run test/services/api.test.ts
-npx vitest run -t "renders the user profile"
+npm run test -- test/services/api.test.ts
+npm run test -- -t "renders the user profile"
 ```
 
 ### Backend

@@ -14,8 +14,8 @@ npm workspaces monorepo: `frontend`, `backend`, `e2e`, one root `package-lock.js
 the root with `npm ci` — never inside a workspace. Plus `tools/seo`, a Python package that runs only
 inside an image build.
 
-Node 24 everywhere: `.nvmrc`, both Dockerfiles (`node:24-alpine`), all CI jobs, and
-`engines.node: ">=24.0.0"` in all four `package.json` files. npm ≥ 10.
+Node 26 everywhere: `.nvmrc`, both Dockerfiles (`node:26-alpine`), all CI jobs, and
+`engines.node: ">=26.0.0"` in all four `package.json` files. npm ≥ 10.
 
 ## Commands
 
@@ -107,6 +107,10 @@ Caddyfile.example, docker-compose.host.yml.example   templates for gitignored de
 - `VITE_APP_URL` from `frontend/.env.production` is the header and footer link text in production
   builds; in development the i18n app title is used. `VITE_*` values are baked in at build time.
 - Every component has a print stylesheet under `@media print`; `e2e/tests/print.spec.ts` covers it.
+- The three frontend `test*` scripts run Vitest through
+  `cross-env NODE_OPTIONS=--no-experimental-webstorage`. Node installs a global `localStorage` that
+  stays undefined without `--localstorage-file`, and it shadows the storage jsdom provides, so a bare
+  `localStorage` read in a component resolves to undefined. Calling `vitest` directly skips the flag.
 
 ## Backend
 
@@ -146,8 +150,8 @@ Routes → controllers → models → pool. All routes are `GET`; there is no wr
 
 ## Images and production
 
-- `frontend/Dockerfile` has three stages. `builder` (`node:24-alpine`) builds the SPA; `seo`
-  (`python:3.13-slim`) runs `tools/seo/generate_seo.py` over that build; `production`
+- `frontend/Dockerfile` has three stages. `builder` (`node:26-alpine`) builds the SPA; `seo`
+  (`python:3.14-slim`) runs `tools/seo/generate_seo.py` over that build; `production`
   (`nginx:alpine`) serves the result with `frontend/nginx.conf`, listening on 3000.
 - `docker-compose.yml` targets `builder` and overrides the command with `npm run dev`, so
   development never runs the SEO stage.

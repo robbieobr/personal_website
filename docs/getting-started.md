@@ -12,8 +12,8 @@ frontend or backend directly on your machine, see [Development](development.md).
 | Node.js        | 24      | Running the app or the tests outside Docker (`.nvmrc` pins `24`)         |
 | npm            | 10+     | Same                                                                     |
 
-Node 24 is not optional when you work outside Docker: all four `package.json` files declare
-`"engines": { "node": ">=24.0.0" }`, and both Dockerfiles build on `node:24-alpine`.
+Node 26 is not optional when you work outside Docker: all four `package.json` files declare
+`"engines": { "node": ">=26.0.0" }`, and both Dockerfiles build on `node:26-alpine`.
 
 ## First run
 

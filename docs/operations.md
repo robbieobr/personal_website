@@ -24,7 +24,7 @@ Run from the repository root, on the host, with the working tree clean:
    current `Caddyfile` aside if you're about to change it.
 4. **Build.** `docker compose -f docker-compose.yml -f docker-compose.prod.yml build --pull`
    builds new images without touching the running containers — a build failure costs nothing.
-   `--pull` refreshes the `node:24-alpine` and `nginx:alpine` base images; it does not pull
+   `--pull` refreshes the `node:26-alpine` and `nginx:alpine` base images; it does not pull
    `mysql:8.0` or `caddy:2-alpine`, since neither has a `build:` section, so neither is upgraded
    by a redeploy.
 5. **Recreate.** `docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --force-recreate --remove-orphans`
