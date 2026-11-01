@@ -5,8 +5,8 @@
   "type": "module",
   "dependencies": {
     "i18next": "^26.4.4",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
     "react-i18next": "^17.0.16",
     "react-loading-skeleton": "^3.3.1"
   },
@@ -28,8 +28,8 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.2.0",
     "@testing-library/user-event": "^14.5.2",
-    "@types/react": "^18.0.0",
-    "@types/react-dom": "^18.0.0",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^4.2.0",
     "cross-env": "^7.0.3",
     "jsdom": "^26.0.0",
