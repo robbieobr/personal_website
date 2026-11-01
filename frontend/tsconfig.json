@@ -14,7 +14,7 @@
     "declaration": false,
     "declarationMap": false,
     "sourceMap": false,
-    "baseUrl": "src",
+    "paths": { "*": ["./src/*"] },
     "types": ["node", "vitest/globals", "vite/client", "@testing-library/jest-dom/vitest"],
     "isolatedModules": true,
     "noEmit": true
